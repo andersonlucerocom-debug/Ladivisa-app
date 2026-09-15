@@ -1,6 +1,9 @@
 export default async function handler(req, res) {
-  // Le decimos al navegador que permita recibir estos datos
   res.setHeader('Access-Control-Allow-Origin', '*');
+  // Estas tres líneas son la magia para DESTRUIR la caché en el servidor
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
 
   try {
     const askBinance = async (tradeType) => {
@@ -8,14 +11,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          asset: 'USDT', 
-          fiat: 'VES', 
-          tradeType, 
-          page: 1, 
-          rows: 10, 
-          payTypes: [], 
-          publisherType: null, 
-          merchantCheck: true 
+          asset: 'USDT', fiat: 'VES', tradeType, page: 1, rows: 10, payTypes: [], publisherType: null, merchantCheck: true 
         })
       });
       
