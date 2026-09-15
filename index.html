@@ -87,7 +87,7 @@ const CURRENCIES = [
   {code:'VES_PAR', name:'Bolívar · Paralelo', flag:'🇻🇪'},
   {code:'EUR', name:'Euro', flag:'🇪🇺'},
   {code:'USDT', name:'USDT · Tether', flag:'₮'}, 
-  {code:'USDC', name:'USD Coin', flag:'Ⓤ'}
+  {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'}
 ];
 
 let rates = { USD: 1 }, prev = { bcv:null, paralelo:null, eur:null };
@@ -159,7 +159,7 @@ async function fetchVenezuela(){
     
     rates.VES_BCV = raw.bcv.price; 
     rates.VES_PAR = raw.paralelo.price;
-    rates.EUR = raw.bcv.price / raw.eur.price; // Calculamos la relación Dólar/Euro para el convertidor
+    rates.EUR = raw.bcv.price / raw.eur.price;
   } catch (error) { throw new Error('Fallo al conectar con BCV/Paralelo'); }
 }
 
@@ -209,7 +209,7 @@ async function refreshAll(){
 }
 
 buildSelect(document.getElementById('fromSelect'), 'USD'); 
-buildSelect(document.getElementById('toSelect'), 'VES_BCV');
+buildSelect(document.getElementById('toSelect'), 'VES_BCV'); // Configurado por defecto a Bolívar BCV a petición tuya
 
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 document.getElementById('swapBtn').addEventListener('click', () => { const fromSel = document.getElementById('fromSelect'), toSel = document.getElementById('toSelect'); const tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp; lastEdited = 'from'; updateConverter(); });
