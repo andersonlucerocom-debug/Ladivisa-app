@@ -129,12 +129,9 @@ function flagFor(code){ return (CURRENCIES.find(c=>c.code===code)||{}).flag || '
 function convert(amount, fromCode, toCode){ const rf = rates[fromCode], rt = rates[toCode]; if(!rf || !rt || isNaN(amount)) return null; return (amount / rf) * rt; }
 function updateConverter(){ const fromCode = document.getElementById('fromSelect').value, toCode = document.getElementById('toSelect').value; document.getElementById('flagFrom').textContent = flagFor(fromCode); document.getElementById('flagTo').textContent = flagFor(toCode); if(lastEdited === 'from'){ const from = parseFloat(document.getElementById('fromAmount').value.replace(',','.')); const result = convert(from, fromCode, toCode); document.getElementById('toAmount').value = result===null ? '—' : fmt(result); } else { const to = parseFloat(document.getElementById('toAmount').value.replace(',','.')); const result = convert(to, toCode, fromCode); document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); } }
 
-/* Destrucción de caché en todas las llamadas (sello de tiempo + no-store) */
-const getNoCacheConfig = () => ({ cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
-
 async function fetchBinanceP2P(){
   const t = new Date().getTime();
-  const res = await fetch(`/api/binance?t=${t}`, getNoCacheConfig());
+  const res = await fetch(`/api/binance?t=${t}`);
   if(!res.ok) throw new Error('Error en Vercel');
   const data = await res.json();
   return { price: data.price, last_update: new Date().toISOString(), source: data.source };
@@ -143,14 +140,14 @@ async function fetchBinanceP2P(){
 async function fetchVenezuela(){
   try {
     const t = new Date().getTime();
-    const resOficial = await fetch(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`, getNoCacheConfig());
-    const resEuro = await fetch(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`, getNoCacheConfig());
+    const resOficial = await fetch(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`);
+    const resEuro = await fetch(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`);
     if(!resOficial.ok || !resEuro.ok) throw new Error('DolarAPI caído');
 
     const oficial = await resOficial.json();
     const eurOficial = await resEuro.json();
     const paraleloData = await fetchBinanceP2P().catch(async () => {
-      const res = await fetch(`https://ve.dolarapi.com/v1/dolares/paralelo?t=${t}`, getNoCacheConfig());
+      const res = await fetch(`https://ve.dolarapi.com/v1/dolares/paralelo?t=${t}`);
       const p = await res.json();
       return { price: p.promedio, last_update: p.fechaActualizacion, source: 'DolarAPI (Respaldo)' };
     });
@@ -165,7 +162,7 @@ async function fetchVenezuela(){
   try {
     const t = new Date().getTime();
     const codes = ['CNY','TRY','RUB'];
-    const results = await Promise.allSettled(codes.map(c => fetch(`https://bcv-api.rafnixg.dev/v1/exchange-rates/latest/${c}?t=${t}`, getNoCacheConfig()).then(r => r.json())));
+    const results = await Promise.allSettled(codes.map(c => fetch(`https://bcv-api.rafnixg.dev/v1/exchange-rates/latest/${c}?t=${t}`).then(r => r.json())));
     raw.extra = {};
     results.forEach((r, i) => { if(r.status === 'fulfilled' && r.value && r.value.rate){ raw.extra[codes[i]] = { vesPerUnit: parseFloat(r.value.rate), date: r.value.date }; rates[codes[i] + '_BCV'] = raw.bcv.price / raw.extra[codes[i]].vesPerUnit; } });
   } catch(e) { raw.extra = {}; }
@@ -173,7 +170,7 @@ async function fetchVenezuela(){
 
 async function fetchCrypto(){
   const t = new Date().getTime();
-  const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&include_24hr_change=true&t=${t}`, getNoCacheConfig());
+  const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&include_24hr_change=true&t=${t}`);
   if(!res.ok) throw new Error('CoinGecko caído');
   const data = await res.json();
   raw.usdt = data.tether; raw.usdc = data['usd-coin'];
@@ -182,7 +179,7 @@ async function fetchCrypto(){
 
 async function fetchWorld(){
   const t = new Date().getTime();
-  const res = await fetch(`https://open.er-api.com/v6/latest/USD?t=${t}`, getNoCacheConfig());
+  const res = await fetch(`https://open.er-api.com/v6/latest/USD?t=${t}`);
   if(!res.ok) throw new Error('API Mundial caída');
   const data = await res.json(); Object.assign(rates, data.rates);
 }
