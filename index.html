@@ -59,7 +59,7 @@
   </header>
 
   <div class="converter">
-    <div class="conv-label">CONVERTIR</div>
+    <div class="conv-label">CONVERTIR A BOLÍVARES</div>
     <div class="conv-row"><div class="curr-pick"><div class="flag" id="flagFrom">🇺🇸</div><select class="curr-select" id="fromSelect"></select></div><input class="amount-input" id="fromAmount" value="1,00" inputmode="decimal"></div>
     <div class="swap-row"><button class="swap-btn" id="swapBtn">⇅</button></div>
     <div class="conv-row"><div class="curr-pick"><div class="flag" id="flagTo">🇻🇪</div><select class="curr-select" id="toSelect"></select></div><input class="amount-input" id="toAmount" value="—" inputmode="decimal"></div>
@@ -74,23 +74,23 @@
       <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">En bolívares (paralelo)</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC</div><div class="sub">En bolívares (paralelo)</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC · USD Coin</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div></div>
     </div>
   </div>
 </div>
 
 <script>
+// La lista ahora es exacta para lo que elegiste, con Bolívares de receptor principal
 const CURRENCIES = [
-  {code:'USD', name:'Dólar', flag:'🇺🇸'}, 
-  {code:'VES_BCV', name:'Bolívar · BCV', flag:'🇻🇪'}, 
-  {code:'VES_PAR', name:'Bolívar · Paralelo', flag:'🇻🇪'},
-  {code:'EUR', name:'Euro', flag:'🇪🇺'},
+  {code:'USD', name:'Dólar Oficial', flag:'🇺🇸'}, 
+  {code:'EUR', name:'Euro Oficial', flag:'🇪🇺'},
   {code:'USDT', name:'USDT · Tether', flag:'₮'}, 
-  {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'}
+  {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'},
+  {code:'VES', name:'Bolívares (Bs)', flag:'🇻🇪'}
 ];
 
-let rates = { USD: 1 }, prev = { bcv:null, paralelo:null, eur:null };
+let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let errors = [], lastEdited = 'from';
 
@@ -110,7 +110,13 @@ function buildSelect(sel, defaultCode){
 }
 
 function flagFor(code){ return (CURRENCIES.find(c=>c.code===code)||{}).flag || '💱'; }
-function convert(amount, fromCode, toCode){ const rf = rates[fromCode], rt = rates[toCode]; if(!rf || !rt || isNaN(amount)) return null; return (amount / rf) * rt; }
+
+// La nueva función inteligente que calcula todo usando la base (Bolívar)
+function convert(amount, fromCode, toCode){ 
+  const rf = rates[fromCode], rt = rates[toCode]; 
+  if(!rf || !rt || isNaN(amount)) return null; 
+  return (amount * rf) / rt;
+}
 
 function updateConverter(){ 
   const fromCode = document.getElementById('fromSelect').value, toCode = document.getElementById('toSelect').value; 
@@ -126,6 +132,17 @@ function updateConverter(){
     const result = convert(to, toCode, fromCode); 
     document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
   } 
+}
+
+// AQUÍ ESTÁ LA INTELIGENCIA: Le decimos al convertidor qué precio exacto usar para cada moneda
+function calculateRates() {
+  rates.VES = 1;
+  if (raw.bcv) rates.USD = raw.bcv.price; // El Dólar usa el precio del BCV
+  if (raw.eur) rates.EUR = raw.eur.price; // El Euro usa el precio del BCV
+  
+  const refRate = raw.paralelo?.price || raw.bcv?.price; // La tasa de la calle
+  if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; // El USDT usa la tasa de la calle
+  if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; // El USDC usa la tasa de la calle
 }
 
 async function fetchBinanceP2P(){
@@ -156,10 +173,6 @@ async function fetchVenezuela(){
     raw.bcv = { price: oficial.promedio, last_update: oficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.eur = { price: eurOficial.promedio, last_update: eurOficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.paralelo = paraleloData;
-    
-    rates.VES_BCV = raw.bcv.price; 
-    rates.VES_PAR = raw.paralelo.price;
-    rates.EUR = raw.bcv.price / raw.eur.price;
   } catch (error) { throw new Error('Fallo al conectar con BCV/Paralelo'); }
 }
 
@@ -170,8 +183,6 @@ async function fetchCrypto(){
     if(!res.ok) throw new Error('CoinGecko caído');
     const data = await res.json();
     raw.usdt = data.tether; raw.usdc = data['usd-coin'];
-    if(raw.usdt) rates.USDT = 1 / raw.usdt.usd; 
-    if(raw.usdc) rates.USDC = 1 / raw.usdc.usd;
   } catch(error) { throw new Error('Fallo al conectar con Cripto'); }
 }
 
@@ -201,6 +212,7 @@ async function refreshAll(){
   
   if(errors.length){ noteEl.style.display='block'; noteEl.textContent = 'Aviso de conexión: ' + errors.join(' · '); }
   
+  calculateRates();
   renderVenezuela(); 
   updateConverter();
   
@@ -208,8 +220,9 @@ async function refreshAll(){
   setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
+// Ahora el convertidor empieza con Dólar arriba y siempre Bolívares abajo
 buildSelect(document.getElementById('fromSelect'), 'USD'); 
-buildSelect(document.getElementById('toSelect'), 'VES_BCV'); // Configurado por defecto a Bolívar BCV a petición tuya
+buildSelect(document.getElementById('toSelect'), 'VES');
 
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 document.getElementById('swapBtn').addEventListener('click', () => { const fromSel = document.getElementById('fromSelect'), toSel = document.getElementById('toSelect'); const tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp; lastEdited = 'from'; updateConverter(); });
