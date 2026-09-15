@@ -7,94 +7,44 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg-page:#07211f; --bg-deep:#0B2E2C; --surface:#123F3C; --surface-2:#164A46;
-    --gold:#D4AF6A; --gold-soft:#E8D2A0; --cream:#F5F1E8; --muted:#9FC9C3;
-    --up:#6FCF97; --down:#E2725B; --radius-lg:28px; --radius-md:18px; --radius-sm:12px;
-  }
+  :root{ --bg-page:#07211f; --bg-deep:#0B2E2C; --surface:#123F3C; --surface-2:#164A46; --gold:#D4AF6A; --gold-soft:#E8D2A0; --cream:#F5F1E8; --muted:#9FC9C3; --up:#6FCF97; --down:#E2725B; --radius-lg:28px; --radius-md:18px; --radius-sm:12px; }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background:radial-gradient(circle at 15% 0%, #0d3a37 0%, transparent 45%),
-      radial-gradient(circle at 90% 90%, #0a2b29 0%, transparent 55%), var(--bg-page);
-    min-height:100vh; font-family:'Manrope', sans-serif; color:var(--cream);
-    padding:0 0 80px;
-  }
+  body{ background:radial-gradient(circle at 15% 0%, #0d3a37 0%, transparent 45%), radial-gradient(circle at 90% 90%, #0a2b29 0%, transparent 55%), var(--bg-page); min-height:100vh; font-family:'Manrope', sans-serif; color:var(--cream); padding:0 0 80px; }
   .wrap{ max-width:760px; margin:0 auto; padding:0 24px; }
-
-  /* header */
   header{ padding:48px 0 28px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
   .brand .mark{ font-family:'Fraunces', serif; font-weight:600; font-size:38px; color:var(--gold-soft); line-height:1; }
   .brand .tag{ font-size:13.5px; color:var(--muted); margin-top:6px; }
-  .status-pill{
-    display:flex; align-items:center; gap:9px; background:var(--surface); border:1px solid rgba(212,175,106,.15);
-    border-radius:999px; padding:10px 18px 10px 14px; font-size:12.5px; color:var(--muted); white-space:nowrap;
-  }
+  .status-pill{ display:flex; align-items:center; gap:9px; background:var(--surface); border:1px solid rgba(212,175,106,.15); border-radius:999px; padding:10px 18px 10px 14px; font-size:12.5px; color:var(--muted); white-space:nowrap; }
   .dot{ width:7px;height:7px;border-radius:50%; background:var(--up); flex-shrink:0; }
   .dot.offline{ background:var(--down); }
-  .refresh-btn{
-    width:36px;height:36px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none;
-    display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; margin-left:6px; flex-shrink:0;
-  }
+  .refresh-btn{ width:36px;height:36px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; margin-left:6px; flex-shrink:0; }
   .refresh-btn.spinning{ animation:spin .8s linear infinite; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
-
-  /* converter */
-  .converter{
-    background:var(--surface); border-radius:var(--radius-lg); padding:32px 28px;
-    border:1px solid rgba(212,175,106,.14); margin-bottom:24px;
-  }
+  .converter{ background:var(--surface); border-radius:var(--radius-lg); padding:32px 28px; border:1px solid rgba(212,175,106,.14); margin-bottom:24px; }
   .conv-label{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.03em; margin-bottom:10px; }
-  .conv-row{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-    background:var(--surface-2); border-radius:var(--radius-md); padding:16px 20px;
-  }
+  .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; background:var(--surface-2); border-radius:var(--radius-md); padding:16px 20px; }
   .curr-pick{ display:flex; align-items:center; gap:12px; min-width:0; flex:1; }
   .flag{ width:38px;height:38px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:18px; background:rgba(212,175,106,.1); flex-shrink:0; }
-  select.curr-select{
-    background:transparent; color:var(--cream); border:none; outline:none; font-family:'Manrope',sans-serif;
-    font-size:15.5px; font-weight:700; cursor:pointer; width:100%; padding:2px 0;
-  }
+  select.curr-select{ background:transparent; color:var(--cream); border:none; outline:none; font-family:'Manrope',sans-serif; font-size:15.5px; font-weight:700; cursor:pointer; width:100%; padding:2px 0; }
   select.curr-select option{ background:var(--surface-2); color:var(--cream); }
-  .amount-input{
-    background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif;
-    font-size:24px; font-weight:500; text-align:right; width:170px; min-width:0;
-  }
+  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:24px; font-weight:500; text-align:right; width:170px; min-width:0; }
   .swap-row{ display:flex; justify-content:center; margin:14px 0; }
-  .swap-btn{
-    width:42px;height:42px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none;
-    display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px;
-    box-shadow:0 8px 20px -8px rgba(212,175,106,.7);
-  }
-
-  .gap-banner{
-    background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03));
-    border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md);
-    padding:18px 22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;
-  }
+  .swap-btn{ width:42px;height:42px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; box-shadow:0 8px 20px -8px rgba(212,175,106,.7); }
+  .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:18px 22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
   .gap-banner .label{ font-size:13px; color:var(--muted); }
   .gap-banner .value{ font-family:'Fraunces', serif; font-size:21px; color:var(--gold-soft); font-weight:600; }
-
   .fallback-note{ font-size:12px; color:var(--down); background:rgba(226,114,91,.08); border:1px solid rgba(226,114,91,.22); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; line-height:1.5; }
-
-  /* tabs + reference lists */
   .tabs{ display:flex; background:var(--surface); border-radius:999px; padding:5px; gap:5px; margin-bottom:22px; }
   .tab{ flex:1; text-align:center; padding:11px 6px; border-radius:999px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; }
   .tab.active{ background:var(--gold); color:#0B2E2C; }
-
   .section-title{ font-size:13px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; }
   .search-wrap{ display:flex; align-items:center; gap:10px; background:var(--surface); border-radius:999px; padding:13px 20px; margin-bottom:18px; border:1px solid rgba(245,241,232,.08); }
   .search-wrap input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Manrope',sans-serif; font-size:14.5px; width:100%; }
   .search-wrap input::placeholder{ color:var(--muted); }
-
   .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   @media (max-width:560px){ .rate-grid{ grid-template-columns:1fr; } }
-
-  .rate-card{
-    background:var(--surface); border-radius:var(--radius-md); padding:18px 20px;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    border:1px solid rgba(212,175,106,.08);
-  }
+  .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:18px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; border:1px solid rgba(212,175,106,.08); }
   .rate-left{ display:flex; align-items:center; gap:14px; min-width:0; }
   .rate-info .name{ font-weight:700; font-size:14.5px; line-height:1.35; }
   .rate-info .sub{ font-size:12px; color:var(--muted); margin-top:4px; line-height:1.4; }
@@ -104,7 +54,6 @@
   .rate-delta.up{ color:var(--up); }
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
-
   .panel{ display:none; }
   .panel.active{ display:block; }
 </style>
@@ -112,45 +61,19 @@
 <body>
 
 <div class="wrap">
-
   <header>
-    <div class="brand">
-      <div class="mark">Divisa</div>
-      <div class="tag">Tasas de cambio al instante — Venezuela y el mundo</div>
-    </div>
-    <div class="status-pill">
-      <span class="dot" id="statusDot"></span>
-      <span id="updateText">Conectando…</span>
-      <button class="refresh-btn" id="refreshBtn" title="Actualizar ahora">⟳</button>
-    </div>
+    <div class="brand"><div class="mark">Divisa</div><div class="tag">Tasas de cambio al instante — Venezuela y el mundo</div></div>
+    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText">Conectando…</span><button class="refresh-btn" id="refreshBtn" title="Actualizar ahora">⟳</button></div>
   </header>
 
   <div class="converter">
     <div class="conv-label">CONVERTIR</div>
-    <div class="conv-row">
-      <div class="curr-pick">
-        <div class="flag" id="flagFrom">🇺🇸</div>
-        <select class="curr-select" id="fromSelect"></select>
-      </div>
-      <input class="amount-input" id="fromAmount" value="1,00" inputmode="decimal">
-    </div>
-
+    <div class="conv-row"><div class="curr-pick"><div class="flag" id="flagFrom">🇺🇸</div><select class="curr-select" id="fromSelect"></select></div><input class="amount-input" id="fromAmount" value="1,00" inputmode="decimal"></div>
     <div class="swap-row"><button class="swap-btn" id="swapBtn">⇅</button></div>
-
-    <div class="conv-row">
-      <div class="curr-pick">
-        <div class="flag" id="flagTo">🇻🇪</div>
-        <select class="curr-select" id="toSelect"></select>
-      </div>
-      <input class="amount-input" id="toAmount" value="—" inputmode="decimal">
-    </div>
+    <div class="conv-row"><div class="curr-pick"><div class="flag" id="flagTo">🇻🇪</div><select class="curr-select" id="toSelect"></select></div><input class="amount-input" id="toAmount" value="—" inputmode="decimal"></div>
   </div>
 
-  <div class="gap-banner">
-    <div class="label">Brecha BCV / Paralelo</div>
-    <div class="value" id="gapValue">—</div>
-  </div>
-
+  <div class="gap-banner"><div class="label">Brecha BCV / Paralelo</div><div class="value" id="gapValue">—</div></div>
   <div id="fallbackNote" class="fallback-note" style="display:none;"></div>
 
   <div class="tabs">
@@ -162,357 +85,149 @@
   <div class="panel active" id="panel-ve">
     <div class="section-title">TASAS OFICIALES Y CRIPTO</div>
     <div class="rate-grid">
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">🇨🇳</div><div class="rate-info"><div class="name">Yuan BCV</div><div class="sub" id="sub-cny">Cargando…</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-cny">···</div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">🇹🇷</div><div class="rate-info"><div class="name">Lira BCV</div><div class="sub" id="sub-try">Cargando…</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-try">···</div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">🇷🇺</div><div class="rate-info"><div class="name">Rublo BCV</div><div class="sub" id="sub-rub">Cargando…</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-rub">···</div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">En bolívares (paralelo)</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div>
-      </div>
-      <div class="rate-card">
-        <div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC</div><div class="sub">En bolívares (paralelo)</div></div></div>
-        <div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div>
-      </div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇨🇳</div><div class="rate-info"><div class="name">Yuan BCV</div><div class="sub" id="sub-cny">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-cny">···</div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇹🇷</div><div class="rate-info"><div class="name">Lira BCV</div><div class="sub" id="sub-try">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-try">···</div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇷🇺</div><div class="rate-info"><div class="name">Rublo BCV</div><div class="sub" id="sub-rub">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-rub">···</div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">En bolívares (paralelo)</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC</div><div class="sub">En bolívares (paralelo)</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div></div>
     </div>
   </div>
 
-  <div class="panel" id="panel-latam">
-    <div class="section-title">MONEDAS DE LATINOAMÉRICA (frente a USD)</div>
-    <div class="search-wrap"><span>🔍</span><input id="searchLatam" placeholder="Buscar país o moneda…"></div>
-    <div class="rate-grid" id="listLatam"></div>
-  </div>
-
-  <div class="panel" id="panel-mundo">
-    <div class="section-title">MONEDAS DEL MUNDO (frente a USD)</div>
-    <div class="search-wrap"><span>🔍</span><input id="searchMundo" placeholder="Buscar entre más de 30 monedas…"></div>
-    <div class="rate-grid" id="listMundo"></div>
-  </div>
-
+  <div class="panel" id="panel-latam"><div class="section-title">MONEDAS DE LATINOAMÉRICA (frente a USD)</div><div class="search-wrap"><span>🔍</span><input id="searchLatam" placeholder="Buscar país o moneda…"></div><div class="rate-grid" id="listLatam"></div></div>
+  <div class="panel" id="panel-mundo"><div class="section-title">MONEDAS DEL MUNDO (frente a USD)</div><div class="search-wrap"><span>🔍</span><input id="searchMundo" placeholder="Buscar entre más de 30 monedas…"></div><div class="rate-grid" id="listMundo"></div></div>
 </div>
 
 <script>
 const CURRENCIES = [
-  {code:'USD', name:'Dólar estadounidense', flag:'🇺🇸', group:'Principal'},
-  {code:'VES_BCV', name:'Bolívar · BCV', flag:'🇻🇪', group:'Venezuela'},
-  {code:'VES_PAR', name:'Bolívar · Paralelo', flag:'🇻🇪', group:'Venezuela'},
-  {code:'CNY_BCV', name:'Yuan · BCV oficial', flag:'🇨🇳', group:'Venezuela'},
-  {code:'TRY_BCV', name:'Lira turca · BCV oficial', flag:'🇹🇷', group:'Venezuela'},
-  {code:'RUB_BCV', name:'Rublo ruso · BCV oficial', flag:'🇷🇺', group:'Venezuela'},
-  {code:'USDT', name:'USDT · Tether', flag:'₮', group:'Cripto'},
-  {code:'USDC', name:'USD Coin', flag:'Ⓤ', group:'Cripto'},
-  {code:'COP', name:'Peso colombiano', flag:'🇨🇴', group:'Latinoamérica'},
-  {code:'ARS', name:'Peso argentino', flag:'🇦🇷', group:'Latinoamérica'},
-  {code:'MXN', name:'Peso mexicano', flag:'🇲🇽', group:'Latinoamérica'},
-  {code:'BRL', name:'Real brasileño', flag:'🇧🇷', group:'Latinoamérica'},
-  {code:'PEN', name:'Sol peruano', flag:'🇵🇪', group:'Latinoamérica'},
-  {code:'CLP', name:'Peso chileno', flag:'🇨🇱', group:'Latinoamérica'},
-  {code:'UYU', name:'Peso uruguayo', flag:'🇺🇾', group:'Latinoamérica'},
-  {code:'BOB', name:'Boliviano', flag:'🇧🇴', group:'Latinoamérica'},
-  {code:'PYG', name:'Guaraní', flag:'🇵🇾', group:'Latinoamérica'},
-  {code:'DOP', name:'Peso dominicano', flag:'🇩🇴', group:'Latinoamérica'},
-  {code:'GTQ', name:'Quetzal', flag:'🇬🇹', group:'Latinoamérica'},
-  {code:'CRC', name:'Colón costarricense', flag:'🇨🇷', group:'Latinoamérica'},
-  {code:'EUR', name:'Euro', flag:'🇪🇺', group:'Mundo'},
-  {code:'GBP', name:'Libra esterlina', flag:'🇬🇧', group:'Mundo'},
-  {code:'JPY', name:'Yen japonés', flag:'🇯🇵', group:'Mundo'},
-  {code:'CNY', name:'Yuan chino', flag:'🇨🇳', group:'Mundo'},
-  {code:'CHF', name:'Franco suizo', flag:'🇨🇭', group:'Mundo'},
-  {code:'CAD', name:'Dólar canadiense', flag:'🇨🇦', group:'Mundo'},
-  {code:'AUD', name:'Dólar australiano', flag:'🇦🇺', group:'Mundo'},
-  {code:'TRY', name:'Lira turca', flag:'🇹🇷', group:'Mundo'},
-  {code:'INR', name:'Rupia india', flag:'🇮🇳', group:'Mundo'},
-  {code:'KRW', name:'Won surcoreano', flag:'🇰🇷', group:'Mundo'},
-  {code:'RUB', name:'Rublo ruso', flag:'🇷🇺', group:'Mundo'},
-  {code:'AED', name:'Dirham EAU', flag:'🇦🇪', group:'Mundo'},
+  {code:'USD', name:'Dólar estadounidense', flag:'🇺🇸', group:'Principal'}, {code:'VES_BCV', name:'Bolívar · BCV', flag:'🇻🇪', group:'Venezuela'}, {code:'VES_PAR', name:'Bolívar · Paralelo', flag:'🇻🇪', group:'Venezuela'},
+  {code:'CNY_BCV', name:'Yuan · BCV oficial', flag:'🇨🇳', group:'Venezuela'}, {code:'TRY_BCV', name:'Lira turca · BCV oficial', flag:'🇹🇷', group:'Venezuela'}, {code:'RUB_BCV', name:'Rublo ruso · BCV oficial', flag:'🇷🇺', group:'Venezuela'},
+  {code:'USDT', name:'USDT · Tether', flag:'₮', group:'Cripto'}, {code:'USDC', name:'USD Coin', flag:'Ⓤ', group:'Cripto'}, {code:'COP', name:'Peso colombiano', flag:'🇨🇴', group:'Latinoamérica'},
+  {code:'ARS', name:'Peso argentino', flag:'🇦🇷', group:'Latinoamérica'}, {code:'MXN', name:'Peso mexicano', flag:'🇲🇽', group:'Latinoamérica'}, {code:'BRL', name:'Real brasileño', flag:'🇧🇷', group:'Latinoamérica'},
+  {code:'PEN', name:'Sol peruano', flag:'🇵🇪', group:'Latinoamérica'}, {code:'CLP', name:'Peso chileno', flag:'🇨🇱', group:'Latinoamérica'}, {code:'UYU', name:'Peso uruguayo', flag:'🇺🇾', group:'Latinoamérica'},
+  {code:'BOB', name:'Boliviano', flag:'🇧🇴', group:'Latinoamérica'}, {code:'PYG', name:'Guaraní', flag:'🇵🇾', group:'Latinoamérica'}, {code:'DOP', name:'Peso dominicano', flag:'🇩🇴', group:'Latinoamérica'},
+  {code:'GTQ', name:'Quetzal', flag:'🇬🇹', group:'Latinoamérica'}, {code:'CRC', name:'Colón costarricense', flag:'🇨🇷', group:'Latinoamérica'}, {code:'EUR', name:'Euro', flag:'🇪🇺', group:'Mundo'},
+  {code:'GBP', name:'Libra esterlina', flag:'🇬🇧', group:'Mundo'}, {code:'JPY', name:'Yen japonés', flag:'🇯🇵', group:'Mundo'}, {code:'CNY', name:'Yuan chino', flag:'🇨🇳', group:'Mundo'},
+  {code:'CHF', name:'Franco suizo', flag:'🇨🇭', group:'Mundo'}, {code:'CAD', name:'Dólar canadiense', flag:'🇨🇦', group:'Mundo'}, {code:'AUD', name:'Dólar australiano', flag:'🇦🇺', group:'Mundo'},
+  {code:'TRY', name:'Lira turca', flag:'🇹🇷', group:'Mundo'}, {code:'INR', name:'Rupia india', flag:'🇮🇳', group:'Mundo'}, {code:'KRW', name:'Won surcoreano', flag:'🇰🇷', group:'Mundo'},
+  {code:'RUB', name:'Rublo ruso', flag:'🇷🇺', group:'Mundo'}, {code:'AED', name:'Dirham EAU', flag:'🇦🇪', group:'Mundo'}
 ];
 const LATAM_CODES = CURRENCIES.filter(c => c.group==='Latinoamérica').map(c=>c.code);
 const MUNDO_CODES = CURRENCIES.filter(c => c.group==='Mundo').map(c=>c.code);
 
-let rates = { USD: 1 };
-let prev = { bcv:null, paralelo:null, eur:null };
+let rates = { USD: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null, extra:{} };
-let errors = [];
-let lastEdited = 'from';
+let errors = [], lastEdited = 'from';
 
-function fmt(n, decimals){
-  if(n === null || n === undefined || isNaN(n)) return '—';
-  if(decimals === undefined) decimals = Math.abs(n) < 10 ? 4 : 2;
-  return Number(n).toLocaleString('es-VE', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
-}
-function fmtDate(iso){
-  if(!iso) return '';
-  try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }
-  catch(e){ return iso; }
-}
-function setDelta(el, changeAbs, changePct){
-  if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; }
-  const up = changeAbs >= 0;
-  el.className = 'rate-delta ' + (up ? 'up' : 'down');
-  el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs),2) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct),2)+'%)' : '');
-}
-
-function buildSelect(sel, defaultCode){
-  const groups = {};
-  CURRENCIES.forEach(c => { (groups[c.group] = groups[c.group]||[]).push(c); });
-  sel.innerHTML = '';
-  Object.keys(groups).forEach(g => {
-    const og = document.createElement('optgroup'); og.label = g;
-    groups[g].forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c.code; opt.textContent = c.flag + '  ' + c.name;
-      og.appendChild(opt);
-    });
-    sel.appendChild(og);
-  });
-  sel.value = defaultCode;
-}
+function fmt(n, decimals){ if(n === null || n === undefined || isNaN(n)) return '—'; if(decimals === undefined) decimals = Math.abs(n) < 10 ? 4 : 2; return Number(n).toLocaleString('es-VE', {minimumFractionDigits:decimals, maximumFractionDigits:decimals}); }
+function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
+function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs),2) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct),2)+'%)' : ''); }
+function buildSelect(sel, defaultCode){ const groups = {}; CURRENCIES.forEach(c => { (groups[c.group] = groups[c.group]||[]).push(c); }); sel.innerHTML = ''; Object.keys(groups).forEach(g => { const og = document.createElement('optgroup'); og.label = g; groups[g].forEach(c => { const opt = document.createElement('option'); opt.value = c.code; opt.textContent = c.flag + '  ' + c.name; og.appendChild(opt); }); sel.appendChild(og); }); sel.value = defaultCode; }
 function flagFor(code){ return (CURRENCIES.find(c=>c.code===code)||{}).flag || '💱'; }
+function convert(amount, fromCode, toCode){ const rf = rates[fromCode], rt = rates[toCode]; if(!rf || !rt || isNaN(amount)) return null; return (amount / rf) * rt; }
+function updateConverter(){ const fromCode = document.getElementById('fromSelect').value, toCode = document.getElementById('toSelect').value; document.getElementById('flagFrom').textContent = flagFor(fromCode); document.getElementById('flagTo').textContent = flagFor(toCode); if(lastEdited === 'from'){ const from = parseFloat(document.getElementById('fromAmount').value.replace(',','.')); const result = convert(from, fromCode, toCode); document.getElementById('toAmount').value = result===null ? '—' : fmt(result); } else { const to = parseFloat(document.getElementById('toAmount').value.replace(',','.')); const result = convert(to, toCode, fromCode); document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); } }
 
-function convert(amount, fromCode, toCode){
-  const rf = rates[fromCode], rt = rates[toCode];
-  if(!rf || !rt || isNaN(amount)) return null;
-  return (amount / rf) * rt;
-}
+/* Destrucción de caché en todas las llamadas (sello de tiempo + no-store) */
+const getNoCacheConfig = () => ({ cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
 
-function updateConverter(){
-  const fromCode = document.getElementById('fromSelect').value;
-  const toCode = document.getElementById('toSelect').value;
-  document.getElementById('flagFrom').textContent = flagFor(fromCode);
-  document.getElementById('flagTo').textContent = flagFor(toCode);
-
-  if(lastEdited === 'from'){
-    const from = parseFloat(document.getElementById('fromAmount').value.replace(',','.'));
-    const result = convert(from, fromCode, toCode);
-    document.getElementById('toAmount').value = result===null ? '—' : fmt(result);
-  } else {
-    const to = parseFloat(document.getElementById('toAmount').value.replace(',','.'));
-    const result = convert(to, toCode, fromCode);
-    document.getElementById('fromAmount').value = result===null ? '—' : fmt(result);
-  }
-}
-
-// ----------------------------------------------------
-// PUENTE CON VERCEL - Aquí está la magia de Binance
-// ----------------------------------------------------
 async function fetchBinanceP2P(){
-  const res = await fetch('/api/binance');
-  if(!res.ok) throw new Error('Error en el puente de Vercel');
+  const t = new Date().getTime();
+  const res = await fetch(`/api/binance?t=${t}`, getNoCacheConfig());
+  if(!res.ok) throw new Error('Error en Vercel');
   const data = await res.json();
-  
-  return { 
-    price: data.price, 
-    last_update: new Date().toISOString(), 
-    source: data.source 
-  };
+  return { price: data.price, last_update: new Date().toISOString(), source: data.source };
 }
 
 async function fetchVenezuela(){
   try {
-    const resOficial = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
-    const resEuro = await fetch('https://ve.dolarapi.com/v1/euros/oficial');
-    
+    const t = new Date().getTime();
+    const resOficial = await fetch(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`, getNoCacheConfig());
+    const resEuro = await fetch(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`, getNoCacheConfig());
     if(!resOficial.ok || !resEuro.ok) throw new Error('DolarAPI caído');
 
     const oficial = await resOficial.json();
     const eurOficial = await resEuro.json();
-
-    // Llama al servidor de Vercel, y si hay un fallo usa DolarAPI de respaldo
     const paraleloData = await fetchBinanceP2P().catch(async () => {
-      const res = await fetch('https://ve.dolarapi.com/v1/dolares/paralelo');
+      const res = await fetch(`https://ve.dolarapi.com/v1/dolares/paralelo?t=${t}`, getNoCacheConfig());
       const p = await res.json();
       return { price: p.promedio, last_update: p.fechaActualizacion, source: 'DolarAPI (Respaldo)' };
     });
 
-    prev.bcv = raw.bcv ? raw.bcv.price : null;
-    prev.paralelo = raw.paralelo ? raw.paralelo.price : null;
-    prev.eur = raw.eur ? raw.eur.price : null;
-
+    prev.bcv = raw.bcv ? raw.bcv.price : null; prev.paralelo = raw.paralelo ? raw.paralelo.price : null; prev.eur = raw.eur ? raw.eur.price : null;
     raw.bcv = { price: oficial.promedio, last_update: oficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.eur = { price: eurOficial.promedio, last_update: eurOficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.paralelo = paraleloData;
-
-    rates.VES_BCV = raw.bcv.price;
-    rates.VES_PAR = raw.paralelo.price;
-
-  } catch (error) {
-    throw new Error('Fuentes de Venezuela caídas: ' + error.message);
-  }
+    rates.VES_BCV = raw.bcv.price; rates.VES_PAR = raw.paralelo.price;
+  } catch (error) { throw new Error('Fuentes caídas: ' + error.message); }
 
   try {
+    const t = new Date().getTime();
     const codes = ['CNY','TRY','RUB'];
-    const results = await Promise.allSettled(codes.map(c => fetch('https://bcv-api.rafnixg.dev/v1/exchange-rates/latest/' + c).then(r => r.json())));
-    
+    const results = await Promise.allSettled(codes.map(c => fetch(`https://bcv-api.rafnixg.dev/v1/exchange-rates/latest/${c}?t=${t}`, getNoCacheConfig()).then(r => r.json())));
     raw.extra = {};
-    results.forEach((r, i) => {
-      if(r.status === 'fulfilled' && r.value && r.value.rate){
-        raw.extra[codes[i]] = { vesPerUnit: parseFloat(r.value.rate), date: r.value.date };
-        rates[codes[i] + '_BCV'] = raw.bcv.price / raw.extra[codes[i]].vesPerUnit;
-      }
-    });
-  } catch(e) {
-    raw.extra = {};
-  }
+    results.forEach((r, i) => { if(r.status === 'fulfilled' && r.value && r.value.rate){ raw.extra[codes[i]] = { vesPerUnit: parseFloat(r.value.rate), date: r.value.date }; rates[codes[i] + '_BCV'] = raw.bcv.price / raw.extra[codes[i]].vesPerUnit; } });
+  } catch(e) { raw.extra = {}; }
 }
 
 async function fetchCrypto(){
-  const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&include_24hr_change=true');
+  const t = new Date().getTime();
+  const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&include_24hr_change=true&t=${t}`, getNoCacheConfig());
   if(!res.ok) throw new Error('CoinGecko caído');
   const data = await res.json();
   raw.usdt = data.tether; raw.usdc = data['usd-coin'];
-  if(raw.usdt) rates.USDT = 1 / raw.usdt.usd;
-  if(raw.usdc) rates.USDC = 1 / raw.usdc.usd;
+  if(raw.usdt) rates.USDT = 1 / raw.usdt.usd; if(raw.usdc) rates.USDC = 1 / raw.usdc.usd;
 }
 
 async function fetchWorld(){
-  const res = await fetch('https://open.er-api.com/v6/latest/USD');
+  const t = new Date().getTime();
+  const res = await fetch(`https://open.er-api.com/v6/latest/USD?t=${t}`, getNoCacheConfig());
   if(!res.ok) throw new Error('API Mundial caída');
-  const data = await res.json();
-  Object.assign(rates, data.rates);
+  const data = await res.json(); Object.assign(rates, data.rates);
 }
 
 function renderVenezuela(){
   const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
-
-  document.getElementById('val-bcv').textContent = fmt(bcvPrice,2);
-  document.getElementById('val-bcv').classList.remove('skel');
-  document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos';
-  if(bcvPrice!==null) setDelta(document.getElementById('delta-bcv'), prev.bcv!==null ? bcvPrice-prev.bcv : null, prev.bcv ? ((bcvPrice-prev.bcv)/prev.bcv*100) : null);
-
-  document.getElementById('val-paralelo').textContent = fmt(paraPrice,2);
-  document.getElementById('val-paralelo').classList.remove('skel');
-  document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos';
-  if(paraPrice!==null) setDelta(document.getElementById('delta-paralelo'), prev.paralelo!==null ? paraPrice-prev.paralelo : null, prev.paralelo ? ((paraPrice-prev.paralelo)/prev.paralelo*100) : null);
-
-  document.getElementById('val-eur').textContent = fmt(eurPrice,2);
-  document.getElementById('val-eur').classList.remove('skel');
-  document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos';
-  if(eurPrice!==null) setDelta(document.getElementById('delta-eur'), prev.eur!==null ? eurPrice-prev.eur : null, prev.eur ? ((eurPrice-prev.eur)/prev.eur*100) : null);
-
+  document.getElementById('val-bcv').textContent = fmt(bcvPrice,2); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; if(bcvPrice!==null) setDelta(document.getElementById('delta-bcv'), prev.bcv!==null ? bcvPrice-prev.bcv : null, prev.bcv ? ((bcvPrice-prev.bcv)/prev.bcv*100) : null);
+  document.getElementById('val-paralelo').textContent = fmt(paraPrice,2); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; if(paraPrice!==null) setDelta(document.getElementById('delta-paralelo'), prev.paralelo!==null ? paraPrice-prev.paralelo : null, prev.paralelo ? ((paraPrice-prev.paralelo)/prev.paralelo*100) : null);
+  document.getElementById('val-eur').textContent = fmt(eurPrice,2); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; if(eurPrice!==null) setDelta(document.getElementById('delta-eur'), prev.eur!==null ? eurPrice-prev.eur : null, prev.eur ? ((eurPrice-prev.eur)/prev.eur*100) : null);
   const refRate = paraPrice || bcvPrice;
-  if(raw.usdt && refRate){
-    document.getElementById('val-usdt').textContent = fmt(raw.usdt.usd*refRate,2);
-    document.getElementById('val-usdt').classList.remove('skel');
-    setDelta(document.getElementById('delta-usdt'), null, raw.usdt.usd_24h_change);
-  }
-  if(raw.usdc && refRate){
-    document.getElementById('val-usdc').textContent = fmt(raw.usdc.usd*refRate,2);
-    document.getElementById('val-usdc').classList.remove('skel');
-    setDelta(document.getElementById('delta-usdc'), null, raw.usdc.usd_24h_change);
-  }
-  if(bcvPrice && paraPrice){
-    const gap = ((paraPrice-bcvPrice)/bcvPrice)*100;
-    document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap),2) + '%';
-  }
-
+  if(raw.usdt && refRate){ document.getElementById('val-usdt').textContent = fmt(raw.usdt.usd*refRate,2); document.getElementById('val-usdt').classList.remove('skel'); setDelta(document.getElementById('delta-usdt'), null, raw.usdt.usd_24h_change); }
+  if(raw.usdc && refRate){ document.getElementById('val-usdc').textContent = fmt(raw.usdc.usd*refRate,2); document.getElementById('val-usdc').classList.remove('skel'); setDelta(document.getElementById('delta-usdc'), null, raw.usdc.usd_24h_change); }
+  if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap),2) + '%'; }
   const extraCards = { CNY:['val-cny','sub-cny'], TRY:['val-try','sub-try'], RUB:['val-rub','sub-rub'] };
-  Object.keys(extraCards).forEach(code => {
-    const [valId, subId] = extraCards[code];
-    const data = raw.extra && raw.extra[code];
-    document.getElementById(valId).textContent = data ? fmt(data.vesPerUnit,2) : '—';
-    document.getElementById(valId).classList.remove('skel');
-    document.getElementById(subId).textContent = data ? ('BCV Oficial · ' + data.date) : 'No disponible';
-  });
+  Object.keys(extraCards).forEach(code => { const [valId, subId] = extraCards[code]; const data = raw.extra && raw.extra[code]; document.getElementById(valId).textContent = data ? fmt(data.vesPerUnit,2) : '—'; document.getElementById(valId).classList.remove('skel'); document.getElementById(subId).textContent = data ? ('BCV Oficial · ' + data.date) : 'No disponible'; });
 }
 
 function renderRefList(containerId, codes, searchTerm=''){
-  const container = document.getElementById(containerId);
-  const term = searchTerm.trim().toLowerCase();
-  container.innerHTML = '';
-  codes.map(code => CURRENCIES.find(c=>c.code===code))
-    .filter(c => !term || c.code.toLowerCase().includes(term) || c.name.toLowerCase().includes(term))
-    .forEach(c => {
-      const rate = rates[c.code];
-      const card = document.createElement('div');
-      card.className = 'rate-card';
-      card.innerHTML = `<div class="rate-left"><div class="flag">${c.flag}</div>
-          <div class="rate-info"><div class="name">${c.name}</div><div class="sub">${c.code} · por 1 USD</div></div></div>
-        <div class="rate-right"><div class="rate-value">${rate ? fmt(rate) : '···'}</div></div>`;
-      container.appendChild(card);
-    });
+  const container = document.getElementById(containerId); const term = searchTerm.trim().toLowerCase(); container.innerHTML = '';
+  codes.map(code => CURRENCIES.find(c=>c.code===code)).filter(c => !term || c.code.toLowerCase().includes(term) || c.name.toLowerCase().includes(term)).forEach(c => { const rate = rates[c.code]; const card = document.createElement('div'); card.className = 'rate-card'; card.innerHTML = `<div class="rate-left"><div class="flag">${c.flag}</div><div class="rate-info"><div class="name">${c.name}</div><div class="sub">${c.code} · por 1 USD</div></div></div><div class="rate-right"><div class="rate-value">${rate ? fmt(rate) : '···'}</div></div>`; container.appendChild(card); });
 }
 
-function setStatus(ok, message){
-  document.getElementById('statusDot').className = 'dot' + (ok ? '' : ' offline');
-  document.getElementById('updateText').textContent = message;
-}
+function setStatus(ok, message){ document.getElementById('statusDot').className = 'dot' + (ok ? '' : ' offline'); document.getElementById('updateText').textContent = message; }
 
 async function refreshAll(){
-  const btn = document.getElementById('refreshBtn');
-  btn.classList.add('spinning');
-  setStatus(true, 'Actualizando en vivo...');
-  const noteEl = document.getElementById('fallbackNote');
-  noteEl.style.display = 'none';
-  errors = [];
-
+  const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando en vivo...');
+  const noteEl = document.getElementById('fallbackNote'); noteEl.style.display = 'none'; errors = [];
   const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto(), fetchWorld()]);
   const labels = ['Venezuela', 'Cripto', 'Mundo'];
   results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
-  
-  if(errors.length){ 
-    noteEl.style.display='block'; 
-    noteEl.textContent = 'Aviso de conexión: ' + errors.join(' · '); 
-  }
-
-  renderVenezuela();
-  renderRefList('listLatam', LATAM_CODES, document.getElementById('searchLatam').value);
-  renderRefList('listMundo', MUNDO_CODES, document.getElementById('searchMundo').value);
-  updateConverter();
-
+  if(errors.length){ noteEl.style.display='block'; noteEl.textContent = 'Aviso de conexión: ' + errors.join(' · '); }
+  renderVenezuela(); renderRefList('listLatam', LATAM_CODES, document.getElementById('searchLatam').value); renderRefList('listMundo', MUNDO_CODES, document.getElementById('searchMundo').value); updateConverter();
   const timeStr = new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-  setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr);
-  btn.classList.remove('spinning');
+  setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
-/* ---------- eventos ---------- */
-buildSelect(document.getElementById('fromSelect'), 'USD');
-buildSelect(document.getElementById('toSelect'), 'VES_BCV');
-
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
-  });
-});
+buildSelect(document.getElementById('fromSelect'), 'USD'); buildSelect(document.getElementById('toSelect'), 'VES_BCV');
+document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.getElementById('panel-'+tab.dataset.tab).classList.add('active'); }); });
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-document.getElementById('swapBtn').addEventListener('click', () => {
-  const fromSel = document.getElementById('fromSelect'), toSel = document.getElementById('toSelect');
-  const tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp;
-  lastEdited = 'from';
-  updateConverter();
-});
-document.getElementById('fromSelect').addEventListener('change', () => { lastEdited='from'; updateConverter(); });
-document.getElementById('toSelect').addEventListener('change', () => { lastEdited='to'; updateConverter(); });
-document.getElementById('fromAmount').addEventListener('input', () => { lastEdited='from'; updateConverter(); });
-document.getElementById('toAmount').addEventListener('input', () => { lastEdited='to'; updateConverter(); });
-document.getElementById('searchLatam').addEventListener('input', e => renderRefList('listLatam', LATAM_CODES, e.target.value));
-document.getElementById('searchMundo').addEventListener('input', e => renderRefList('listMundo', MUNDO_CODES, e.target.value));
+document.getElementById('swapBtn').addEventListener('click', () => { const fromSel = document.getElementById('fromSelect'), toSel = document.getElementById('toSelect'); const tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp; lastEdited = 'from'; updateConverter(); });
+document.getElementById('fromSelect').addEventListener('change', () => { lastEdited='from'; updateConverter(); }); document.getElementById('toSelect').addEventListener('change', () => { lastEdited='to'; updateConverter(); });
+document.getElementById('fromAmount').addEventListener('input', () => { lastEdited='from'; updateConverter(); }); document.getElementById('toAmount').addEventListener('input', () => { lastEdited='to'; updateConverter(); });
+document.getElementById('searchLatam').addEventListener('input', e => renderRefList('listLatam', LATAM_CODES, e.target.value)); document.getElementById('searchMundo').addEventListener('input', e => renderRefList('listMundo', MUNDO_CODES, e.target.value));
 
 refreshAll();
-
-// Refresco automático cada 60 segundos (tiempo real)
 setInterval(refreshAll, 60 * 1000); 
 </script>
 </body>
