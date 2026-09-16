@@ -18,16 +18,33 @@
   .status-pill{ display:flex; align-items:center; gap:9px; background:var(--surface); border:1px solid rgba(212,175,106,.15); border-radius:999px; padding:10px 18px 10px 14px; font-size:12.5px; color:var(--muted); white-space:nowrap; }
   .dot{ width:7px;height:7px;border-radius:50%; background:var(--up); flex-shrink:0; }
   .dot.offline{ background:var(--down); }
-  .refresh-btn{ width:36px;height:36px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; margin-left:6px; flex-shrink:0; }
+  .refresh-btn{ width:36px;height:36px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; margin-left:6px; flex-shrink:0; transition: transform 0.2s; }
+  .refresh-btn:active { transform: scale(0.9); }
   .refresh-btn.spinning{ animation:spin .8s linear infinite; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
-  .converter{ background:var(--surface); border-radius:var(--radius-lg); padding:32px 28px; border:1px solid rgba(212,175,106,.14); margin-bottom:24px; }
-  .conv-label{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.03em; margin-bottom:10px; }
-  .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; background:var(--surface-2); border-radius:var(--radius-md); padding:16px 20px; }
-  .curr-pick{ display:flex; align-items:center; gap:12px; min-width:0; flex:1; }
+  
+  .converter{ background:var(--surface); border-radius:var(--radius-lg); padding:32px 28px; border:1px solid rgba(212,175,106,.14); margin-bottom:24px; position: relative; }
+  .conv-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .conv-label{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.03em; }
+  .reset-btn { background: rgba(212,175,106,.15); color: var(--gold-soft); border: 1px solid rgba(212,175,106,.3); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.2s ease; }
+  .reset-btn:hover { background: var(--gold); color: #0B2E2C; }
+  
+  .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; background:var(--surface-2); border-radius:var(--radius-md); padding:16px 20px; position: relative; }
+  .curr-pick{ display:flex; align-items:center; gap:12px; min-width:0; flex:1; cursor: pointer; }
   .flag{ width:38px;height:38px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:18px; background:rgba(212,175,106,.1); flex-shrink:0; }
-  select.curr-select{ background:transparent; color:var(--cream); border:none; outline:none; font-family:'Manrope',sans-serif; font-size:15.5px; font-weight:700; cursor:pointer; width:100%; padding:2px 0; }
-  select.curr-select option{ background:var(--surface-2); color:var(--cream); }
+  
+  /* ESTILOS DEL NUEVO MENÚ DESPLEGABLE */
+  .custom-select { position: relative; flex: 1; user-select: none; }
+  .select-selected { display: flex; align-items: center; justify-content: space-between; font-family: 'Manrope', sans-serif; font-size: 15.5px; font-weight: 700; color: var(--cream); width: 100%; }
+  .select-selected .chevron { font-size: 10px; color: var(--gold-soft); transition: transform 0.3s; margin-left: 8px; }
+  .select-selected.active .chevron { transform: rotate(180deg); }
+  .select-items { position: absolute; background-color: var(--surface); border: 1px solid rgba(212,175,106,.2); top: 130%; left: -20px; right: -20px; z-index: 99; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.4); opacity: 1; transform: translateY(0); transition: all 0.2s ease; }
+  .select-hide { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+  .select-item { padding: 14px 20px; cursor: pointer; display: flex; align-items: center; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; color: var(--cream); border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
+  .select-item:last-child { border-bottom: none; }
+  .select-item:hover { background-color: rgba(212,175,106,.15); }
+  .select-item .flag-mini { font-size: 18px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+
   .fixed-label{ font-family:'Manrope',sans-serif; font-size:15.5px; font-weight:700; color:var(--cream); margin-left:4px; }
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:24px; font-weight:500; text-align:right; width:170px; min-width:0; }
   .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:18px 22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; margin-top:24px; }
@@ -35,7 +52,7 @@
   .gap-banner .value{ font-family:'Fraunces', serif; font-size:21px; color:var(--gold-soft); font-weight:600; }
   .fallback-note{ font-size:12px; color:var(--down); background:rgba(226,114,91,.08); border:1px solid rgba(226,114,91,.22); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; line-height:1.5; }
   .section-title{ font-size:13px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; }
-  .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom: 40px; }
   @media (max-width:560px){ .rate-grid{ grid-template-columns:1fr; } }
   .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:18px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; border:1px solid rgba(212,175,106,.08); }
   .rate-left{ display:flex; align-items:center; gap:14px; min-width:0; }
@@ -47,6 +64,14 @@
   .rate-delta.up{ color:var(--up); }
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
+
+  /* MÓDULO EDUCATIVO (INFO) */
+  .info-section { background: var(--surface-2); border-radius: var(--radius-lg); padding: 28px; border: 1px solid rgba(159,201,195,.15); }
+  .info-title { font-family: 'Fraunces', serif; color: var(--gold-soft); font-size: 20px; margin: 0 0 20px 0; font-weight: 600; }
+  .info-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width:560px){ .info-grid{ grid-template-columns: 1fr 1fr 1fr; } }
+  .info-box h4 { margin: 0 0 8px 0; color: var(--cream); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .info-box p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -58,22 +83,32 @@
   </header>
 
   <div class="converter">
-    <div class="conv-label">CONVERTIR A BOLÍVARES</div>
+    <div class="conv-head">
+      <div class="conv-label">CONVERTIR A BOLÍVARES</div>
+      <button class="reset-btn" id="resetBtn" title="Borrar y reiniciar">⟲</button>
+    </div>
     
-    <!-- Fila de Arriba: Solo monedas extranjeras -->
-    <div class="conv-row">
+    <!-- Fila de Arriba: Menú Personalizado Elegante -->
+    <div class="conv-row" id="dropdownTrigger">
       <div class="curr-pick">
         <div class="flag" id="flagFrom">🇺🇸</div>
-        <select class="curr-select" id="fromSelect"></select>
+        <div class="custom-select">
+          <div class="select-selected" id="selectedBox">
+            <span id="selectedName">Dólar Oficial</span>
+            <span class="chevron">▼</span>
+          </div>
+          <!-- La lista desplegable -->
+          <div class="select-items select-hide" id="selectOptions"></div>
+        </div>
       </div>
       <input class="amount-input" id="fromAmount" value="1,00" inputmode="decimal">
     </div>
     
-    <div style="height: 12px;"></div> <!-- Separador visual limpio -->
+    <div style="height: 12px;"></div> <!-- Separador visual -->
     
     <!-- Fila de Abajo: Fija en Bolívares -->
     <div class="conv-row">
-      <div class="curr-pick">
+      <div class="curr-pick" style="cursor: default;">
         <div class="flag">🇻🇪</div>
         <div class="fixed-label">Bolívares (Bs)</div>
       </div>
@@ -94,10 +129,30 @@
       <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC · USD Coin</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div></div>
     </div>
   </div>
+
+  <!-- NUEVO: SECCIÓN INFORMATIVA -->
+  <div class="info-section">
+    <h3 class="info-title">¿Cuál es la diferencia?</h3>
+    <div class="info-grid">
+      <div class="info-box">
+        <h4>💱 Dólar Paralelo</h4>
+        <p>Es el precio real del mercado de la calle en Venezuela. Calculamos este promedio basándonos en los intercambios en vivo de los comerciantes en Binance P2P.</p>
+      </div>
+      <div class="info-box">
+        <h4>₮ USDT (Tether)</h4>
+        <p>Es una criptomoneda "estable" global. Aunque su valor busca ser siempre $1, el mercado mundial le genera micro-variaciones (céntimos). En Venezuela, se cambia usando la tasa paralela.</p>
+      </div>
+      <div class="info-box">
+        <h4>Ⓤ USDC (USD Coin)</h4>
+        <p>Otra criptomoneda "estable" muy segura y auditada en EE.UU. Al igual que el USDT, tiene ligeras variaciones mundiales, pero al convertirla a bolívares se usa la tasa del mercado paralelo.</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// Lista limpia sin Bolívares
+// Lista de monedas (Sin Bolívares)
 const CURRENCIES = [
   {code:'USD', name:'Dólar Oficial', flag:'🇺🇸'}, 
   {code:'EUR', name:'Euro Oficial', flag:'🇪🇺'},
@@ -105,27 +160,61 @@ const CURRENCIES = [
   {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'}
 ];
 
+let activeFromCode = 'USD'; // Moneda por defecto
 let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let errors = [], lastEdited = 'from';
 
+// FUNCIONES DE FORMATEO Y UTILIDAD
 function fmt(n, decimals){ if(n === null || n === undefined || isNaN(n)) return '—'; if(decimals === undefined) decimals = Math.abs(n) < 10 ? 4 : 2; return Number(n).toLocaleString('es-VE', {minimumFractionDigits:decimals, maximumFractionDigits:decimals}); }
 function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
 function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs),2) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct),2)+'%)' : ''); }
 
-function buildSelect(sel, defaultCode){ 
-  sel.innerHTML = ''; 
-  CURRENCIES.forEach(c => { 
-    const opt = document.createElement('option'); 
-    opt.value = c.code; 
-    opt.textContent = c.flag + '  ' + c.name; 
-    sel.appendChild(opt); 
-  }); 
-  sel.value = defaultCode; 
+// CEREBRO DEL MENÚ DESPLEGABLE PERSONALIZADO
+function setupCustomDropdown() {
+  const trigger = document.getElementById('dropdownTrigger');
+  const selectedBox = document.getElementById('selectedBox');
+  const optionsList = document.getElementById('selectOptions');
+  
+  // Construir las opciones
+  optionsList.innerHTML = '';
+  CURRENCIES.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'select-item';
+    item.innerHTML = `<span class="flag-mini">${c.flag}</span> ${c.name}`;
+    
+    // Al hacer clic en una opción
+    item.addEventListener('click', (e) => {
+      e.stopPropagation(); // Evitar que el clic cierre e inmediatamente abra
+      activeFromCode = c.code;
+      document.getElementById('flagFrom').textContent = c.flag;
+      document.getElementById('selectedName').textContent = c.name;
+      optionsList.classList.add('select-hide');
+      selectedBox.classList.remove('active');
+      lastEdited = 'from';
+      updateConverter();
+    });
+    optionsList.appendChild(item);
+  });
+
+  // Abrir/Cerrar al tocar la fila
+  trigger.addEventListener('click', (e) => {
+    // Si tocan el input de escribir, no abrir el menú
+    if(e.target.id === 'fromAmount') return; 
+    optionsList.classList.toggle('select-hide');
+    selectedBox.classList.toggle('active');
+  });
+
+  // Cerrar al tocar en cualquier otra parte de la pantalla
+  document.addEventListener('click', (e) => {
+    if (!trigger.contains(e.target)) {
+      optionsList.classList.add('select-hide');
+      selectedBox.classList.remove('active');
+    }
+  });
 }
 
-function flagFor(code){ return (CURRENCIES.find(c=>c.code===code)||{}).flag || '💱'; }
-
+// CEREBRO DEL CONVERTIDOR
 function convert(amount, fromCode, toCode){ 
   const rf = rates[fromCode], rt = rates[toCode]; 
   if(!rf || !rt || isNaN(amount)) return null; 
@@ -133,17 +222,14 @@ function convert(amount, fromCode, toCode){
 }
 
 function updateConverter(){ 
-  const fromCode = document.getElementById('fromSelect').value;
-  const toCode = 'VES'; // Siempre convierte a Bolívares de forma fija
-  document.getElementById('flagFrom').textContent = flagFor(fromCode); 
-  
+  const toCode = 'VES'; // Fijo
   if(lastEdited === 'from'){ 
     const from = parseFloat(document.getElementById('fromAmount').value.replace(',','.')); 
-    const result = convert(from, fromCode, toCode); 
+    const result = convert(from, activeFromCode, toCode); 
     document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
   } else { 
     const to = parseFloat(document.getElementById('toAmount').value.replace(',','.')); 
-    const result = convert(to, toCode, fromCode); 
+    const result = convert(to, toCode, activeFromCode); 
     document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
   } 
 }
@@ -158,6 +244,7 @@ function calculateRates() {
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
 }
 
+// LECTURA DE APIs
 async function fetchBinanceP2P(){
   const t = new Date().getTime();
   const res = await fetch(`/api/binance?t=${t}`);
@@ -233,10 +320,18 @@ async function refreshAll(){
   setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
-buildSelect(document.getElementById('fromSelect'), 'USDT'); 
-
+// Inicializar página
+setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-document.getElementById('fromSelect').addEventListener('change', () => { lastEdited='from'; updateConverter(); }); 
+
+// BOTÓN DE REINICIO
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('fromAmount').value = '1,00';
+  lastEdited = 'from';
+  updateConverter();
+});
+
+// Eventos de escritura
 document.getElementById('fromAmount').addEventListener('input', () => { lastEdited='from'; updateConverter(); }); 
 document.getElementById('toAmount').addEventListener('input', () => { lastEdited='to'; updateConverter(); });
 
