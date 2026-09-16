@@ -31,15 +31,22 @@
   .reset-btn:active { transform: scale(0.9); }
   
   .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface-2); border-radius:var(--radius-md); padding:14px 16px; position: relative; }
-  .curr-pick{ display:flex; align-items:center; gap:10px; min-width:0; flex:1; cursor: pointer; }
+  .curr-pick-container { display: flex; flex: 1; align-items: center; min-width: 0; }
+  .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; cursor: pointer; }
   .flag{ width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:16px; background:rgba(212,175,106,.1); flex-shrink:0; }
   
-  /* MENÚ DESPLEGABLE ELÁSTICO Y RESPONSIVO */
+  /* BOTÓN SWAP DE INTERCAMBIO */
+  .swap-row { display:flex; justify-content:center; margin:-14px 0; position:relative; z-index:10; }
+  .swap-btn { width:42px; height:42px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:4px solid var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s; }
+  .swap-btn:hover { transform:scale(1.08); }
+  .swap-btn:active { transform:scale(0.9); }
+
+  /* MENÚ DESPLEGABLE */
   .custom-select { position: relative; flex: 1; user-select: none; }
   .select-selected { display: flex; align-items: center; justify-content: space-between; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: var(--cream); width: 100%; }
   .select-selected .chevron { font-size: 10px; color: var(--gold-soft); transition: transform 0.3s; margin-left: 6px; flex-shrink: 0; }
   .select-selected.active .chevron { transform: rotate(180deg); }
-  .select-items { position: absolute; background-color: var(--surface); border: 1px solid rgba(212,175,106,.2); top: calc(100% + 15px); left: -10px; width: 260px; max-width: 85vw; z-index: 99; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 1; transform: translateY(0); transition: all 0.2s ease; }
+  .select-items { position: absolute; background-color: var(--surface); border: 1px solid rgba(212,175,106,.2); top: calc(100% + 15px); left: -10px; width: 260px; max-width: 85vw; max-height: 280px; overflow-y: auto; z-index: 99; border-radius: var(--radius-md); box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 1; transform: translateY(0); transition: all 0.2s ease; }
   .select-hide { opacity: 0; transform: translateY(-10px); pointer-events: none; }
   .select-item { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; font-family: 'Manrope', sans-serif; font-size: 14.5px; font-weight: 600; color: var(--cream); border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
   .select-item:last-child { border-bottom: none; }
@@ -55,6 +62,7 @@
   .gap-banner .label{ font-size:13px; color:var(--muted); }
   .gap-banner .value{ font-family:'Fraunces', serif; font-size:20px; color:var(--gold-soft); font-weight:600; }
   
+  .fallback-note{ font-size:12px; color:var(--down); background:rgba(226,114,91,.08); border:1px solid rgba(226,114,91,.22); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; line-height:1.5; }
   .section-title{ font-size:12px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; }
   .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom: 32px; }
   
@@ -69,14 +77,13 @@
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
 
-  /* MÓDULO EDUCATIVO (INFO) RESPONSIVO */
+  /* MÓDULO EDUCATIVO RESPONSIVO */
   .info-section { background: var(--surface-2); border-radius: var(--radius-lg); padding: 24px; border: 1px solid rgba(159,201,195,.15); }
   .info-title { font-family: 'Fraunces', serif; color: var(--gold-soft); font-size: 18px; margin: 0 0 18px 0; font-weight: 600; }
   .info-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
   .info-box h4 { margin: 0 0 6px 0; color: var(--cream); font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
   .info-box p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
 
-  /* AJUSTES ESPECÍFICOS PARA CELULARES (Redmi Note 13 y similares) */
   @media (max-width:560px){ 
     .wrap { padding: 0 16px; }
     header { padding: 28px 0 20px; }
@@ -89,7 +96,7 @@
     .gap-banner { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
     .gap-banner .value { font-size: 18px; }
     .info-section { padding: 20px 16px; }
-    .select-items { width: calc(100vw - 64px); left: 0; } /* Ajuste perfecto para que no se salga en móviles */
+    .select-items { width: calc(100vw - 64px); left: 0; } 
   }
   @media (min-width:600px){ 
     .info-grid{ grid-template-columns: 1fr 1fr 1fr; gap: 20px; } 
@@ -106,40 +113,48 @@
 
   <div class="converter">
     <div class="conv-head">
-      <div class="conv-label">CONVERTIR A BOLÍVARES</div>
+      <div class="conv-label" id="mainConvLabel">CONVERTIR A BOLÍVARES</div>
       <button class="reset-btn" id="resetBtn" title="Borrar y reiniciar">⟲</button>
     </div>
     
-    <!-- Fila de Arriba: Menú Personalizado Elegante -->
-    <div class="conv-row" id="dropdownTrigger">
-      <div class="curr-pick">
-        <div class="flag" id="flagFrom">🇺🇸</div>
-        <div class="custom-select">
-          <div class="select-selected" id="selectedBox">
-            <span id="selectedName">Dólar Oficial</span>
-            <span class="chevron">▼</span>
+    <!-- Fila 1 -->
+    <div class="conv-row">
+      <div class="curr-pick-container" id="currContainer1">
+        <!-- El Menú Desplegable arranca aquí -->
+        <div id="customSelectWrapper" class="curr-pick">
+          <div class="flag" id="flagFrom">🇺🇸</div>
+          <div class="custom-select" id="dropdownTrigger">
+            <div class="select-selected" id="selectedBox">
+              <span id="selectedName">Dólar Oficial</span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="select-items select-hide" id="selectOptions"></div>
           </div>
-          <!-- La lista desplegable -->
-          <div class="select-items select-hide" id="selectOptions"></div>
         </div>
       </div>
       <input class="amount-input" id="fromAmount" value="1,00" inputmode="decimal">
     </div>
     
-    <div style="height: 10px;"></div> <!-- Separador visual -->
+    <!-- Botón Swap -->
+    <div class="swap-row">
+      <button class="swap-btn" id="swapBtn" title="Invertir conversión">⇅</button>
+    </div>
     
-    <!-- Fila de Abajo: Fija en Bolívares -->
+    <!-- Fila 2 -->
     <div class="conv-row">
-      <div class="curr-pick" style="cursor: default;">
-        <div class="flag">🇻🇪</div>
-        <div class="fixed-label">Bolívares (Bs)</div>
+      <div class="curr-pick-container" id="currContainer2">
+        <!-- Los Bolívares arrancan aquí -->
+        <div id="fixedVesWrapper" class="curr-pick" style="cursor: default;">
+          <div class="flag">🇻🇪</div>
+          <div class="fixed-label">Bolívares (Bs)</div>
+        </div>
       </div>
       <input class="amount-input" id="toAmount" value="—" inputmode="decimal">
     </div>
   </div>
 
   <div class="gap-banner"><div class="label">Brecha BCV / Paralelo</div><div class="value" id="gapValue">—</div></div>
-  <div id="fallbackNote" class="fallback-note" style="display:none; color:var(--down); background:rgba(226,114,91,.08); padding:12px; border-radius:12px; border:1px solid rgba(226,114,91,.22); margin-bottom:20px; font-size:12px;"></div>
+  <div id="fallbackNote" class="fallback-note" style="display:none;"></div>
 
   <div>
     <div class="section-title">MERCADO VENEZOLANO Y CRIPTO</div>
@@ -174,14 +189,17 @@
 </div>
 
 <script>
+// Lista de monedas incluyendo el Paralelo
 const CURRENCIES = [
   {code:'USD', name:'Dólar Oficial', flag:'🇺🇸'}, 
+  {code:'USD_PAR', name:'Dólar Paralelo', flag:'💱'},
   {code:'EUR', name:'Euro Oficial', flag:'🇪🇺'},
   {code:'USDT', name:'USDT · Tether', flag:'₮'}, 
   {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'}
 ];
 
 let activeFromCode = 'USD'; 
+let isSwapped = false; // Variable para saber si la calculadora está invertida
 let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let errors = [], lastEdited = 'from';
@@ -215,7 +233,6 @@ function setupCustomDropdown() {
   });
 
   trigger.addEventListener('click', (e) => {
-    if(e.target.id === 'fromAmount') return; 
     optionsList.classList.toggle('select-hide');
     selectedBox.classList.toggle('active');
   });
@@ -234,15 +251,18 @@ function convert(amount, fromCode, toCode){
   return (amount * rf) / rt;
 }
 
+// CEREBRO INTELIGENTE DEL CONVERTIDOR (Maneja el Swap y los cálculos exactos)
 function updateConverter(){ 
-  const toCode = 'VES'; 
+  const actualFromCode = isSwapped ? 'VES' : activeFromCode;
+  const actualToCode = isSwapped ? activeFromCode : 'VES';
+  
   if(lastEdited === 'from'){ 
     const from = parseFloat(document.getElementById('fromAmount').value.replace(',','.')); 
-    const result = convert(from, activeFromCode, toCode); 
+    const result = convert(from, actualFromCode, actualToCode); 
     document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
   } else { 
     const to = parseFloat(document.getElementById('toAmount').value.replace(',','.')); 
-    const result = convert(to, toCode, activeFromCode); 
+    const result = convert(to, actualToCode, actualFromCode); 
     document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
   } 
 }
@@ -251,11 +271,48 @@ function calculateRates() {
   rates.VES = 1;
   if (raw.bcv) rates.USD = raw.bcv.price; 
   if (raw.eur) rates.EUR = raw.eur.price; 
+  if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; // El nuevo Dólar Paralelo
   
   const refRate = raw.paralelo?.price || raw.bcv?.price; 
   if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
 }
+
+// LÓGICA DEL BOTÓN SWAP
+document.getElementById('swapBtn').addEventListener('click', () => {
+  isSwapped = !isSwapped;
+  const c1 = document.getElementById('currContainer1');
+  const c2 = document.getElementById('currContainer2');
+  const selWrap = document.getElementById('customSelectWrapper');
+  const fixedWrap = document.getElementById('fixedVesWrapper');
+  
+  // Intercambiar visualmente las cajas
+  if(isSwapped) {
+    c1.appendChild(fixedWrap);
+    c2.appendChild(selWrap);
+    document.getElementById('mainConvLabel').textContent = 'CONVERTIR DESDE BOLÍVARES';
+  } else {
+    c1.appendChild(selWrap);
+    c2.appendChild(fixedWrap);
+    document.getElementById('mainConvLabel').textContent = 'CONVERTIR A BOLÍVARES';
+  }
+  
+  // Intercambiar los números que el usuario había escrito
+  const v1 = document.getElementById('fromAmount').value;
+  const v2 = document.getElementById('toAmount').value;
+  document.getElementById('fromAmount').value = v2;
+  document.getElementById('toAmount').value = v1;
+  
+  lastEdited = 'from';
+  updateConverter();
+});
+
+// LÓGICA DEL BOTÓN REINICIO
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('fromAmount').value = '1,00';
+  lastEdited = 'from';
+  updateConverter();
+});
 
 async function fetchBinanceP2P(){
   const t = new Date().getTime();
@@ -332,15 +389,9 @@ async function refreshAll(){
   setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
+// Inicializadores y Eventos
 setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-
-document.getElementById('resetBtn').addEventListener('click', () => {
-  document.getElementById('fromAmount').value = '1,00';
-  lastEdited = 'from';
-  updateConverter();
-});
-
 document.getElementById('fromAmount').addEventListener('input', () => { lastEdited='from'; updateConverter(); }); 
 document.getElementById('toAmount').addEventListener('input', () => { lastEdited='to'; updateConverter(); });
 
