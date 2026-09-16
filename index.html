@@ -35,7 +35,7 @@
   .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; cursor: pointer; }
   .flag{ width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:16px; background:rgba(212,175,106,.1); flex-shrink:0; }
   
-  /* BOTÓN SWAP DE INTERCAMBIO */
+  /* BOTÓN SWAP */
   .swap-row { display:flex; justify-content:center; margin:-14px 0; position:relative; z-index:10; }
   .swap-btn { width:42px; height:42px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:4px solid var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s; }
   .swap-btn:hover { transform:scale(1.08); }
@@ -55,7 +55,6 @@
 
   .fixed-label{ font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:var(--cream); margin-left:2px; }
   
-  /* INPUT FLEXIBLE */
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:45%; min-width:80px; }
   
   .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; margin-top:20px; }
@@ -77,7 +76,7 @@
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
 
-  /* MÓDULO EDUCATIVO RESPONSIVO */
+  /* MÓDULO EDUCATIVO */
   .info-section { background: var(--surface-2); border-radius: var(--radius-lg); padding: 24px; border: 1px solid rgba(159,201,195,.15); }
   .info-title { font-family: 'Fraunces', serif; color: var(--gold-soft); font-size: 18px; margin: 0 0 18px 0; font-weight: 600; }
   .info-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
@@ -117,10 +116,8 @@
       <button class="reset-btn" id="resetBtn" title="Borrar y reiniciar">⟲</button>
     </div>
     
-    <!-- Fila 1 -->
     <div class="conv-row">
       <div class="curr-pick-container" id="currContainer1">
-        <!-- El Menú Desplegable arranca aquí -->
         <div id="customSelectWrapper" class="curr-pick">
           <div class="flag" id="flagFrom">🇺🇸</div>
           <div class="custom-select" id="dropdownTrigger">
@@ -132,18 +129,15 @@
           </div>
         </div>
       </div>
-      <input class="amount-input" id="fromAmount" value="1,00" inputmode="decimal">
+      <input class="amount-input" id="fromAmount" value="1.00" inputmode="decimal">
     </div>
     
-    <!-- Botón Swap -->
     <div class="swap-row">
       <button class="swap-btn" id="swapBtn" title="Invertir conversión">⇅</button>
     </div>
     
-    <!-- Fila 2 -->
     <div class="conv-row">
       <div class="curr-pick-container" id="currContainer2">
-        <!-- Los Bolívares arrancan aquí -->
         <div id="fixedVesWrapper" class="curr-pick" style="cursor: default;">
           <div class="flag">🇻🇪</div>
           <div class="fixed-label">Bolívares (Bs)</div>
@@ -167,7 +161,6 @@
     </div>
   </div>
 
-  <!-- SECCIÓN INFORMATIVA -->
   <div class="info-section">
     <h3 class="info-title">¿Cuál es la diferencia?</h3>
     <div class="info-grid">
@@ -177,7 +170,7 @@
       </div>
       <div class="info-box">
         <h4>₮ USDT (Tether)</h4>
-        <p>Es una criptomoneda "estable" global. Aunque su valor busca ser siempre $1, el mercado mundial le genera micro-variaciones (céntimos). En Venezuela, se cambia usando la tasa paralela.</p>
+        <p>Es una criptomoneda "estable" global. Aunque su valor busca ser siempre $1.00, el mercado mundial le genera micro-variaciones (céntimos). En Venezuela, se cambia usando la tasa paralela.</p>
       </div>
       <div class="info-box">
         <h4>Ⓤ USDC (USD Coin)</h4>
@@ -189,7 +182,6 @@
 </div>
 
 <script>
-// Lista de monedas incluyendo el Paralelo
 const CURRENCIES = [
   {code:'USD', name:'Dólar Oficial', flag:'🇺🇸'}, 
   {code:'USD_PAR', name:'Dólar Paralelo', flag:'💱'},
@@ -199,14 +191,36 @@ const CURRENCIES = [
 ];
 
 let activeFromCode = 'USD'; 
-let isSwapped = false; // Variable para saber si la calculadora está invertida
+let isSwapped = false; 
 let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let errors = [], lastEdited = 'from';
 
-function fmt(n, decimals){ if(n === null || n === undefined || isNaN(n)) return '—'; if(decimals === undefined) decimals = Math.abs(n) < 10 ? 4 : 2; return Number(n).toLocaleString('es-VE', {minimumFractionDigits:decimals, maximumFractionDigits:decimals}); }
+// NUEVO FORMATO DE NÚMEROS: Estilo US (20,000.00)
+function fmt(n){ 
+  if(n === null || n === undefined || isNaN(n)) return '—'; 
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
+}
 function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
-function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs),2) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct),2)+'%)' : ''); }
+function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); }
+
+// TRADUCTOR INTELIGENTE DE PUNTOS Y COMAS (Evita que el Swap se vuelva loco)
+function parseInput(val) {
+  if(!val) return 0;
+  let s = val.toString().trim();
+  const lastComma = s.lastIndexOf(',');
+  const lastDot = s.lastIndexOf('.');
+  
+  if (lastComma > lastDot) {
+    s = s.replace(/\./g, '').replace(',', '.'); // Formato ES (ej. 20.000,00)
+  } else if (lastDot > lastComma && lastComma !== -1) {
+    s = s.replace(/,/g, ''); // Formato US (ej. 20,000.00)
+  } else if (lastComma !== -1) {
+    if (s.length - lastComma - 1 === 3) s = s.replace(/,/g, ''); 
+    else s = s.replace(',', '.');
+  }
+  return parseFloat(s) || 0;
+}
 
 function setupCustomDropdown() {
   const trigger = document.getElementById('dropdownTrigger');
@@ -251,17 +265,17 @@ function convert(amount, fromCode, toCode){
   return (amount * rf) / rt;
 }
 
-// CEREBRO INTELIGENTE DEL CONVERTIDOR (Maneja el Swap y los cálculos exactos)
 function updateConverter(){ 
   const actualFromCode = isSwapped ? 'VES' : activeFromCode;
   const actualToCode = isSwapped ? activeFromCode : 'VES';
   
   if(lastEdited === 'from'){ 
-    const from = parseFloat(document.getElementById('fromAmount').value.replace(',','.')); 
+    // Usamos el parseInput para leer el número sin que se equivoque
+    const from = parseInput(document.getElementById('fromAmount').value); 
     const result = convert(from, actualFromCode, actualToCode); 
     document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
   } else { 
-    const to = parseFloat(document.getElementById('toAmount').value.replace(',','.')); 
+    const to = parseInput(document.getElementById('toAmount').value); 
     const result = convert(to, actualToCode, actualFromCode); 
     document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
   } 
@@ -271,14 +285,13 @@ function calculateRates() {
   rates.VES = 1;
   if (raw.bcv) rates.USD = raw.bcv.price; 
   if (raw.eur) rates.EUR = raw.eur.price; 
-  if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; // El nuevo Dólar Paralelo
+  if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; 
   
   const refRate = raw.paralelo?.price || raw.bcv?.price; 
   if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
 }
 
-// LÓGICA DEL BOTÓN SWAP
 document.getElementById('swapBtn').addEventListener('click', () => {
   isSwapped = !isSwapped;
   const c1 = document.getElementById('currContainer1');
@@ -286,7 +299,6 @@ document.getElementById('swapBtn').addEventListener('click', () => {
   const selWrap = document.getElementById('customSelectWrapper');
   const fixedWrap = document.getElementById('fixedVesWrapper');
   
-  // Intercambiar visualmente las cajas
   if(isSwapped) {
     c1.appendChild(fixedWrap);
     c2.appendChild(selWrap);
@@ -297,19 +309,19 @@ document.getElementById('swapBtn').addEventListener('click', () => {
     document.getElementById('mainConvLabel').textContent = 'CONVERTIR A BOLÍVARES';
   }
   
-  // Intercambiar los números que el usuario había escrito
+  // Al darle al botón, los números se pasan de arriba a abajo idénticos
   const v1 = document.getElementById('fromAmount').value;
   const v2 = document.getElementById('toAmount').value;
   document.getElementById('fromAmount').value = v2;
   document.getElementById('toAmount').value = v1;
   
+  // Refrescamos pero ahora NO se volverá loco gracias al "parseInput"
   lastEdited = 'from';
   updateConverter();
 });
 
-// LÓGICA DEL BOTÓN REINICIO
 document.getElementById('resetBtn').addEventListener('click', () => {
-  document.getElementById('fromAmount').value = '1,00';
+  document.getElementById('fromAmount').value = '1.00';
   lastEdited = 'from';
   updateConverter();
 });
@@ -358,15 +370,15 @@ async function fetchCrypto(){
 function renderVenezuela(){
   const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
   
-  document.getElementById('val-bcv').textContent = fmt(bcvPrice,2); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; if(bcvPrice!==null) setDelta(document.getElementById('delta-bcv'), prev.bcv!==null ? bcvPrice-prev.bcv : null, prev.bcv ? ((bcvPrice-prev.bcv)/prev.bcv*100) : null);
-  document.getElementById('val-paralelo').textContent = fmt(paraPrice,2); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; if(paraPrice!==null) setDelta(document.getElementById('delta-paralelo'), prev.paralelo!==null ? paraPrice-prev.paralelo : null, prev.paralelo ? ((paraPrice-prev.paralelo)/prev.paralelo*100) : null);
-  document.getElementById('val-eur').textContent = fmt(eurPrice,2); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; if(eurPrice!==null) setDelta(document.getElementById('delta-eur'), prev.eur!==null ? eurPrice-prev.eur : null, prev.eur ? ((eurPrice-prev.eur)/prev.eur*100) : null);
+  document.getElementById('val-bcv').textContent = fmt(bcvPrice); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; if(bcvPrice!==null) setDelta(document.getElementById('delta-bcv'), prev.bcv!==null ? bcvPrice-prev.bcv : null, prev.bcv ? ((bcvPrice-prev.bcv)/prev.bcv*100) : null);
+  document.getElementById('val-paralelo').textContent = fmt(paraPrice); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; if(paraPrice!==null) setDelta(document.getElementById('delta-paralelo'), prev.paralelo!==null ? paraPrice-prev.paralelo : null, prev.paralelo ? ((paraPrice-prev.paralelo)/prev.paralelo*100) : null);
+  document.getElementById('val-eur').textContent = fmt(eurPrice); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; if(eurPrice!==null) setDelta(document.getElementById('delta-eur'), prev.eur!==null ? eurPrice-prev.eur : null, prev.eur ? ((eurPrice-prev.eur)/prev.eur*100) : null);
   
   const refRate = paraPrice || bcvPrice;
-  if(raw.usdt && refRate){ document.getElementById('val-usdt').textContent = fmt(raw.usdt.usd*refRate,2); document.getElementById('val-usdt').classList.remove('skel'); setDelta(document.getElementById('delta-usdt'), null, raw.usdt.usd_24h_change); }
-  if(raw.usdc && refRate){ document.getElementById('val-usdc').textContent = fmt(raw.usdc.usd*refRate,2); document.getElementById('val-usdc').classList.remove('skel'); setDelta(document.getElementById('delta-usdc'), null, raw.usdc.usd_24h_change); }
+  if(raw.usdt && refRate){ document.getElementById('val-usdt').textContent = fmt(raw.usdt.usd*refRate); document.getElementById('val-usdt').classList.remove('skel'); setDelta(document.getElementById('delta-usdt'), null, raw.usdt.usd_24h_change); }
+  if(raw.usdc && refRate){ document.getElementById('val-usdc').textContent = fmt(raw.usdc.usd*refRate); document.getElementById('val-usdc').classList.remove('skel'); setDelta(document.getElementById('delta-usdc'), null, raw.usdc.usd_24h_change); }
   
-  if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap),2) + '%'; }
+  if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap)) + '%'; }
 }
 
 function setStatus(ok, message){ document.getElementById('statusDot').className = 'dot' + (ok ? '' : ' offline'); document.getElementById('updateText').textContent = message; }
@@ -389,7 +401,6 @@ async function refreshAll(){
   setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
-// Inicializadores y Eventos
 setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 document.getElementById('fromAmount').addEventListener('input', () => { lastEdited='from'; updateConverter(); }); 
