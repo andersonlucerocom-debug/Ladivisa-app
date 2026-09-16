@@ -63,7 +63,7 @@
   .gap-banner .value{ font-family:'Fraunces', serif; font-size:20px; color:var(--gold-soft); font-weight:600; }
   
   .fallback-note{ font-size:12px; color:var(--down); background:rgba(226,114,91,.08); border:1px solid rgba(226,114,91,.22); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; line-height:1.5; }
-  .section-title{ font-size:12px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; }
+  .section-title{ font-size:12px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
   .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom: 32px; }
   
   .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(212,175,106,.08); }
@@ -77,12 +77,16 @@
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
 
-  /* MÓDULO EDUCATIVO */
   .info-section { background: var(--surface-2); border-radius: var(--radius-lg); padding: 24px; border: 1px solid rgba(159,201,195,.15); }
   .info-title { font-family: 'Fraunces', serif; color: var(--gold-soft); font-size: 18px; margin: 0 0 18px 0; font-weight: 600; }
   .info-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
   .info-box h4 { margin: 0 0 6px 0; color: var(--cream); font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
   .info-box p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+
+  /* SCROLLBAR PARA EL MENÚ */
+  .select-items::-webkit-scrollbar { width: 6px; }
+  .select-items::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+  .select-items::-webkit-scrollbar-thumb { background: rgba(212,175,106,.4); border-radius: 10px; }
 
   @media (max-width:560px){ 
     .wrap { padding: 0 16px; }
@@ -123,14 +127,15 @@
           <div class="flag" id="flagFrom">🇺🇸</div>
           <div class="custom-select" id="dropdownTrigger">
             <div class="select-selected" id="selectedBox">
-              <span id="selectedName">Dólar Oficial</span>
+              <span id="selectedName">Dólar Oficial (BCV)</span>
               <span class="chevron">▼</span>
             </div>
             <div class="select-items select-hide" id="selectOptions"></div>
           </div>
         </div>
       </div>
-      <input class="amount-input" id="fromAmount" value="1.00" inputmode="decimal">
+      <!-- inputmode="numeric" obliga a abrir el teclado de solo números en celulares -->
+      <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric">
     </div>
     
     <div class="swap-row">
@@ -144,7 +149,7 @@
           <div class="fixed-label">Bolívares (Bs)</div>
         </div>
       </div>
-      <input class="amount-input" id="toAmount" value="—" inputmode="decimal">
+      <input class="amount-input" id="toAmount" value="—" inputmode="numeric">
     </div>
   </div>
 
@@ -152,7 +157,7 @@
   <div id="fallbackNote" class="fallback-note" style="display:none;"></div>
 
   <div>
-    <div class="section-title">MERCADO VENEZOLANO Y CRIPTO</div>
+    <div class="section-title">Indicadores Principales</div>
     <div class="rate-grid">
       <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div></div>
@@ -183,21 +188,31 @@
 </div>
 
 <script>
+// LISTA MAESTRA DE MONEDAS: Oficiales del BCV + Criptos + LATAM
 const CURRENCIES = [
-  {code:'USD', name:'Dólar Oficial', flag:'🇺🇸'}, 
+  {code:'USD', name:'Dólar Oficial (BCV)', flag:'🇺🇸'}, 
   {code:'USD_PAR', name:'Dólar Paralelo', flag:'💱'},
-  {code:'EUR', name:'Euro Oficial', flag:'🇪🇺'},
+  {code:'EUR', name:'Euro Oficial (BCV)', flag:'🇪🇺'},
+  {code:'CNY', name:'Yuan Chino (BCV)', flag:'🇨🇳'},
+  {code:'TRY', name:'Lira Turca (BCV)', flag:'🇹🇷'},
+  {code:'RUB', name:'Rublo Ruso (BCV)', flag:'🇷🇺'},
   {code:'USDT', name:'USDT · Tether', flag:'₮'}, 
-  {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'}
+  {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'},
+  {code:'MXN', name:'Peso Mexicano', flag:'🇲🇽'},
+  {code:'PEN', name:'Sol Peruano', flag:'🇵🇪'},
+  {code:'COP', name:'Peso Colombiano', flag:'🇨🇴'},
+  {code:'ARS', name:'Peso Argentino', flag:'🇦🇷'},
+  {code:'UYU', name:'Peso Uruguayo', flag:'🇺🇾'}
 ];
 
 let activeFromCode = 'USD'; 
 let isSwapped = false; 
 let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
+let globalFiatRates = {}; // Aquí guardaremos las tasas mundiales de LATAM, China, Turquía y Rusia
 let errors = [], lastEdited = 'from';
 
-// NÚMEROS ELEGANTES: Siempre terminan en .XX y separan miles con comas
+// FUNCIONES DE FORMATEO
 function fmt(n){ 
   if(n === null || n === undefined || isNaN(n)) return '—'; 
   return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
@@ -205,47 +220,28 @@ function fmt(n){
 function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
 function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); }
 
-// TRADUCTOR EXACTO (Limpia las comas antes de que la máquina calcule)
+// TRADUCTOR EXACTO (Para las matemáticas)
 function parseInput(val) {
   if(!val) return 0;
   let s = val.toString().trim().replace(/,/g, ''); 
   return parseFloat(s) || 0;
 }
 
-// FORMATEA MIENTRAS ESCRIBES: Pone comas, pero te deja libre los decimales
-function formatInputLive(e) {
+// NUEVO SISTEMA DE CAJERO AUTOMÁTICO (Entrada de derecha a izquierda)
+function formatATMInput(e) {
   let val = e.target.value;
-  if(val === '') {
-    lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
-    updateConverter();
-    return;
-  }
+  // Extraemos únicamente los números (ignoramos puntos y comas)
+  let digits = val.replace(/\D/g, '');
+  if (digits === '') digits = '0';
   
-  val = val.replace(/[^0-9.]/g, ''); 
-  let parts = val.split('.');
-  let intPart = parts[0];
+  // Dividimos entre 100 para crear siempre los 2 decimales fijos
+  let num = parseInt(digits, 10) / 100;
   
-  if(intPart !== '') {
-    intPart = BigInt(intPart).toLocaleString('en-US'); 
-  }
-  
-  if (intPart === '' && parts.length > 1) intPart = '0';
-  
-  if(parts.length > 1) {
-    e.target.value = intPart + '.' + parts[1].substring(0, 2); 
-  } else {
-    e.target.value = intPart;
-  }
+  // Re-imprimimos el valor perfecto en pantalla
+  e.target.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   
   lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
   updateConverter();
-}
-
-// MAGIA DE ELEGANCIA (Blur): Si dejas de escribir, te estampa el .00 automático
-function applyStrictFormat(e) {
-  if(e.target.value !== '') {
-    e.target.value = fmt(parseInput(e.target.value));
-  }
 }
 
 function setupCustomDropdown() {
@@ -308,16 +304,28 @@ function updateConverter(){
 
 function calculateRates() {
   rates.VES = 1;
+  // 1. Tasas Base de Venezuela
   if (raw.bcv) rates.USD = raw.bcv.price; 
   if (raw.eur) rates.EUR = raw.eur.price; 
   if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; 
   
+  // 2. Tasas de Criptomonedas (Se cruzan con la tasa más alta en la calle)
   const refRate = raw.paralelo?.price || raw.bcv?.price; 
   if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
+
+  // 3. Tasas Globales (BCV Restante y Latinoamérica cruzado con el Dólar BCV Oficial)
+  const officialUSD = raw.bcv?.price || 1;
+  if (globalFiatRates.CNY) rates.CNY = officialUSD / globalFiatRates.CNY;
+  if (globalFiatRates.TRY) rates.TRY = officialUSD / globalFiatRates.TRY;
+  if (globalFiatRates.RUB) rates.RUB = officialUSD / globalFiatRates.RUB;
+  if (globalFiatRates.MXN) rates.MXN = officialUSD / globalFiatRates.MXN;
+  if (globalFiatRates.PEN) rates.PEN = officialUSD / globalFiatRates.PEN;
+  if (globalFiatRates.COP) rates.COP = officialUSD / globalFiatRates.COP;
+  if (globalFiatRates.ARS) rates.ARS = officialUSD / globalFiatRates.ARS;
+  if (globalFiatRates.UYU) rates.UYU = officialUSD / globalFiatRates.UYU;
 }
 
-// BOTÓN SWAP PERFECTO: Mantiene los formatos y decimales
 document.getElementById('swapBtn').addEventListener('click', () => {
   isSwapped = !isSwapped;
   const c1 = document.getElementById('currContainer1');
@@ -335,11 +343,9 @@ document.getElementById('swapBtn').addEventListener('click', () => {
     document.getElementById('mainConvLabel').textContent = 'CONVERTIR A BOLÍVARES';
   }
   
-  // Extraemos limpio
   const v1 = parseInput(document.getElementById('fromAmount').value);
   const v2 = parseInput(document.getElementById('toAmount').value);
   
-  // Insertamos formateado con pura elegancia
   document.getElementById('fromAmount').value = fmt(v2);
   document.getElementById('toAmount').value = fmt(v1);
   
@@ -353,6 +359,7 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   updateConverter();
 });
 
+// RED DE CONEXIONES (APIs)
 async function fetchBinanceP2P(){
   const t = new Date().getTime();
   const res = await fetch(`/api/binance?t=${t}`);
@@ -394,6 +401,16 @@ async function fetchCrypto(){
   } catch(error) { throw new Error('Fallo al conectar con Cripto'); }
 }
 
+// NUEVA CONEXIÓN PARA EL RESTO DEL MUNDO (China, Turquía, Rusia y LATAM)
+async function fetchGlobalRates(){
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    if(!res.ok) throw new Error('API Global caída');
+    const data = await res.json();
+    globalFiatRates = data.rates;
+  } catch(error) { console.warn('Error en conexión internacional', error); }
+}
+
 function renderVenezuela(){
   const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
   
@@ -414,8 +431,9 @@ async function refreshAll(){
   const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando en vivo...');
   const noteEl = document.getElementById('fallbackNote'); noteEl.style.display = 'none'; errors = [];
   
-  const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto()]);
-  const labels = ['Mercado Nacional', 'Criptomonedas'];
+  // Ahora el sistema consulta VENEZUELA, CRIPTO Y EL RESTO DEL MUNDO al mismo tiempo
+  const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto(), fetchGlobalRates()]);
+  const labels = ['Mercado Nacional', 'Criptomonedas', 'Mercado Internacional'];
   results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
   
   if(errors.length){ noteEl.style.display='block'; noteEl.textContent = 'Aviso de conexión: ' + errors.join(' · '); }
@@ -431,17 +449,12 @@ async function refreshAll(){
 setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 
-// Conectando los eventos
+// Teclado tipo "Cajero Automático"
 const fromInput = document.getElementById('fromAmount');
 const toInput = document.getElementById('toAmount');
 
-// Mientras escribes
-fromInput.addEventListener('input', formatInputLive); 
-toInput.addEventListener('input', formatInputLive);
-
-// La regla de elegancia al soltar la caja (Blur)
-fromInput.addEventListener('blur', applyStrictFormat);
-toInput.addEventListener('blur', applyStrictFormat);
+fromInput.addEventListener('input', formatATMInput); 
+toInput.addEventListener('input', formatATMInput);
 
 refreshAll();
 setInterval(refreshAll, 60 * 1000); 
