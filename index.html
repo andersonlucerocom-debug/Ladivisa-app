@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La Divisa — Tasas de cambio al instante</title><link rel="icon" type="image/png" href="favicon.png">
+
+<title>La Divisa — Tasas de cambio al instante</title>
+<meta name="description" content="Consulta y calcula en tiempo real las tasas de cambio en Venezuela: Dólar BCV, Dólar Paralelo, Euro, USDT, USDC y divisas internacionales.">
+<meta name="keywords" content="dolar bcv, dolar paralelo, binance p2p, tasas venezuela, calculadora divisas, precio dolar hoy">
+<meta name="author" content="La Divisa">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="La Divisa — Tasas de cambio al instante">
+<meta property="og:description" content="Calculadora y tasas precisas: Dólar BCV, Paralelo, Euro, Cripto y monedas de Latinoamérica.">
+<meta property="og:image" content="https://ladivisa-app.vercel.app/favicon.png">
+<meta property="og:url" content="https://ladivisa-app.vercel.app">
+
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -13,9 +26,11 @@
   body{ background:radial-gradient(circle at 15% 0%, #0d3a37 0%, transparent 45%), radial-gradient(circle at 90% 90%, #0a2b29 0%, transparent 55%), var(--bg-page); min-height:100vh; font-family:'Manrope', sans-serif; color:var(--cream); padding:0 0 80px; }
   .wrap{ max-width:760px; margin:0 auto; padding:0 20px; }
   header{ padding:40px 0 24px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  
   .brand .mark{ font-family:'Fraunces', serif; font-weight:600; font-size:34px; color:var(--gold-soft); line-height:1; display:flex; align-items:center; gap:12px; }
-.brand .mark img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+  .brand .mark img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
   .brand .tag{ font-size:13px; color:var(--muted); margin-top:6px; }
+  
   .status-pill{ display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid rgba(212,175,106,.15); border-radius:999px; padding:8px 16px; font-size:12px; color:var(--muted); white-space:nowrap; }
   .dot{ width:7px;height:7px;border-radius:50%; background:var(--up); flex-shrink:0; }
   .dot.offline{ background:var(--down); }
@@ -36,13 +51,11 @@
   .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; cursor: pointer; }
   .flag{ width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:16px; background:rgba(212,175,106,.1); flex-shrink:0; }
   
-  /* BOTÓN SWAP */
   .swap-row { display:flex; justify-content:center; margin:-14px 0; position:relative; z-index:10; }
   .swap-btn { width:42px; height:42px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:4px solid var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s; }
   .swap-btn:hover { transform:scale(1.08); }
   .swap-btn:active { transform:scale(0.9); }
 
-  /* MENÚ DESPLEGABLE */
   .custom-select { position: relative; flex: 1; user-select: none; }
   .select-selected { display: flex; align-items: center; justify-content: space-between; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: var(--cream); width: 100%; }
   .select-selected .chevron { font-size: 10px; color: var(--gold-soft); transition: transform 0.3s; margin-left: 6px; flex-shrink: 0; }
@@ -55,7 +68,6 @@
   .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
   .fixed-label{ font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:var(--cream); margin-left:2px; }
-  
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:55%; min-width:80px; transition: color 0.2s; }
   .amount-input:focus { color: var(--gold-soft); }
   
@@ -78,7 +90,6 @@
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
 
-  /* BOTÓN MOSTRAR MÁS (Acordeón) */
   .toggle-container { display: flex; justify-content: center; margin-bottom: 32px; }
   .toggle-btn { background: transparent; border: 1px solid rgba(212,175,106,.4); color: var(--gold-soft); padding: 12px 24px; border-radius: 999px; font-family: 'Manrope', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
   .toggle-btn:hover { background: rgba(212,175,106,.1); border-color: var(--gold); }
@@ -101,6 +112,7 @@
     .wrap { padding: 0 16px; }
     header { padding: 28px 0 20px; }
     .brand .mark { font-size: 28px; }
+    .brand .mark img { width: 34px; height: 34px; }
     .converter { padding: 20px 16px; }
     .amount-input { font-size: 19px; width: 45%; }
     .select-selected { font-size: 14px; }
@@ -120,7 +132,10 @@
 
 <div class="wrap">
   <header>
-    <div class="brand"><div class="mark"><img src="favicon.png" alt="Logo La Divisa"> La Divisa</div><div class="tag">Tasas de cambio al instante</div></div>
+    <div class="brand">
+      <div class="mark"><img src="favicon.png" alt="Logo La Divisa"> La Divisa</div>
+      <div class="tag">Tasas de cambio al instante</div>
+    </div>
     <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText">Conectando…</span><button class="refresh-btn" id="refreshBtn" title="Actualizar ahora">⟳</button></div>
   </header>
 
@@ -164,7 +179,6 @@
   <div class="gap-banner"><div class="label">Brecha BCV / Paralelo</div><div class="value" id="gapValue">—</div></div>
   <div id="fallbackNote" class="fallback-note" style="display:none;"></div>
 
-  <!-- INDICADORES PRINCIPALES (Siempre visibles) -->
   <div>
     <div class="section-title">Indicadores Principales</div>
     <div class="rate-grid">
@@ -176,12 +190,10 @@
     </div>
   </div>
 
-  <!-- BOTÓN ACORDEÓN -->
   <div class="toggle-container">
     <button class="toggle-btn" id="toggleExtraBtn">Mostrar mercado internacional y LATAM ▼</button>
   </div>
 
-  <!-- BÓVEDA OCULTA (Monedas Internacionales) -->
   <div class="extra-rates" id="extraRatesContainer">
     <div class="section-title">Mercado Internacional y LATAM</div>
     <div class="rate-grid">
@@ -200,19 +212,19 @@
   </div>
 
   <div class="info-section">
-    <h3 class="info-title">¿Cuál es la diferencia?</h3>
+    <h3 class="info-title">Guía rápida de divisas</h3>
     <div class="info-grid">
       <div class="info-box">
         <h4>💱 Dólar Paralelo</h4>
-        <p>Es el precio real del mercado de la calle en Venezuela. Calculamos este promedio basándonos en los intercambios en vivo de los comerciantes en Binance P2P.</p>
+        <p>Es la referencia del mercado informal obtenida del promedio de intercambio comercial en Binance P2P en Venezuela.</p>
       </div>
       <div class="info-box">
         <h4>₮ USDT (Tether)</h4>
-        <p>Es una criptomoneda "estable" global. Aunque su valor busca ser siempre $1.00, el mercado mundial le genera micro-variaciones (céntimos). En Venezuela, se cambia usando la tasa paralela.</p>
+        <p>Criptomoneda que equivale a un dólar digital. A nivel mundial sufre micro-variaciones que se reflejan en su precio exacto en bolívares al cruzarlo con la tasa paralela.</p>
       </div>
       <div class="info-box">
         <h4>Ⓤ USDC (USD Coin)</h4>
-        <p>Otra criptomoneda "estable" muy segura y auditada en EE.UU. Al igual que el USDT, tiene ligeras variaciones mundiales, pero al convertirla a bolívares se usa la tasa del mercado paralelo.</p>
+        <p>Criptomoneda respaldada y auditada en EE.UU. Al igual que el USDT, tiene su propio comportamiento en la bolsa global independiente del billete físico.</p>
       </div>
     </div>
   </div>
@@ -241,7 +253,7 @@ const CURRENCIES = [
 
 let activeFromCode = 'USD'; 
 let isSwapped = false; 
-let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
+let rates = { VES: 1 };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let globalFiatRates = {}; 
 let errors = [], lastEdited = 'from';
@@ -250,15 +262,46 @@ function fmt(n){
   if(n === null || n === undefined || isNaN(n)) return '—'; 
   return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
 }
-function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
-function setDelta(el, changeAbs, changePct){ 
-  if(!el) return;
-  if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ 
-    el.textContent=''; el.className='rate-delta'; return; 
-  } 
-  const up = changeAbs >= 0; 
-  el.className = 'rate-delta ' + (up ? 'up' : 'down'); 
-  el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); 
+
+function fmtDate(iso){ 
+  if(!iso) return ''; 
+  try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}); }
+  catch(e){ return iso; } 
+}
+
+// NUEVO: Función para rastrear la variación guardando en la memoria del navegador
+function updateDeltaTracker(key, newValue) {
+  if (!newValue) return null;
+  let current = localStorage.getItem(key + '_current');
+  let prev = localStorage.getItem(key + '_prev');
+
+  if (!current) {
+    localStorage.setItem(key + '_current', newValue);
+    localStorage.setItem(key + '_prev', newValue);
+    return { prev: newValue, current: newValue };
+  }
+
+  current = parseFloat(current);
+  if (current !== newValue) {
+    localStorage.setItem(key + '_prev', current);
+    localStorage.setItem(key + '_current', newValue);
+    return { prev: current, current: newValue };
+  }
+
+  return { prev: parseFloat(prev || current), current: newValue };
+}
+
+// NUEVO: Función para dibujar la flecha y los bolívares de variación
+function setDeltaUI(el, oldVal, newVal) {
+  if (!el || !oldVal || !newVal || oldVal === newVal) {
+    if(el) { el.textContent = ''; el.className = 'rate-delta'; }
+    return;
+  }
+  let diff = newVal - oldVal;
+  let pct = (diff / oldVal) * 100;
+  const up = diff > 0;
+  el.className = 'rate-delta ' + (up ? 'up' : 'down');
+  el.textContent = (up ? '↑ ' : '↓ ') + fmt(Math.abs(diff)) + ' Bs (' + fmt(Math.abs(pct)) + '%)';
 }
 
 function parseInput(val) {
@@ -341,6 +384,7 @@ function calculateRates() {
   if (raw.eur) rates.EUR = raw.eur.price; 
   if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; 
   
+  // Volvemos a la fórmula mundial cruzada con CoinGecko
   const refRate = raw.paralelo?.price || raw.bcv?.price; 
   if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
@@ -354,7 +398,6 @@ function calculateRates() {
   if (globalFiatRates.COP) rates.COP = officialUSD / globalFiatRates.COP;
   if (globalFiatRates.ARS) rates.ARS = officialUSD / globalFiatRates.ARS;
   if (globalFiatRates.UYU) rates.UYU = officialUSD / globalFiatRates.UYU;
-  // Nuevas Monedas Agregadas
   if (globalFiatRates.BRL) rates.BRL = officialUSD / globalFiatRates.BRL;
   if (globalFiatRates.CLP) rates.CLP = officialUSD / globalFiatRates.CLP;
   if (globalFiatRates.DOP) rates.DOP = officialUSD / globalFiatRates.DOP;
@@ -393,7 +436,6 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   updateConverter();
 });
 
-// Lógica del botón de Acordeón
 const toggleExtraBtn = document.getElementById('toggleExtraBtn');
 const extraRatesContainer = document.getElementById('extraRatesContainer');
 
@@ -429,8 +471,6 @@ async function fetchVenezuela(){
       return { price: p.promedio, last_update: p.fechaActualizacion, source: 'DolarAPI (Respaldo)' };
     });
 
-    prev.bcv = raw.bcv ? raw.bcv.price : null; prev.paralelo = raw.paralelo ? raw.paralelo.price : null; prev.eur = raw.eur ? raw.eur.price : null;
-    
     raw.bcv = { price: oficial.promedio, last_update: oficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.eur = { price: eurOficial.promedio, last_update: eurOficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.paralelo = paraleloData;
@@ -440,7 +480,7 @@ async function fetchVenezuela(){
 async function fetchCrypto(){
   try {
     const t = new Date().getTime();
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&include_24hr_change=true&t=${t}`);
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&t=${t}`);
     if(!res.ok) throw new Error('CoinGecko caído');
     const data = await res.json();
     raw.usdt = data.tether; raw.usdc = data['usd-coin'];
@@ -469,17 +509,29 @@ function renderFiatCard(code, elementId) {
 function renderVenezuela(){
   const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
   
-  document.getElementById('val-bcv').textContent = fmt(bcvPrice); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; if(bcvPrice!==null) setDelta(document.getElementById('delta-bcv'), prev.bcv!==null ? bcvPrice-prev.bcv : null, prev.bcv ? ((bcvPrice-prev.bcv)/prev.bcv*100) : null);
-  document.getElementById('val-paralelo').textContent = fmt(paraPrice); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; if(paraPrice!==null) setDelta(document.getElementById('delta-paralelo'), prev.paralelo!==null ? paraPrice-prev.paralelo : null, prev.paralelo ? ((paraPrice-prev.paralelo)/prev.paralelo*100) : null);
-  document.getElementById('val-eur').textContent = fmt(eurPrice); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; if(eurPrice!==null) setDelta(document.getElementById('delta-eur'), prev.eur!==null ? eurPrice-prev.eur : null, prev.eur ? ((eurPrice-prev.eur)/prev.eur*100) : null);
+  document.getElementById('val-bcv').textContent = fmt(bcvPrice); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; 
+  if(bcvPrice!==null) { let t = updateDeltaTracker('bcv', bcvPrice); setDeltaUI(document.getElementById('delta-bcv'), t.prev, t.current); }
+  
+  document.getElementById('val-paralelo').textContent = fmt(paraPrice); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; 
+  if(paraPrice!==null) { let t = updateDeltaTracker('paralelo', paraPrice); setDeltaUI(document.getElementById('delta-paralelo'), t.prev, t.current); }
+  
+  document.getElementById('val-eur').textContent = fmt(eurPrice); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; 
+  if(eurPrice!==null) { let t = updateDeltaTracker('eur', eurPrice); setDeltaUI(document.getElementById('delta-eur'), t.prev, t.current); }
   
   const refRate = paraPrice || bcvPrice;
-  if(raw.usdt && refRate){ document.getElementById('val-usdt').textContent = fmt(raw.usdt.usd*refRate); document.getElementById('val-usdt').classList.remove('skel'); setDelta(document.getElementById('delta-usdt'), null, raw.usdt.usd_24h_change); }
-  if(raw.usdc && refRate){ document.getElementById('val-usdc').textContent = fmt(raw.usdc.usd*refRate); document.getElementById('val-usdc').classList.remove('skel'); setDelta(document.getElementById('delta-usdc'), null, raw.usdc.usd_24h_change); }
+  if(raw.usdt && refRate){ 
+    const usdtPrice = raw.usdt.usd * refRate;
+    document.getElementById('val-usdt').textContent = fmt(usdtPrice); document.getElementById('val-usdt').classList.remove('skel'); 
+    let t = updateDeltaTracker('usdt', usdtPrice); setDeltaUI(document.getElementById('delta-usdt'), t.prev, t.current);
+  }
+  if(raw.usdc && refRate){ 
+    const usdcPrice = raw.usdc.usd * refRate;
+    document.getElementById('val-usdc').textContent = fmt(usdcPrice); document.getElementById('val-usdc').classList.remove('skel'); 
+    let t = updateDeltaTracker('usdc', usdcPrice); setDeltaUI(document.getElementById('delta-usdc'), t.prev, t.current);
+  }
   
   if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap)) + '%'; }
   
-  // Render de todas las monedas extra
   renderFiatCard('CNY', 'cny');
   renderFiatCard('TRY', 'try');
   renderFiatCard('RUB', 'rub');
@@ -496,9 +548,10 @@ function renderVenezuela(){
 function setStatus(ok, message){ document.getElementById('statusDot').className = 'dot' + (ok ? '' : ' offline'); document.getElementById('updateText').textContent = message; }
 
 async function refreshAll(){
-  const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando en vivo...');
+  const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando...');
   const noteEl = document.getElementById('fallbackNote'); noteEl.style.display = 'none'; errors = [];
   
+  // Incorporamos a CoinGecko de vuelta en la solicitud principal
   const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto(), fetchGlobalRates()]);
   const labels = ['Mercado Nacional', 'Criptomonedas', 'Mercado Internacional'];
   results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
@@ -509,8 +562,8 @@ async function refreshAll(){
   renderVenezuela(); 
   updateConverter();
   
-  const timeStr = new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-  setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'En vivo') + ' · ' + timeStr); btn.classList.remove('spinning');
+  const timeStr = new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit'});
+  setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'Última actualización') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
 setupCustomDropdown();
@@ -523,7 +576,8 @@ fromInput.addEventListener('input', formatATMInput);
 toInput.addEventListener('input', formatATMInput);
 
 refreshAll();
-setInterval(refreshAll, 60 * 1000); 
+// Actualización automática estable cada 60 minutos (1 hora)
+setInterval(refreshAll, 60 * 60 * 1000); 
 </script>
 </body>
 </html>
