@@ -67,7 +67,6 @@
   .select-item:hover { background-color: rgba(212,175,106,.15); }
   .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  .fixed-label{ font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:var(--cream); margin-left:2px; }
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:55%; min-width:80px; transition: color 0.2s; }
   .amount-input:focus { color: var(--gold-soft); }
   
@@ -116,7 +115,6 @@
     .converter { padding: 20px 16px; }
     .amount-input { font-size: 19px; width: 45%; }
     .select-selected { font-size: 14px; }
-    .fixed-label { font-size: 14px; }
     .rate-grid{ grid-template-columns:1fr; } 
     .gap-banner { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
     .gap-banner .value { font-size: 18px; }
@@ -141,20 +139,20 @@
 
   <div class="converter">
     <div class="conv-head">
-      <div class="conv-label" id="mainConvLabel">CONVERTIR A BOLÍVARES</div>
+      <div class="conv-label" id="mainConvLabel">CONVERTIR DIVISAS</div>
       <button class="reset-btn" id="resetBtn" title="Borrar y reiniciar">⟲</button>
     </div>
     
     <div class="conv-row">
-      <div class="curr-pick-container" id="currContainer1">
-        <div id="customSelectWrapper" class="curr-pick">
+      <div class="curr-pick-container">
+        <div id="customSelectWrapperFrom" class="curr-pick">
           <div class="flag" id="flagFrom">🇺🇸</div>
-          <div class="custom-select" id="dropdownTrigger">
-            <div class="select-selected" id="selectedBox">
-              <span id="selectedName">Dólar Oficial (BCV)</span>
+          <div class="custom-select" id="dropdownTriggerFrom">
+            <div class="select-selected" id="selectedBoxFrom">
+              <span id="selectedNameFrom">Dólar Oficial (BCV)</span>
               <span class="chevron">▼</span>
             </div>
-            <div class="select-items select-hide" id="selectOptions"></div>
+            <div class="select-items select-hide" id="selectOptionsFrom"></div>
           </div>
         </div>
       </div>
@@ -162,14 +160,20 @@
     </div>
     
     <div class="swap-row">
-      <button class="swap-btn" id="swapBtn" title="Invertir conversión">⇅</button>
+      <button class="swap-btn" id="swapBtn" title="Invertir monedas">⇅</button>
     </div>
     
     <div class="conv-row">
-      <div class="curr-pick-container" id="currContainer2">
-        <div id="fixedVesWrapper" class="curr-pick" style="cursor: default;">
-          <div class="flag">🇻🇪</div>
-          <div class="fixed-label">Bolívares (Bs)</div>
+      <div class="curr-pick-container">
+        <div id="customSelectWrapperTo" class="curr-pick">
+          <div class="flag" id="flagTo">🇻🇪</div>
+          <div class="custom-select" id="dropdownTriggerTo">
+            <div class="select-selected" id="selectedBoxTo">
+              <span id="selectedNameTo">Bolívares (Bs)</span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="select-items select-hide" id="selectOptionsTo"></div>
+          </div>
         </div>
       </div>
       <input class="amount-input" id="toAmount" value="—" inputmode="numeric">
@@ -233,6 +237,7 @@
 
 <script>
 const CURRENCIES = [
+  {code:'VES', name:'Bolívares (Bs)', flag:'🇻🇪'},
   {code:'USD', name:'Dólar Oficial (BCV)', flag:'🇺🇸'}, 
   {code:'USD_PAR', name:'Dólar Paralelo', flag:'💱'},
   {code:'EUR', name:'Euro Oficial (BCV)', flag:'🇪🇺'},
@@ -252,7 +257,7 @@ const CURRENCIES = [
 ];
 
 let activeFromCode = 'USD'; 
-let isSwapped = false; 
+let activeToCode = 'VES'; 
 let rates = { VES: 1 };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let globalFiatRates = {}; 
@@ -269,7 +274,6 @@ function fmtDate(iso){
   catch(e){ return iso; } 
 }
 
-// NUEVO: Función para rastrear la variación guardando en la memoria del navegador
 function updateDeltaTracker(key, newValue) {
   if (!newValue) return null;
   let current = localStorage.getItem(key + '_current');
@@ -291,7 +295,6 @@ function updateDeltaTracker(key, newValue) {
   return { prev: parseFloat(prev || current), current: newValue };
 }
 
-// NUEVO: Función para dibujar la flecha y los bolívares de variación
 function setDeltaUI(el, oldVal, newVal) {
   if (!el || !oldVal || !newVal || oldVal === newVal) {
     if(el) { el.textContent = ''; el.className = 'rate-delta'; }
@@ -320,10 +323,10 @@ function formatATMInput(e) {
   updateConverter();
 }
 
-function setupCustomDropdown() {
-  const trigger = document.getElementById('dropdownTrigger');
-  const selectedBox = document.getElementById('selectedBox');
-  const optionsList = document.getElementById('selectOptions');
+function setupDropdown(triggerId, boxId, listId, flagId, nameId, isFromType) {
+  const trigger = document.getElementById(triggerId);
+  const selectedBox = document.getElementById(boxId);
+  const optionsList = document.getElementById(listId);
   
   optionsList.innerHTML = '';
   CURRENCIES.forEach(c => {
@@ -333,9 +336,9 @@ function setupCustomDropdown() {
     
     item.addEventListener('click', (e) => {
       e.stopPropagation(); 
-      activeFromCode = c.code;
-      document.getElementById('flagFrom').textContent = c.flag;
-      document.getElementById('selectedName').textContent = c.name;
+      if (isFromType) { activeFromCode = c.code; } else { activeToCode = c.code; }
+      document.getElementById(flagId).textContent = c.flag;
+      document.getElementById(nameId).textContent = c.name;
       optionsList.classList.add('select-hide');
       selectedBox.classList.remove('active');
       lastEdited = 'from';
@@ -345,17 +348,29 @@ function setupCustomDropdown() {
   });
 
   trigger.addEventListener('click', (e) => {
+    const otherListId = isFromType ? 'selectOptionsTo' : 'selectOptionsFrom';
+    const otherBoxId = isFromType ? 'selectedBoxTo' : 'selectedBoxFrom';
+    document.getElementById(otherListId).classList.add('select-hide');
+    document.getElementById(otherBoxId).classList.remove('active');
+
     optionsList.classList.toggle('select-hide');
     selectedBox.classList.toggle('active');
   });
-
-  document.addEventListener('click', (e) => {
-    if (!trigger.contains(e.target)) {
-      optionsList.classList.add('select-hide');
-      selectedBox.classList.remove('active');
-    }
-  });
 }
+
+setupDropdown('dropdownTriggerFrom', 'selectedBoxFrom', 'selectOptionsFrom', 'flagFrom', 'selectedNameFrom', true);
+setupDropdown('dropdownTriggerTo', 'selectedBoxTo', 'selectOptionsTo', 'flagTo', 'selectedNameTo', false);
+
+document.addEventListener('click', (e) => {
+  const tFrom = document.getElementById('dropdownTriggerFrom');
+  const tTo = document.getElementById('dropdownTriggerTo');
+  if (!tFrom.contains(e.target) && !tTo.contains(e.target)) {
+    document.getElementById('selectOptionsFrom').classList.add('select-hide');
+    document.getElementById('selectedBoxFrom').classList.remove('active');
+    document.getElementById('selectOptionsTo').classList.add('select-hide');
+    document.getElementById('selectedBoxTo').classList.remove('active');
+  }
+});
 
 function convert(amount, fromCode, toCode){ 
   const rf = rates[fromCode], rt = rates[toCode]; 
@@ -364,16 +379,13 @@ function convert(amount, fromCode, toCode){
 }
 
 function updateConverter(){ 
-  const actualFromCode = isSwapped ? 'VES' : activeFromCode;
-  const actualToCode = isSwapped ? activeFromCode : 'VES';
-  
   if(lastEdited === 'from'){ 
     const from = parseInput(document.getElementById('fromAmount').value); 
-    const result = convert(from, actualFromCode, actualToCode); 
+    const result = convert(from, activeFromCode, activeToCode); 
     document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
   } else { 
     const to = parseInput(document.getElementById('toAmount').value); 
-    const result = convert(to, actualToCode, actualFromCode); 
+    const result = convert(to, activeToCode, activeFromCode); 
     document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
   } 
 }
@@ -384,7 +396,6 @@ function calculateRates() {
   if (raw.eur) rates.EUR = raw.eur.price; 
   if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; 
   
-  // Volvemos a la fórmula mundial cruzada con CoinGecko
   const refRate = raw.paralelo?.price || raw.bcv?.price; 
   if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
@@ -404,22 +415,18 @@ function calculateRates() {
 }
 
 document.getElementById('swapBtn').addEventListener('click', () => {
-  isSwapped = !isSwapped;
-  const c1 = document.getElementById('currContainer1');
-  const c2 = document.getElementById('currContainer2');
-  const selWrap = document.getElementById('customSelectWrapper');
-  const fixedWrap = document.getElementById('fixedVesWrapper');
-  
-  if(isSwapped) {
-    c1.appendChild(fixedWrap);
-    c2.appendChild(selWrap);
-    document.getElementById('mainConvLabel').textContent = 'CONVERTIR DESDE BOLÍVARES';
-  } else {
-    c1.appendChild(selWrap);
-    c2.appendChild(fixedWrap);
-    document.getElementById('mainConvLabel').textContent = 'CONVERTIR A BOLÍVARES';
-  }
-  
+  const tempCode = activeFromCode;
+  activeFromCode = activeToCode;
+  activeToCode = tempCode;
+
+  const fromC = CURRENCIES.find(c => c.code === activeFromCode);
+  const toC = CURRENCIES.find(c => c.code === activeToCode);
+
+  document.getElementById('flagFrom').textContent = fromC.flag;
+  document.getElementById('selectedNameFrom').textContent = fromC.name;
+  document.getElementById('flagTo').textContent = toC.flag;
+  document.getElementById('selectedNameTo').textContent = toC.name;
+
   const v1 = parseInput(document.getElementById('fromAmount').value);
   const v2 = parseInput(document.getElementById('toAmount').value);
   
@@ -551,7 +558,6 @@ async function refreshAll(){
   const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando...');
   const noteEl = document.getElementById('fallbackNote'); noteEl.style.display = 'none'; errors = [];
   
-  // Incorporamos a CoinGecko de vuelta en la solicitud principal
   const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto(), fetchGlobalRates()]);
   const labels = ['Mercado Nacional', 'Criptomonedas', 'Mercado Internacional'];
   results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
@@ -566,17 +572,10 @@ async function refreshAll(){
   setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'Última actualización') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
-setupCustomDropdown();
-document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-
-const fromInput = document.getElementById('fromAmount');
-const toInput = document.getElementById('toAmount');
-
 fromInput.addEventListener('input', formatATMInput); 
 toInput.addEventListener('input', formatATMInput);
 
 refreshAll();
-// Actualización automática estable cada 60 minutos (1 hora)
 setInterval(refreshAll, 60 * 60 * 1000); 
 </script>
 </body>
