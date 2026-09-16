@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Divisa — Tasas de cambio al instante</title>
+<title>La Divisa — Tasas de cambio al instante</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -55,7 +55,7 @@
 
   .fixed-label{ font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:var(--cream); margin-left:2px; }
   
-  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:45%; min-width:80px; }
+  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:55%; min-width:80px; }
   
   .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; margin-top:20px; }
   .gap-banner .label{ font-size:13px; color:var(--muted); }
@@ -88,7 +88,7 @@
     header { padding: 28px 0 20px; }
     .brand .mark { font-size: 28px; }
     .converter { padding: 20px 16px; }
-    .amount-input { font-size: 19px; width: 40%; }
+    .amount-input { font-size: 19px; width: 45%; }
     .select-selected { font-size: 14px; }
     .fixed-label { font-size: 14px; }
     .rate-grid{ grid-template-columns:1fr; } 
@@ -106,7 +106,7 @@
 
 <div class="wrap">
   <header>
-    <div class="brand"><div class="mark">Divisa</div><div class="tag">Tasas de cambio al instante</div></div>
+    <div class="brand"><div class="mark">La Divisa</div><div class="tag">Tasas de cambio al instante</div></div>
     <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText">Conectando…</span><button class="refresh-btn" id="refreshBtn" title="Actualizar ahora">⟳</button></div>
   </header>
 
@@ -196,7 +196,6 @@ let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let errors = [], lastEdited = 'from';
 
-// NUEVO FORMATO DE NÚMEROS: Estilo US (20,000.00)
 function fmt(n){ 
   if(n === null || n === undefined || isNaN(n)) return '—'; 
   return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
@@ -204,22 +203,41 @@ function fmt(n){
 function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
 function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); }
 
-// TRADUCTOR INTELIGENTE DE PUNTOS Y COMAS (Evita que el Swap se vuelva loco)
+// Parsea el número limpiando comas 
 function parseInput(val) {
   if(!val) return 0;
-  let s = val.toString().trim();
-  const lastComma = s.lastIndexOf(',');
-  const lastDot = s.lastIndexOf('.');
-  
-  if (lastComma > lastDot) {
-    s = s.replace(/\./g, '').replace(',', '.'); // Formato ES (ej. 20.000,00)
-  } else if (lastDot > lastComma && lastComma !== -1) {
-    s = s.replace(/,/g, ''); // Formato US (ej. 20,000.00)
-  } else if (lastComma !== -1) {
-    if (s.length - lastComma - 1 === 3) s = s.replace(/,/g, ''); 
-    else s = s.replace(',', '.');
-  }
+  let s = val.toString().trim().replace(/,/g, ''); 
   return parseFloat(s) || 0;
+}
+
+// FORMATEA EN VIVO MIENTRAS ESCRIBES
+function formatInputLive(e) {
+  let val = e.target.value;
+  if(val === '') {
+    lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
+    updateConverter();
+    return;
+  }
+  
+  val = val.replace(/[^0-9.]/g, ''); // Solo permite números y puntos
+  let parts = val.split('.');
+  let intPart = parts[0];
+  
+  if(intPart !== '') {
+    // Le pone las comitas a los miles al instante
+    intPart = BigInt(intPart).toLocaleString('en-US'); 
+  }
+  
+  if (intPart === '' && parts.length > 1) intPart = '0';
+  
+  if(parts.length > 1) {
+    e.target.value = intPart + '.' + parts[1].substring(0, 2); // Máximo 2 decimales
+  } else {
+    e.target.value = intPart;
+  }
+  
+  lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
+  updateConverter();
 }
 
 function setupCustomDropdown() {
@@ -270,7 +288,6 @@ function updateConverter(){
   const actualToCode = isSwapped ? activeFromCode : 'VES';
   
   if(lastEdited === 'from'){ 
-    // Usamos el parseInput para leer el número sin que se equivoque
     const from = parseInput(document.getElementById('fromAmount').value); 
     const result = convert(from, actualFromCode, actualToCode); 
     document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
@@ -309,13 +326,11 @@ document.getElementById('swapBtn').addEventListener('click', () => {
     document.getElementById('mainConvLabel').textContent = 'CONVERTIR A BOLÍVARES';
   }
   
-  // Al darle al botón, los números se pasan de arriba a abajo idénticos
   const v1 = document.getElementById('fromAmount').value;
   const v2 = document.getElementById('toAmount').value;
   document.getElementById('fromAmount').value = v2;
   document.getElementById('toAmount').value = v1;
   
-  // Refrescamos pero ahora NO se volverá loco gracias al "parseInput"
   lastEdited = 'from';
   updateConverter();
 });
@@ -403,8 +418,10 @@ async function refreshAll(){
 
 setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-document.getElementById('fromAmount').addEventListener('input', () => { lastEdited='from'; updateConverter(); }); 
-document.getElementById('toAmount').addEventListener('input', () => { lastEdited='to'; updateConverter(); });
+
+// Conectamos la función que da formato en vivo a las cajas de texto
+document.getElementById('fromAmount').addEventListener('input', formatInputLive); 
+document.getElementById('toAmount').addEventListener('input', formatInputLive);
 
 refreshAll();
 setInterval(refreshAll, 60 * 1000); 
