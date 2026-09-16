@@ -55,7 +55,8 @@
 
   .fixed-label{ font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:var(--cream); margin-left:2px; }
   
-  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:55%; min-width:80px; }
+  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:55%; min-width:80px; transition: color 0.2s; }
+  .amount-input:focus { color: var(--gold-soft); }
   
   .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; margin-top:20px; }
   .gap-banner .label{ font-size:13px; color:var(--muted); }
@@ -196,6 +197,7 @@ let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let errors = [], lastEdited = 'from';
 
+// NÚMEROS ELEGANTES: Siempre terminan en .XX y separan miles con comas
 function fmt(n){ 
   if(n === null || n === undefined || isNaN(n)) return '—'; 
   return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
@@ -203,14 +205,14 @@ function fmt(n){
 function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
 function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); }
 
-// Parsea el número limpiando comas 
+// TRADUCTOR EXACTO (Limpia las comas antes de que la máquina calcule)
 function parseInput(val) {
   if(!val) return 0;
   let s = val.toString().trim().replace(/,/g, ''); 
   return parseFloat(s) || 0;
 }
 
-// FORMATEA EN VIVO MIENTRAS ESCRIBES
+// FORMATEA MIENTRAS ESCRIBES: Pone comas, pero te deja libre los decimales
 function formatInputLive(e) {
   let val = e.target.value;
   if(val === '') {
@@ -219,25 +221,31 @@ function formatInputLive(e) {
     return;
   }
   
-  val = val.replace(/[^0-9.]/g, ''); // Solo permite números y puntos
+  val = val.replace(/[^0-9.]/g, ''); 
   let parts = val.split('.');
   let intPart = parts[0];
   
   if(intPart !== '') {
-    // Le pone las comitas a los miles al instante
     intPart = BigInt(intPart).toLocaleString('en-US'); 
   }
   
   if (intPart === '' && parts.length > 1) intPart = '0';
   
   if(parts.length > 1) {
-    e.target.value = intPart + '.' + parts[1].substring(0, 2); // Máximo 2 decimales
+    e.target.value = intPart + '.' + parts[1].substring(0, 2); 
   } else {
     e.target.value = intPart;
   }
   
   lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
   updateConverter();
+}
+
+// MAGIA DE ELEGANCIA (Blur): Si dejas de escribir, te estampa el .00 automático
+function applyStrictFormat(e) {
+  if(e.target.value !== '') {
+    e.target.value = fmt(parseInput(e.target.value));
+  }
 }
 
 function setupCustomDropdown() {
@@ -309,6 +317,7 @@ function calculateRates() {
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
 }
 
+// BOTÓN SWAP PERFECTO: Mantiene los formatos y decimales
 document.getElementById('swapBtn').addEventListener('click', () => {
   isSwapped = !isSwapped;
   const c1 = document.getElementById('currContainer1');
@@ -326,10 +335,13 @@ document.getElementById('swapBtn').addEventListener('click', () => {
     document.getElementById('mainConvLabel').textContent = 'CONVERTIR A BOLÍVARES';
   }
   
-  const v1 = document.getElementById('fromAmount').value;
-  const v2 = document.getElementById('toAmount').value;
-  document.getElementById('fromAmount').value = v2;
-  document.getElementById('toAmount').value = v1;
+  // Extraemos limpio
+  const v1 = parseInput(document.getElementById('fromAmount').value);
+  const v2 = parseInput(document.getElementById('toAmount').value);
+  
+  // Insertamos formateado con pura elegancia
+  document.getElementById('fromAmount').value = fmt(v2);
+  document.getElementById('toAmount').value = fmt(v1);
   
   lastEdited = 'from';
   updateConverter();
@@ -419,9 +431,17 @@ async function refreshAll(){
 setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 
-// Conectamos la función que da formato en vivo a las cajas de texto
-document.getElementById('fromAmount').addEventListener('input', formatInputLive); 
-document.getElementById('toAmount').addEventListener('input', formatInputLive);
+// Conectando los eventos
+const fromInput = document.getElementById('fromAmount');
+const toInput = document.getElementById('toAmount');
+
+// Mientras escribes
+fromInput.addEventListener('input', formatInputLive); 
+toInput.addEventListener('input', formatInputLive);
+
+// La regla de elegancia al soltar la caja (Blur)
+fromInput.addEventListener('blur', applyStrictFormat);
+toInput.addEventListener('blur', applyStrictFormat);
 
 refreshAll();
 setInterval(refreshAll, 60 * 1000); 
