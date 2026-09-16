@@ -253,7 +253,7 @@ const CURRENCIES = [
   {code:'COP', name:'Peso Colombiano', flag:'🇨🇴'},
   {code:'DOP', name:'Peso Dominicano', flag:'🇩🇴'},
   {code:'ARS', name:'Peso Argentino', flag:'🇦🇷'},
-  {code:'UYU', name:'Peso Uruguayo', flag:'🇺🇾'}
+  {code:'UYU', name:'Peso Uruguayo', flag:'UY'}
 ];
 
 let activeFromCode = 'USD'; 
@@ -571,6 +571,9 @@ async function refreshAll(){
   const timeStr = new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit'});
   setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'Última actualización') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
+
+const fromInput = document.getElementById('fromAmount');
+const toInput = document.getElementById('toAmount');
 
 fromInput.addEventListener('input', formatATMInput); 
 toInput.addEventListener('input', formatATMInput);
