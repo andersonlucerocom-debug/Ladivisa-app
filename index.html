@@ -134,7 +134,6 @@
           </div>
         </div>
       </div>
-      <!-- inputmode="numeric" obliga a abrir el teclado de solo números en celulares -->
       <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric">
     </div>
     
@@ -159,11 +158,22 @@
   <div>
     <div class="section-title">Indicadores Principales</div>
     <div class="rate-grid">
+      <!-- Tarjetas Originales -->
       <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC · USD Coin</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div></div>
+      
+      <!-- NUEVAS TARJETAS: BCV Y LATAM -->
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇨🇳</div><div class="rate-info"><div class="name">Yuan Chino</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-cny">···</div><div class="rate-delta" id="delta-cny"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇹🇷</div><div class="rate-info"><div class="name">Lira Turca</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-try">···</div><div class="rate-delta" id="delta-try"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇷🇺</div><div class="rate-info"><div class="name">Rublo Ruso</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-rub">···</div><div class="rate-delta" id="delta-rub"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇲🇽</div><div class="rate-info"><div class="name">Peso Mexicano</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-mxn">···</div><div class="rate-delta" id="delta-mxn"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇵🇪</div><div class="rate-info"><div class="name">Sol Peruano</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-pen">···</div><div class="rate-delta" id="delta-pen"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇨🇴</div><div class="rate-info"><div class="name">Peso Colombiano</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-cop">···</div><div class="rate-delta" id="delta-cop"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇦🇷</div><div class="rate-info"><div class="name">Peso Argentino</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-ars">···</div><div class="rate-delta" id="delta-ars"></div></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇾</div><div class="rate-info"><div class="name">Peso Uruguayo</div><div class="sub">En bolívares</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-uyu">···</div><div class="rate-delta" id="delta-uyu"></div></div></div>
     </div>
   </div>
 
@@ -188,7 +198,6 @@
 </div>
 
 <script>
-// LISTA MAESTRA DE MONEDAS: Oficiales del BCV + Criptos + LATAM
 const CURRENCIES = [
   {code:'USD', name:'Dólar Oficial (BCV)', flag:'🇺🇸'}, 
   {code:'USD_PAR', name:'Dólar Paralelo', flag:'💱'},
@@ -209,37 +218,36 @@ let activeFromCode = 'USD';
 let isSwapped = false; 
 let rates = { VES: 1 }, prev = { bcv:null, paralelo:null, eur:null };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
-let globalFiatRates = {}; // Aquí guardaremos las tasas mundiales de LATAM, China, Turquía y Rusia
+let globalFiatRates = {}; 
 let errors = [], lastEdited = 'from';
 
-// FUNCIONES DE FORMATEO
 function fmt(n){ 
   if(n === null || n === undefined || isNaN(n)) return '—'; 
   return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
 }
 function fmtDate(iso){ if(!iso) return ''; try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'}); }catch(e){ return iso; } }
-function setDelta(el, changeAbs, changePct){ if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ el.textContent='Primera lectura'; el.className='rate-delta'; return; } const up = changeAbs >= 0; el.className = 'rate-delta ' + (up ? 'up' : 'down'); el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); }
+function setDelta(el, changeAbs, changePct){ 
+  if(!el) return;
+  if(changeAbs === null || changeAbs === undefined || isNaN(changeAbs)){ 
+    el.textContent=''; el.className='rate-delta'; return; 
+  } 
+  const up = changeAbs >= 0; 
+  el.className = 'rate-delta ' + (up ? 'up' : 'down'); 
+  el.textContent = (up?'↑ ':'↓ ') + fmt(Math.abs(changeAbs)) + (changePct!==undefined && !isNaN(changePct) ? ' ('+fmt(Math.abs(changePct))+'%)' : ''); 
+}
 
-// TRADUCTOR EXACTO (Para las matemáticas)
 function parseInput(val) {
   if(!val) return 0;
   let s = val.toString().trim().replace(/,/g, ''); 
   return parseFloat(s) || 0;
 }
 
-// NUEVO SISTEMA DE CAJERO AUTOMÁTICO (Entrada de derecha a izquierda)
 function formatATMInput(e) {
   let val = e.target.value;
-  // Extraemos únicamente los números (ignoramos puntos y comas)
   let digits = val.replace(/\D/g, '');
   if (digits === '') digits = '0';
-  
-  // Dividimos entre 100 para crear siempre los 2 decimales fijos
   let num = parseInt(digits, 10) / 100;
-  
-  // Re-imprimimos el valor perfecto en pantalla
   e.target.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  
   lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
   updateConverter();
 }
@@ -304,17 +312,14 @@ function updateConverter(){
 
 function calculateRates() {
   rates.VES = 1;
-  // 1. Tasas Base de Venezuela
   if (raw.bcv) rates.USD = raw.bcv.price; 
   if (raw.eur) rates.EUR = raw.eur.price; 
   if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; 
   
-  // 2. Tasas de Criptomonedas (Se cruzan con la tasa más alta en la calle)
   const refRate = raw.paralelo?.price || raw.bcv?.price; 
   if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
   if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
 
-  // 3. Tasas Globales (BCV Restante y Latinoamérica cruzado con el Dólar BCV Oficial)
   const officialUSD = raw.bcv?.price || 1;
   if (globalFiatRates.CNY) rates.CNY = officialUSD / globalFiatRates.CNY;
   if (globalFiatRates.TRY) rates.TRY = officialUSD / globalFiatRates.TRY;
@@ -359,7 +364,6 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   updateConverter();
 });
 
-// RED DE CONEXIONES (APIs)
 async function fetchBinanceP2P(){
   const t = new Date().getTime();
   const res = await fetch(`/api/binance?t=${t}`);
@@ -401,7 +405,6 @@ async function fetchCrypto(){
   } catch(error) { throw new Error('Fallo al conectar con Cripto'); }
 }
 
-// NUEVA CONEXIÓN PARA EL RESTO DEL MUNDO (China, Turquía, Rusia y LATAM)
 async function fetchGlobalRates(){
   try {
     const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
@@ -409,6 +412,16 @@ async function fetchGlobalRates(){
     const data = await res.json();
     globalFiatRates = data.rates;
   } catch(error) { console.warn('Error en conexión internacional', error); }
+}
+
+function renderFiatCard(code, elementId) {
+  const bcvPrice = raw.bcv?.price;
+  if(globalFiatRates[code] && bcvPrice) {
+    const rateInVes = bcvPrice / globalFiatRates[code];
+    document.getElementById(`val-${elementId}`).textContent = fmt(rateInVes);
+    document.getElementById(`val-${elementId}`).classList.remove('skel');
+    document.getElementById(`delta-${elementId}`).textContent = ''; 
+  }
 }
 
 function renderVenezuela(){
@@ -423,6 +436,16 @@ function renderVenezuela(){
   if(raw.usdc && refRate){ document.getElementById('val-usdc').textContent = fmt(raw.usdc.usd*refRate); document.getElementById('val-usdc').classList.remove('skel'); setDelta(document.getElementById('delta-usdc'), null, raw.usdc.usd_24h_change); }
   
   if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap)) + '%'; }
+  
+  // Renderizar las nuevas 8 tarjetas
+  renderFiatCard('CNY', 'cny');
+  renderFiatCard('TRY', 'try');
+  renderFiatCard('RUB', 'rub');
+  renderFiatCard('MXN', 'mxn');
+  renderFiatCard('PEN', 'pen');
+  renderFiatCard('COP', 'cop');
+  renderFiatCard('ARS', 'ars');
+  renderFiatCard('UYU', 'uyu');
 }
 
 function setStatus(ok, message){ document.getElementById('statusDot').className = 'dot' + (ok ? '' : ' offline'); document.getElementById('updateText').textContent = message; }
@@ -431,7 +454,6 @@ async function refreshAll(){
   const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando en vivo...');
   const noteEl = document.getElementById('fallbackNote'); noteEl.style.display = 'none'; errors = [];
   
-  // Ahora el sistema consulta VENEZUELA, CRIPTO Y EL RESTO DEL MUNDO al mismo tiempo
   const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto(), fetchGlobalRates()]);
   const labels = ['Mercado Nacional', 'Criptomonedas', 'Mercado Internacional'];
   results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
@@ -449,7 +471,6 @@ async function refreshAll(){
 setupCustomDropdown();
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 
-// Teclado tipo "Cajero Automático"
 const fromInput = document.getElementById('fromAmount');
 const toInput = document.getElementById('toAmount');
 
