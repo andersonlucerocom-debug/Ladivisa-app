@@ -9,12 +9,19 @@
 <meta name="keywords" content="dolar bcv, dolar paralelo, binance p2p, tasas venezuela, calculadora divisas, precio dolar hoy">
 <meta name="author" content="La Divisa">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#07211f">
 
+<!-- Enlace al Manifest para que sea instalable (PWA) -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Meta etiquetas mejoradas para compartir enlaces -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="La Divisa — Tasas de cambio al instante">
-<meta property="og:description" content="Calculadora y tasas precisas: Dólar BCV, Paralelo, Euro, Cripto y monedas de Latinoamérica.">
+<meta property="og:description" content="Calculadora y tasas precisas en Venezuela: Dólar BCV, Paralelo, Euro y Cripto.">
 <meta property="og:image" content="https://ladivisa-app.vercel.app/favicon.png">
 <meta property="og:url" content="https://ladivisa-app.vercel.app">
+<meta name="twitter:card" content="summary_large_image">
+
 <meta name="google-site-verification" content="HVPO_zZIswpYUq27bWWuQa3RqlGVpgw91iWQezpSHuE" />
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,12 +32,16 @@
   html,body{margin:0;padding:0;overflow-x:hidden;}
   body{ background:radial-gradient(circle at 15% 0%, #0d3a37 0%, transparent 45%), radial-gradient(circle at 90% 90%, #0a2b29 0%, transparent 55%), var(--bg-page); min-height:100vh; font-family:'Manrope', sans-serif; color:var(--cream); padding:0 0 80px; }
   .wrap{ max-width:760px; margin:0 auto; padding:0 20px; }
-  header{ padding:40px 0 24px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
   
+  /* Cabecera y Botón Instalar App */
+  header{ padding:40px 0 24px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .brand-group { display: flex; flex-direction: column; gap: 12px; }
   .brand .mark{ font-family:'Fraunces', serif; font-weight:600; font-size:34px; color:var(--gold-soft); line-height:1; display:flex; align-items:center; gap:12px; }
   .brand .mark img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
   .brand .tag{ font-size:13px; color:var(--muted); margin-top:6px; }
-  
+  .install-btn { display:none; background: var(--gold); color: #0B2E2C; border: none; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); align-items: center; gap: 6px; width: fit-content; transition: transform 0.2s;}
+  .install-btn:active { transform: scale(0.95); }
+
   .status-pill{ display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid rgba(212,175,106,.15); border-radius:999px; padding:8px 16px; font-size:12px; color:var(--muted); white-space:nowrap; }
   .dot{ width:7px;height:7px;border-radius:50%; background:var(--up); flex-shrink:0; }
   .dot.offline{ background:var(--down); }
@@ -67,8 +78,13 @@
   .select-item:hover { background-color: rgba(212,175,106,.15); }
   .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:55%; min-width:80px; transition: color 0.2s; }
+  /* Input y botón copiar */
+  .input-wrapper { display: flex; align-items: center; justify-content: flex-end; width: 55%; gap: 8px; }
+  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:100%; min-width:60px; transition: color 0.2s; }
   .amount-input:focus { color: var(--gold-soft); }
+  .copy-btn { background: rgba(212,175,106,.1); border: 1px solid rgba(212,175,106,.2); color: var(--gold-soft); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-size:16px; }
+  .copy-btn:hover { background: var(--gold); color: #0B2E2C; }
+  .copy-btn:active { transform: scale(0.9); }
   
   .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; margin-top:20px; }
   .gap-banner .label{ font-size:13px; color:var(--muted); }
@@ -113,7 +129,7 @@
     .brand .mark { font-size: 28px; }
     .brand .mark img { width: 34px; height: 34px; }
     .converter { padding: 20px 16px; }
-    .amount-input { font-size: 19px; width: 45%; }
+    .amount-input { font-size: 19px; }
     .select-selected { font-size: 14px; }
     .rate-grid{ grid-template-columns:1fr; } 
     .gap-banner { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -130,9 +146,12 @@
 
 <div class="wrap">
   <header>
-    <div class="brand">
-      <div class="mark"><img src="favicon.png" alt="Logo La Divisa"> La Divisa</div>
-      <div class="tag">Tasas de cambio al instante</div>
+    <div class="brand-group">
+      <div class="brand">
+        <div class="mark"><img src="favicon.png" alt="Logo La Divisa"> La Divisa</div>
+        <div class="tag">Tasas de cambio al instante</div>
+      </div>
+      <button id="installAppBtn" class="install-btn">⬇️ Instalar App Gratis</button>
     </div>
     <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText">Conectando…</span><button class="refresh-btn" id="refreshBtn" title="Actualizar ahora">⟳</button></div>
   </header>
@@ -156,7 +175,7 @@
           </div>
         </div>
       </div>
-      <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric">
+      <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric" style="width: 55%; padding-right: 8px;">
     </div>
     
     <div class="swap-row">
@@ -176,7 +195,10 @@
           </div>
         </div>
       </div>
-      <input class="amount-input" id="toAmount" value="—" inputmode="numeric">
+      <div class="input-wrapper">
+        <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly>
+        <button class="copy-btn" id="copyResultBtn" title="Copiar monto exacto" onclick="copyResult()">📋</button>
+      </div>
     </div>
   </div>
 
@@ -262,6 +284,49 @@ let rates = { VES: 1 };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let globalFiatRates = {}; 
 let errors = [], lastEdited = 'from';
+
+// Funciones PWA (Instalar App)
+let deferredPrompt;
+const installBtn = document.getElementById('installAppBtn');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'flex';
+});
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt !== null) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') { deferredPrompt = null; installBtn.style.display = 'none'; }
+  }
+});
+
+// Función de Copiado a WhatsApp / Portapapeles
+function copyResult() {
+  const fromVal = document.getElementById('fromAmount').value;
+  const fromName = document.getElementById('selectedNameFrom').innerText;
+  const toVal = document.getElementById('toAmount').value;
+  const toName = document.getElementById('selectedNameTo').innerText;
+  
+  const textToCopy = `💱 La Divisa\n${fromVal} ${fromName} = ${toVal} ${toName}\nConsulta en vivo: https://ladivisa-app.vercel.app`;
+  
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    const btn = document.getElementById('copyResultBtn');
+    btn.textContent = '✔️';
+    setTimeout(() => btn.textContent = '📋', 2000);
+  });
+}
+
+// Cargar Memoria al iniciar (Conexión Lenta)
+const savedRaw = localStorage.getItem('ladivisa_raw_data');
+if (savedRaw) {
+  try {
+    raw = JSON.parse(savedRaw);
+    calculateRates();
+    renderVenezuela();
+    updateConverter();
+  } catch(e){}
+}
 
 function fmt(n){ 
   if(n === null || n === undefined || isNaN(n)) return '—'; 
@@ -562,14 +627,20 @@ async function refreshAll(){
   const labels = ['Mercado Nacional', 'Criptomonedas', 'Mercado Internacional'];
   results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
   
-  if(errors.length){ noteEl.style.display='block'; noteEl.textContent = 'Aviso de conexión: ' + errors.join(' · '); }
+  if(errors.length){ 
+    noteEl.style.display='block'; 
+    noteEl.textContent = 'Aviso: Estás viendo precios guardados localmente. Falló la conexión: ' + errors.join(' · '); 
+  } else {
+    // Guardar en memoria si fue exitoso
+    localStorage.setItem('ladivisa_raw_data', JSON.stringify(raw));
+  }
   
   calculateRates();
   renderVenezuela(); 
   updateConverter();
   
   const timeStr = new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit'});
-  setStatus(errors.length===0, (errors.length ? 'Actualizado parcialmente' : 'Última actualización') + ' · ' + timeStr); btn.classList.remove('spinning');
+  setStatus(errors.length===0, (errors.length ? 'Conexión débil' : 'Última actualización') + ' · ' + timeStr); btn.classList.remove('spinning');
 }
 
 const fromInput = document.getElementById('fromAmount');
