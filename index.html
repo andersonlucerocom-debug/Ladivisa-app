@@ -78,8 +78,8 @@
   .select-item:hover { background-color: rgba(212,175,106,.15); }
   .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  /* Input y botón copiar */
-  .input-wrapper { display: flex; align-items: center; justify-content: flex-end; width: 55%; gap: 8px; }
+  /* Input y botones copiar */
+  .input-wrapper { display: flex; align-items: center; justify-content: flex-end; width: 55%; gap: 6px; }
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:100%; min-width:60px; transition: color 0.2s; }
   .amount-input:focus { color: var(--gold-soft); }
   .copy-btn { background: rgba(212,175,106,.1); border: 1px solid rgba(212,175,106,.2); color: var(--gold-soft); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-size:16px; }
@@ -197,7 +197,8 @@
       </div>
       <div class="input-wrapper">
         <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly>
-        <button class="copy-btn" id="copyResultBtn" title="Copiar monto exacto" onclick="copyResult()">📋</button>
+        <button class="copy-btn" id="copyNumberBtn" title="Copiar número para el banco" onclick="copyNumber()">📋</button>
+        <button class="copy-btn" id="copyTextBtn" title="Copiar texto para enviar" onclick="copyText()">📤</button>
       </div>
     </div>
   </div>
@@ -301,8 +302,20 @@ installBtn.addEventListener('click', async () => {
   }
 });
 
-// Función de Copiado a WhatsApp / Portapapeles
-function copyResult() {
+// Función: Copiar solo el número (Para bancos)
+function copyNumber() {
+  const val = document.getElementById('toAmount').value;
+  if(val === '—') return;
+  const cleanVal = val.replace(/,/g, ''); // Quita las comas para el banco
+  navigator.clipboard.writeText(cleanVal).then(() => {
+    const btn = document.getElementById('copyNumberBtn');
+    btn.textContent = '✔️';
+    setTimeout(() => btn.textContent = '📋', 2000);
+  });
+}
+
+// Función: Copiar texto estructurado (Para WhatsApp)
+function copyText() {
   const fromVal = document.getElementById('fromAmount').value;
   const fromName = document.getElementById('selectedNameFrom').innerText;
   const toVal = document.getElementById('toAmount').value;
@@ -311,9 +324,9 @@ function copyResult() {
   const textToCopy = `💱 La Divisa\n${fromVal} ${fromName} = ${toVal} ${toName}\nConsulta en vivo: https://ladivisa-app.vercel.app`;
   
   navigator.clipboard.writeText(textToCopy).then(() => {
-    const btn = document.getElementById('copyResultBtn');
+    const btn = document.getElementById('copyTextBtn');
     btn.textContent = '✔️';
-    setTimeout(() => btn.textContent = '📋', 2000);
+    setTimeout(() => btn.textContent = '📤', 2000);
   });
 }
 
