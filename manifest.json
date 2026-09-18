@@ -1,0 +1,21 @@
+{
+  "name": "La Divisa - Tasas Venezuela",
+  "short_name": "La Divisa",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07211f",
+  "theme_color": "#07211f",
+  "description": "Calculadora y tasas precisas en tiempo real.",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
