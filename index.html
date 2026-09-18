@@ -78,11 +78,13 @@
   .select-item:hover { background-color: rgba(212,175,106,.15); }
   .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  /* Input y botones copiar */
-  .input-wrapper { display: flex; align-items: center; justify-content: flex-end; width: 55%; gap: 6px; }
+  /* Input y botones copiados */
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:100%; min-width:60px; transition: color 0.2s; }
   .amount-input:focus { color: var(--gold-soft); }
-  .copy-btn { background: rgba(212,175,106,.1); border: 1px solid rgba(212,175,106,.2); color: var(--gold-soft); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-size:16px; }
+  
+  /* Contenedor de botones fuera del cuadro del input */
+  .actions-container { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+  .copy-btn { background: rgba(212,175,106,.1); border: 1px solid rgba(212,175,106,.2); color: var(--gold-soft); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-size:16px; }
   .copy-btn:hover { background: var(--gold); color: #0B2E2C; }
   .copy-btn:active { transform: scale(0.9); }
   
@@ -195,11 +197,13 @@
           </div>
         </div>
       </div>
-      <div class="input-wrapper">
-        <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly>
-        <button class="copy-btn" id="copyNumberBtn" title="Copiar número para el banco" onclick="copyNumber()">📋</button>
-        <button class="copy-btn" id="copyTextBtn" title="Copiar texto para enviar" onclick="copyText()">📤</button>
-      </div>
+      <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly style="width: 55%; padding-right: 8px;">
+    </div>
+    
+    <!-- Botones fuera del cuadro gris, alineados a la derecha -->
+    <div class="actions-container">
+      <button class="copy-btn" id="copyNumberBtn" title="Copiar" onclick="copyNumber()">📋</button>
+      <button class="copy-btn" id="copyTextBtn" title="Compartir" onclick="copyText()">📤</button>
     </div>
   </div>
 
