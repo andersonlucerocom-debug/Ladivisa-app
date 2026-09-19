@@ -207,7 +207,8 @@
           </div>
         </div>
       </div>
-      <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly style="width: 55%; padding-right: 8px;">
+      <!-- Aquí quitamos la palabra "readonly" para desbloquear la casilla de abajo -->
+      <input class="amount-input" id="toAmount" value="—" inputmode="numeric" style="width: 55%; padding-right: 8px;">
     </div>
     
     <div class="fast-bills">
@@ -244,7 +245,6 @@
   <div>
     <div class="section-title">Indicadores Principales</div>
     <div class="rate-grid">
-      <!-- Se agregaron los contenedores de Sparklines -->
       <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div><div class="sparkline" id="spark-bcv"></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div><div class="sparkline" id="spark-paralelo"></div></div>
       <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div><div class="sparkline" id="spark-eur"></div></div>
@@ -420,7 +420,6 @@ function updateDeltaTracker(key, newValue) {
   return { prev: parseFloat(prev || current), current: newValue };
 }
 
-// Función generadora del Sparkline (Curvas estéticas SVG)
 function getSparklineSVG(isUp) {
   if(isUp) {
     return `<svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,40 C20,25 35,40 50,20 C70,0 85,25 100,5" fill="none" stroke="var(--up)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
@@ -428,12 +427,11 @@ function getSparklineSVG(isUp) {
   return `<svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,5 C20,20 35,5 50,25 C70,45 85,20 100,35" fill="none" stroke="var(--down)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
 }
 
-// Ajuste para dibujar el Sparkline si hay cambios
 function setDeltaUI(el, oldVal, newVal, sparkId) {
   if (!el || !oldVal || !newVal || oldVal === newVal) {
     if(el) { el.textContent = ''; el.className = 'rate-delta'; }
     if(sparkId && document.getElementById(sparkId)) {
-      document.getElementById(sparkId).innerHTML = getSparklineSVG(true); // Neutral/Default
+      document.getElementById(sparkId).innerHTML = getSparklineSVG(true);
     }
     return;
   }
@@ -443,7 +441,6 @@ function setDeltaUI(el, oldVal, newVal, sparkId) {
   el.className = 'rate-delta ' + (up ? 'up' : 'down');
   el.textContent = (up ? '↑ ' : '↓ ') + fmt(Math.abs(diff)) + ' Bs (' + fmt(Math.abs(pct)) + '%)';
   
-  // Dibujar el mini-gráfico de fondo
   if(sparkId && document.getElementById(sparkId)) {
     document.getElementById(sparkId).innerHTML = getSparklineSVG(up);
   }
@@ -658,7 +655,6 @@ function renderFiatCard(code, elementId) {
 function renderVenezuela(){
   const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
   
-  // Se añade el cuarto parámetro a setDeltaUI para conectar con el contenedor de Sparklines
   document.getElementById('val-bcv').textContent = fmt(bcvPrice); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; 
   if(bcvPrice!==null) { let t = updateDeltaTracker('bcv', bcvPrice); setDeltaUI(document.getElementById('delta-bcv'), t.prev, t.current, 'spark-bcv'); }
   
@@ -726,7 +722,6 @@ const toInput = document.getElementById('toAmount');
 fromInput.addEventListener('input', formatATMInput); 
 toInput.addEventListener('input', formatATMInput);
 
-// ¡AQUÍ ESTÁ LA LÍNEA REPARADA QUE CONECTA EL BOTÓN!
 document.getElementById('refreshBtn').addEventListener('click', refreshAll);
 
 if ('serviceWorker' in navigator) {
