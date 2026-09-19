@@ -183,7 +183,6 @@
           </div>
         </div>
       </div>
-      <!-- inputmode numérico restaurado con formato tipo cajero -->
       <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric" style="width: 55%; padding-right: 8px;">
     </div>
     
@@ -713,6 +712,13 @@ const toInput = document.getElementById('toAmount');
 
 fromInput.addEventListener('input', formatATMInput); 
 toInput.addEventListener('input', formatATMInput);
+
+// Código inyectado para encender el Service Worker (Modo Offline Absoluto)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => console.log('SW falló'));
+  });
+}
 
 refreshAll();
 setInterval(refreshAll, 60 * 60 * 1000); 
