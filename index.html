@@ -102,16 +102,20 @@
   .section-title{ font-size:12px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
   .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom: 20px; }
   
-  .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(212,175,106,.08); }
-  .rate-left{ display:flex; align-items:center; gap:12px; min-width:0; }
+  /* Ajustes para integrar los mini-gráficos sin desordenar */
+  .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(212,175,106,.08); position: relative; overflow: hidden; }
+  .rate-left{ display:flex; align-items:center; gap:12px; min-width:0; position: relative; z-index: 2; }
   .rate-info .name{ font-weight:700; font-size:14px; line-height:1.3; }
   .rate-info .sub{ font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.3; }
-  .rate-right{ text-align:right; flex-shrink:0; }
+  .rate-right{ text-align:right; flex-shrink:0; position: relative; z-index: 2; }
   .rate-value{ font-family:'Fraunces', serif; font-size:17px; font-weight:600; line-height:1.2; }
   .rate-delta{ font-size:11.5px; font-weight:700; margin-top:4px; }
   .rate-delta.up{ color:var(--up); }
   .rate-delta.down{ color:var(--down); }
   .skel{ opacity:.4; }
+  
+  /* Mini-gráficos (Sparklines) */
+  .sparkline { position: absolute; right: 0; bottom: 0; width: 45%; height: 50%; opacity: 0.12; pointer-events: none; z-index: 1; display: flex; align-items: flex-end; justify-content: flex-end; padding-right: 5px; }
 
   .toggle-container { display: flex; justify-content: center; margin-bottom: 32px; }
   .toggle-btn { background: transparent; border: 1px solid rgba(212,175,106,.4); color: var(--gold-soft); padding: 12px 24px; border-radius: 999px; font-family: 'Manrope', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -206,7 +210,6 @@
       <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly style="width: 55%; padding-right: 8px;">
     </div>
     
-    <!-- Botones Billetes Rápidos agregados -->
     <div class="fast-bills">
       <button class="bill-btn" onclick="setFastBill(1)">$1</button>
       <button class="bill-btn" onclick="setFastBill(5)">$5</button>
@@ -216,7 +219,6 @@
       <button class="bill-btn" onclick="setFastBill(100)">$100</button>
     </div>
 
-    <!-- Botones fuera del cuadro gris con íconos vectoriales SVG -->
     <div class="actions-container">
       <button class="copy-btn" id="copyNumberBtn" title="Copiar" onclick="copyNumber()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -242,11 +244,12 @@
   <div>
     <div class="section-title">Indicadores Principales</div>
     <div class="rate-grid">
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">1 USDT en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC · USD Coin</div><div class="sub">1 USDC en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div></div>
+      <!-- Se agregaron los contenedores de Sparklines -->
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div><div class="sparkline" id="spark-bcv"></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div><div class="sparkline" id="spark-paralelo"></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div><div class="sparkline" id="spark-eur"></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">1 USDT en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div><div class="sparkline" id="spark-usdt"></div></div>
+      <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC · USD Coin</div><div class="sub">1 USDC en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div><div class="sparkline" id="spark-usdc"></div></div>
     </div>
   </div>
 
@@ -319,7 +322,6 @@ let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let globalFiatRates = {}; 
 let errors = [], lastEdited = 'from';
 
-// Funciones PWA (Instalar App)
 let deferredPrompt;
 const installBtn = document.getElementById('installAppBtn');
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -335,27 +337,24 @@ installBtn.addEventListener('click', async () => {
   }
 });
 
-// Botones de Billetes Rápidos (Agrega el monto con su formato correcto)
 function setFastBill(amount) {
   document.getElementById('fromAmount').value = amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   lastEdited = 'from';
   updateConverter();
 }
 
-// Función: Copiar solo el número (Para bancos) con SVG
 function copyNumber() {
   const val = document.getElementById('toAmount').value;
   if(val === '—') return;
   const cleanVal = val.replace(/,/g, ''); 
   navigator.clipboard.writeText(cleanVal).then(() => {
     const btn = document.getElementById('copyNumberBtn');
-    const originalHTML = btn.innerHTML; // Guarda el SVG
+    const originalHTML = btn.innerHTML; 
     btn.textContent = '✔️';
-    setTimeout(() => btn.innerHTML = originalHTML, 2000); // Restaura el SVG
+    setTimeout(() => btn.innerHTML = originalHTML, 2000); 
   });
 }
 
-// Función: Menú Nativo de Compartir (Para WhatsApp y más) con SVG
 function copyText() {
   const fromVal = document.getElementById('fromAmount').value;
   const fromName = document.getElementById('selectedNameFrom').innerText;
@@ -364,14 +363,12 @@ function copyText() {
   
   const textToShare = `💱 La Divisa\n${fromVal} ${fromName} = ${toVal} ${toName}\nConsulta en vivo: https://ladivisa-app.vercel.app`;
   
-  // Llama al menú nativo de tu celular
   if (navigator.share) {
     navigator.share({
       title: 'La Divisa',
       text: textToShare
     }).catch(console.error);
   } else {
-    // Si están en una PC vieja sin ese menú, copia el texto como respaldo
     navigator.clipboard.writeText(textToShare).then(() => {
       const btn = document.getElementById('copyTextBtn');
       const originalHTML = btn.innerHTML;
@@ -381,7 +378,6 @@ function copyText() {
   }
 }
 
-// Cargar Memoria al iniciar (Conexión Lenta)
 const savedRaw = localStorage.getItem('ladivisa_raw_data');
 if (savedRaw) {
   try {
@@ -424,9 +420,21 @@ function updateDeltaTracker(key, newValue) {
   return { prev: parseFloat(prev || current), current: newValue };
 }
 
-function setDeltaUI(el, oldVal, newVal) {
+// Función generadora del Sparkline (Curvas estéticas SVG)
+function getSparklineSVG(isUp) {
+  if(isUp) {
+    return `<svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,40 C20,25 35,40 50,20 C70,0 85,25 100,5" fill="none" stroke="var(--up)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+  }
+  return `<svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,5 C20,20 35,5 50,25 C70,45 85,20 100,35" fill="none" stroke="var(--down)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+}
+
+// Ajuste para dibujar el Sparkline si hay cambios
+function setDeltaUI(el, oldVal, newVal, sparkId) {
   if (!el || !oldVal || !newVal || oldVal === newVal) {
     if(el) { el.textContent = ''; el.className = 'rate-delta'; }
+    if(sparkId && document.getElementById(sparkId)) {
+      document.getElementById(sparkId).innerHTML = getSparklineSVG(true); // Neutral/Default
+    }
     return;
   }
   let diff = newVal - oldVal;
@@ -434,6 +442,11 @@ function setDeltaUI(el, oldVal, newVal) {
   const up = diff > 0;
   el.className = 'rate-delta ' + (up ? 'up' : 'down');
   el.textContent = (up ? '↑ ' : '↓ ') + fmt(Math.abs(diff)) + ' Bs (' + fmt(Math.abs(pct)) + '%)';
+  
+  // Dibujar el mini-gráfico de fondo
+  if(sparkId && document.getElementById(sparkId)) {
+    document.getElementById(sparkId).innerHTML = getSparklineSVG(up);
+  }
 }
 
 function parseInput(val) {
@@ -645,25 +658,26 @@ function renderFiatCard(code, elementId) {
 function renderVenezuela(){
   const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
   
+  // Se añade el cuarto parámetro a setDeltaUI para conectar con el contenedor de Sparklines
   document.getElementById('val-bcv').textContent = fmt(bcvPrice); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; 
-  if(bcvPrice!==null) { let t = updateDeltaTracker('bcv', bcvPrice); setDeltaUI(document.getElementById('delta-bcv'), t.prev, t.current); }
+  if(bcvPrice!==null) { let t = updateDeltaTracker('bcv', bcvPrice); setDeltaUI(document.getElementById('delta-bcv'), t.prev, t.current, 'spark-bcv'); }
   
   document.getElementById('val-paralelo').textContent = fmt(paraPrice); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; 
-  if(paraPrice!==null) { let t = updateDeltaTracker('paralelo', paraPrice); setDeltaUI(document.getElementById('delta-paralelo'), t.prev, t.current); }
+  if(paraPrice!==null) { let t = updateDeltaTracker('paralelo', paraPrice); setDeltaUI(document.getElementById('delta-paralelo'), t.prev, t.current, 'spark-paralelo'); }
   
   document.getElementById('val-eur').textContent = fmt(eurPrice); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; 
-  if(eurPrice!==null) { let t = updateDeltaTracker('eur', eurPrice); setDeltaUI(document.getElementById('delta-eur'), t.prev, t.current); }
+  if(eurPrice!==null) { let t = updateDeltaTracker('eur', eurPrice); setDeltaUI(document.getElementById('delta-eur'), t.prev, t.current, 'spark-eur'); }
   
   const refRate = paraPrice || bcvPrice;
   if(raw.usdt && refRate){ 
     const usdtPrice = raw.usdt.usd * refRate;
     document.getElementById('val-usdt').textContent = fmt(usdtPrice); document.getElementById('val-usdt').classList.remove('skel'); 
-    let t = updateDeltaTracker('usdt', usdtPrice); setDeltaUI(document.getElementById('delta-usdt'), t.prev, t.current);
+    let t = updateDeltaTracker('usdt', usdtPrice); setDeltaUI(document.getElementById('delta-usdt'), t.prev, t.current, 'spark-usdt');
   }
   if(raw.usdc && refRate){ 
     const usdcPrice = raw.usdc.usd * refRate;
     document.getElementById('val-usdc').textContent = fmt(usdcPrice); document.getElementById('val-usdc').classList.remove('skel'); 
-    let t = updateDeltaTracker('usdc', usdcPrice); setDeltaUI(document.getElementById('delta-usdc'), t.prev, t.current);
+    let t = updateDeltaTracker('usdc', usdcPrice); setDeltaUI(document.getElementById('delta-usdc'), t.prev, t.current, 'spark-usdc');
   }
   
   if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap)) + '%'; }
@@ -695,7 +709,6 @@ async function refreshAll(){
     noteEl.style.display='block'; 
     noteEl.textContent = 'Aviso: Estás viendo precios guardados localmente. Falló la conexión: ' + errors.join(' · '); 
   } else {
-    // Guardar en memoria si fue exitoso
     localStorage.setItem('ladivisa_raw_data', JSON.stringify(raw));
   }
   
@@ -713,7 +726,6 @@ const toInput = document.getElementById('toAmount');
 fromInput.addEventListener('input', formatATMInput); 
 toInput.addEventListener('input', formatATMInput);
 
-// Código inyectado para encender el Service Worker (Modo Offline Absoluto)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => console.log('SW falló'));
