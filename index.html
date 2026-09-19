@@ -726,6 +726,9 @@ const toInput = document.getElementById('toAmount');
 fromInput.addEventListener('input', formatATMInput); 
 toInput.addEventListener('input', formatATMInput);
 
+// ¡AQUÍ ESTÁ LA LÍNEA REPARADA QUE CONECTA EL BOTÓN!
+document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => console.log('SW falló'));
