@@ -78,7 +78,7 @@
   .select-item:hover { background-color: rgba(212,175,106,.15); }
   .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  /* Input modificado para aceptar matemáticas */
+  /* Input y botones */
   .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:100%; min-width:60px; transition: color 0.2s; }
   .amount-input:focus { color: var(--gold-soft); }
   
@@ -88,7 +88,7 @@
   .bill-btn:hover { background: rgba(212,175,106,.15); border-color: var(--gold); }
   .bill-btn:active { transform: scale(0.9); background: var(--gold); color: #0B2E2C; }
 
-  /* Contenedor de botones fuera del cuadro del input */
+  /* Contenedor de botones SVG */
   .actions-container { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
   .copy-btn { background: rgba(212,175,106,.1); border: 1px solid rgba(212,175,106,.2); color: var(--gold-soft); border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-size:15px; }
   .copy-btn:hover { background: var(--gold); color: #0B2E2C; }
@@ -183,8 +183,8 @@
           </div>
         </div>
       </div>
-      <!-- inputmode en texto para permitir operadores matemáticos -->
-      <input class="amount-input" id="fromAmount" value="1.00" inputmode="text" style="width: 55%; padding-right: 8px;" autocomplete="off">
+      <!-- inputmode numérico restaurado con formato tipo cajero -->
+      <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric" style="width: 55%; padding-right: 8px;">
     </div>
     
     <div class="swap-row">
@@ -204,10 +204,10 @@
           </div>
         </div>
       </div>
-      <input class="amount-input" id="toAmount" value="—" inputmode="text" style="width: 55%; padding-right: 8px;" autocomplete="off">
+      <input class="amount-input" id="toAmount" value="—" inputmode="numeric" readonly style="width: 55%; padding-right: 8px;">
     </div>
     
-    <!-- Botones Billetes Rápidos -->
+    <!-- Botones Billetes Rápidos agregados -->
     <div class="fast-bills">
       <button class="bill-btn" onclick="setFastBill(1)">$1</button>
       <button class="bill-btn" onclick="setFastBill(5)">$5</button>
@@ -217,7 +217,7 @@
       <button class="bill-btn" onclick="setFastBill(100)">$100</button>
     </div>
 
-    <!-- Botones Copiar/Compartir -->
+    <!-- Botones fuera del cuadro gris con íconos vectoriales SVG -->
     <div class="actions-container">
       <button class="copy-btn" id="copyNumberBtn" title="Copiar" onclick="copyNumber()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -320,11 +320,6 @@ let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
 let globalFiatRates = {}; 
 let errors = [], lastEdited = 'from';
 
-// Función para Vibración Háptica (Sensación premium)
-function vib() {
-  if (navigator.vibrate) navigator.vibrate(15);
-}
-
 // Funciones PWA (Instalar App)
 let deferredPrompt;
 const installBtn = document.getElementById('installAppBtn');
@@ -341,33 +336,28 @@ installBtn.addEventListener('click', async () => {
   }
 });
 
-// Botones de Billetes Rápidos
+// Botones de Billetes Rápidos (Agrega el monto con su formato correcto)
 function setFastBill(amount) {
-  vib();
-  document.getElementById('fromAmount').value = amount;
+  document.getElementById('fromAmount').value = amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   lastEdited = 'from';
   updateConverter();
-  // Al tocar un billete, formateamos bonito automáticamente
-  document.getElementById('fromAmount').value = fmt(amount);
 }
 
-// Función: Copiar solo el número
+// Función: Copiar solo el número (Para bancos) con SVG
 function copyNumber() {
-  vib();
   const val = document.getElementById('toAmount').value;
   if(val === '—') return;
   const cleanVal = val.replace(/,/g, ''); 
   navigator.clipboard.writeText(cleanVal).then(() => {
     const btn = document.getElementById('copyNumberBtn');
-    const originalHTML = btn.innerHTML;
+    const originalHTML = btn.innerHTML; // Guarda el SVG
     btn.textContent = '✔️';
-    setTimeout(() => btn.innerHTML = originalHTML, 2000);
+    setTimeout(() => btn.innerHTML = originalHTML, 2000); // Restaura el SVG
   });
 }
 
-// Función: Menú Nativo de Compartir
+// Función: Menú Nativo de Compartir (Para WhatsApp y más) con SVG
 function copyText() {
-  vib();
   const fromVal = document.getElementById('fromAmount').value;
   const fromName = document.getElementById('selectedNameFrom').innerText;
   const toVal = document.getElementById('toAmount').value;
@@ -375,12 +365,14 @@ function copyText() {
   
   const textToShare = `💱 La Divisa\n${fromVal} ${fromName} = ${toVal} ${toName}\nConsulta en vivo: https://ladivisa-app.vercel.app`;
   
+  // Llama al menú nativo de tu celular
   if (navigator.share) {
     navigator.share({
       title: 'La Divisa',
       text: textToShare
     }).catch(console.error);
   } else {
+    // Si están en una PC vieja sin ese menú, copia el texto como respaldo
     navigator.clipboard.writeText(textToShare).then(() => {
       const btn = document.getElementById('copyTextBtn');
       const originalHTML = btn.innerHTML;
@@ -416,17 +408,20 @@ function updateDeltaTracker(key, newValue) {
   if (!newValue) return null;
   let current = localStorage.getItem(key + '_current');
   let prev = localStorage.getItem(key + '_prev');
+
   if (!current) {
     localStorage.setItem(key + '_current', newValue);
     localStorage.setItem(key + '_prev', newValue);
     return { prev: newValue, current: newValue };
   }
+
   current = parseFloat(current);
   if (current !== newValue) {
     localStorage.setItem(key + '_prev', current);
     localStorage.setItem(key + '_current', newValue);
     return { prev: current, current: newValue };
   }
+
   return { prev: parseFloat(prev || current), current: newValue };
 }
 
@@ -442,19 +437,20 @@ function setDeltaUI(el, oldVal, newVal) {
   el.textContent = (up ? '↑ ' : '↓ ') + fmt(Math.abs(diff)) + ' Bs (' + fmt(Math.abs(pct)) + '%)';
 }
 
-// Parseador Matemático Avanzado
-function parseMathInput(val) {
-  if(!val) return null;
-  let s = val.toString().replace(/,/g, ''); 
-  // Solo permite números y operadores matemáticos básicos
-  if (/[^0-9\.\+\-\*\/\(\)\s]/.test(s)) return null;
-  try {
-    // Evalúa la matemática de forma segura
-    let res = new Function('return ' + s)();
-    return (isNaN(res) || !isFinite(res)) ? null : res;
-  } catch(e) {
-    return null; // Si la ecuación está incompleta (ej: "2+")
-  }
+function parseInput(val) {
+  if(!val) return 0;
+  let s = val.toString().trim().replace(/,/g, ''); 
+  return parseFloat(s) || 0;
+}
+
+function formatATMInput(e) {
+  let val = e.target.value;
+  let digits = val.replace(/\D/g, '');
+  if (digits === '') digits = '0';
+  let num = parseInt(digits, 10) / 100;
+  e.target.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
+  updateConverter();
 }
 
 function setupDropdown(triggerId, boxId, listId, flagId, nameId, isFromType) {
@@ -486,6 +482,7 @@ function setupDropdown(triggerId, boxId, listId, flagId, nameId, isFromType) {
     const otherBoxId = isFromType ? 'selectedBoxTo' : 'selectedBoxFrom';
     document.getElementById(otherListId).classList.add('select-hide');
     document.getElementById(otherBoxId).classList.remove('active');
+
     optionsList.classList.toggle('select-hide');
     selectedBox.classList.toggle('active');
   });
@@ -513,21 +510,13 @@ function convert(amount, fromCode, toCode){
 
 function updateConverter(){ 
   if(lastEdited === 'from'){ 
-    const from = parseMathInput(document.getElementById('fromAmount').value); 
-    if (from !== null) {
-      const result = convert(from, activeFromCode, activeToCode); 
-      document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
-    } else {
-      document.getElementById('toAmount').value = '—';
-    }
+    const from = parseInput(document.getElementById('fromAmount').value); 
+    const result = convert(from, activeFromCode, activeToCode); 
+    document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
   } else { 
-    const to = parseMathInput(document.getElementById('toAmount').value); 
-    if (to !== null) {
-      const result = convert(to, activeToCode, activeFromCode); 
-      document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
-    } else {
-      document.getElementById('fromAmount').value = '—';
-    }
+    const to = parseInput(document.getElementById('toAmount').value); 
+    const result = convert(to, activeToCode, activeFromCode); 
+    document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
   } 
 }
 
@@ -556,7 +545,6 @@ function calculateRates() {
 }
 
 document.getElementById('swapBtn').addEventListener('click', () => {
-  vib();
   const tempCode = activeFromCode;
   activeFromCode = activeToCode;
   activeToCode = tempCode;
@@ -569,18 +557,17 @@ document.getElementById('swapBtn').addEventListener('click', () => {
   document.getElementById('flagTo').textContent = toC.flag;
   document.getElementById('selectedNameTo').textContent = toC.name;
 
-  const v1 = parseMathInput(document.getElementById('fromAmount').value);
-  const v2 = parseMathInput(document.getElementById('toAmount').value);
+  const v1 = parseInput(document.getElementById('fromAmount').value);
+  const v2 = parseInput(document.getElementById('toAmount').value);
   
-  document.getElementById('fromAmount').value = v2 !== null ? fmt(v2) : '—';
-  document.getElementById('toAmount').value = v1 !== null ? fmt(v1) : '—';
+  document.getElementById('fromAmount').value = fmt(v2);
+  document.getElementById('toAmount').value = fmt(v1);
   
   lastEdited = 'from';
   updateConverter();
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
-  vib();
   document.getElementById('fromAmount').value = '1.00';
   lastEdited = 'from';
   updateConverter();
@@ -590,7 +577,6 @@ const toggleExtraBtn = document.getElementById('toggleExtraBtn');
 const extraRatesContainer = document.getElementById('extraRatesContainer');
 
 toggleExtraBtn.addEventListener('click', () => {
-  vib();
   extraRatesContainer.classList.toggle('show');
   if(extraRatesContainer.classList.contains('show')) {
     toggleExtraBtn.textContent = 'Ocultar mercado internacional y LATAM ▲';
@@ -725,19 +711,8 @@ async function refreshAll(){
 const fromInput = document.getElementById('fromAmount');
 const toInput = document.getElementById('toAmount');
 
-// Se actualiza la conversión en tiempo real al escribir matemáticas
-fromInput.addEventListener('input', () => { lastEdited = 'from'; updateConverter(); });
-toInput.addEventListener('input', () => { lastEdited = 'to'; updateConverter(); });
-
-// Formatea bonito (con sus comas) cuando haces clic afuera del cuadro
-fromInput.addEventListener('blur', function() { 
-  let val = parseMathInput(this.value);
-  if(val !== null) this.value = fmt(val);
-});
-toInput.addEventListener('blur', function() { 
-  let val = parseMathInput(this.value);
-  if(val !== null) this.value = fmt(val);
-});
+fromInput.addEventListener('input', formatATMInput); 
+toInput.addEventListener('input', formatATMInput);
 
 refreshAll();
 setInterval(refreshAll, 60 * 60 * 1000); 
