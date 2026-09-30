@@ -639,11 +639,22 @@ async function fetchVenezuela(){
 async function fetchCrypto(){
   try {
     const t = new Date().getTime();
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd&t=${t}`);
-    if(!res.ok) throw new Error('CoinGecko caído');
+    const res = await fetch(`/api/crypto?t=${t}`);
+    
+    if(!res.ok) {
+      console.warn('API de Cripto no disponible temporalmente. Usando datos locales si existen.');
+      return; 
+    }
+    
     const data = await res.json();
-    raw.usdt = data.tether; raw.usdc = data['usd-coin'];
-  } catch(error) { throw new Error('Fallo al conectar con Cripto'); }
+    
+    if(data.tether && data['usd-coin']) {
+      raw.usdt = data.tether; 
+      raw.usdc = data['usd-coin'];
+    }
+  } catch(error) { 
+    console.warn('Fallo silencioso en Cripto:', error); 
+  }
 }
 
 async function fetchGlobalRates(){
