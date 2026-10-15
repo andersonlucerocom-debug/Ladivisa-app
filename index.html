@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-VE">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>La Divisa — Tasas de cambio al instante</title>
-<meta name="description" content="Consulta y calcula en tiempo real las tasas de cambio en Venezuela: Dólar BCV, Dólar Paralelo, Euro, USDT, USDC y divisas internacionales.">
-<meta name="keywords" content="dolar bcv, dolar paralelo, binance p2p, tasas venezuela, calculadora divisas, precio dolar hoy">
+<title>La Divisa — Dólar BCV, Paralelo y Promedio hoy en Venezuela</title>
+<meta name="description" content="Consulta y calcula en tiempo real las tasas de cambio en Venezuela: Dólar BCV, Dólar Paralelo, Dólar Promedio, Euro, USDT, USDC y divisas internacionales. Calculadora gratis e instalable.">
+<meta name="keywords" content="dolar bcv, dolar paralelo, dolar promedio, binance p2p, tasas venezuela, calculadora divisas, precio dolar hoy, usdt venezuela, euro bcv">
 <meta name="author" content="La Divisa">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#07211f">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://ladivisa-app.vercel.app/">
+<link rel="alternate" hreflang="es-VE" href="https://ladivisa-app.vercel.app/">
 
 <!-- Optimización PWA para iPhones (iOS Nativo) -->
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="La Divisa">
 <link rel="apple-touch-icon" href="favicon.png">
@@ -20,301 +24,589 @@
 <!-- Enlace al Manifest para que sea instalable en Android -->
 <link rel="manifest" href="manifest.json">
 
-<!-- Meta etiquetas mejoradas para compartir enlaces -->
+<!-- Meta etiquetas para compartir enlaces -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="La Divisa">
+<meta property="og:locale" content="es_VE">
 <meta property="og:title" content="La Divisa — Tasas de cambio al instante">
-<meta property="og:description" content="Calculadora y tasas precisas en Venezuela: Dólar BCV, Paralelo, Euro y Cripto.">
+<meta property="og:description" content="Calculadora y tasas precisas en Venezuela: Dólar BCV, Paralelo, Promedio, Euro y Cripto.">
 <meta property="og:image" content="https://ladivisa-app.vercel.app/favicon.png">
-<meta property="og:url" content="https://ladivisa-app.vercel.app">
+<meta property="og:image:alt" content="Logo de La Divisa">
+<meta property="og:url" content="https://ladivisa-app.vercel.app/">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="La Divisa — Tasas de cambio al instante">
+<meta name="twitter:description" content="Dólar BCV, Paralelo, Promedio, Euro, USDT y USDC en tiempo real.">
+<meta name="twitter:image" content="https://ladivisa-app.vercel.app/favicon.png">
 
 <meta name="google-site-verification" content="HVPO_zZIswpYUq27bWWuQa3RqlGVpgw91iWQezpSHuE" />
 <link rel="icon" type="image/png" href="favicon.png">
 
-<!-- Carga súper rápida de tipografía (Preload) para evitar parpadeos -->
+<!-- Carga rápida de tipografía -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" as="style">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- Datos estructurados (Schema.org JSON-LD): WebApplication + FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://ladivisa-app.vercel.app/#website",
+      "url": "https://ladivisa-app.vercel.app/",
+      "name": "La Divisa",
+      "description": "Tasas de cambio al instante en Venezuela: Dólar BCV, Paralelo, Promedio, Euro, USDT y USDC.",
+      "inLanguage": "es-VE"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://ladivisa-app.vercel.app/#app",
+      "name": "La Divisa",
+      "alternateName": "La Divisa — Calculadora de tasas de cambio de Venezuela",
+      "url": "https://ladivisa-app.vercel.app/",
+      "description": "Calculadora y monitor de tasas de cambio en tiempo real para Venezuela: Dólar BCV, Dólar Paralelo (Binance P2P), Dólar Promedio, Euro, USDT, USDC y divisas de Latinoamérica y el mundo.",
+      "applicationCategory": "FinanceApplication",
+      "applicationSubCategory": "Calculadora de divisas",
+      "operatingSystem": "Web, Android, iOS",
+      "browserRequirements": "Requiere JavaScript",
+      "inLanguage": "es-VE",
+      "isAccessibleForFree": true,
+      "image": "https://ladivisa-app.vercel.app/favicon.png",
+      "areaServed": { "@type": "Country", "name": "Venezuela" },
+      "audience": { "@type": "Audience", "audienceType": "Personas y comerciantes en Venezuela", "geographicArea": { "@type": "Country", "name": "Venezuela" } },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+      "featureList": [
+        "Tasa del Dólar BCV (oficial) en tiempo real",
+        "Dólar Paralelo según Binance P2P",
+        "Dólar Promedio entre BCV y Paralelo",
+        "Euro oficial, USDT y USDC en bolívares",
+        "Calculadora entre más de 15 divisas",
+        "Cotización múltiple lista para WhatsApp",
+        "Instalable como aplicación (PWA) en Android e iPhone"
+      ],
+      "isPartOf": { "@id": "https://ladivisa-app.vercel.app/#website" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://ladivisa-app.vercel.app/#faq",
+      "inLanguage": "es-VE",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es el Dólar BCV?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Es la tasa oficial de referencia del dólar publicada por el Banco Central de Venezuela (BCV). Se utiliza como base para operaciones reguladas, facturación y precios referenciados al dólar oficial." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué es el Dólar Paralelo?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Es la referencia del mercado informal obtenida del promedio de intercambio comercial en Binance P2P en Venezuela." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué es el Dólar Promedio?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Es la media aritmética entre la tasa del Dólar BCV y la del Dólar Paralelo. Sirve como referencia intermedia al fijar precios o negociar." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué es la brecha cambiaria entre el BCV y el Paralelo?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Es la diferencia porcentual entre el Dólar Paralelo y el Dólar BCV. Si el paralelo cuesta más que el oficial, la brecha es positiva." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué es el USDT (Tether)?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Es una criptomoneda que equivale a un dólar digital. A nivel mundial sufre micro-variaciones que se reflejan en su precio exacto en bolívares al cruzarlo con la tasa paralela." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué es el USDC (USD Coin)?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Es una criptomoneda respaldada y auditada en EE.UU. Al igual que el USDT, tiene su propio comportamiento en la bolsa global independiente del billete físico." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo uso la calculadora de La Divisa?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Elige la moneda de origen y la de destino, escribe o pega un monto (o toca un botón de monto rápido) y verás el resultado al instante. También puedes tocar cualquier tarjeta de tasa para convertir esa moneda." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cada cuánto se actualizan las tasas?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Las tasas se actualizan al abrir la página, automáticamente cada hora y cada vez que pulsas el botón de actualizar." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo instalar La Divisa en mi teléfono?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Sí. En Android pulsa el botón Instalar App. En iPhone abre la página en Safari y elige Compartir, luego Agregar a inicio." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
 <style>
-  :root{ --bg-page:#07211f; --bg-deep:#0B2E2C; --surface:#123F3C; --surface-2:#164A46; --gold:#D4AF6A; --gold-soft:#E8D2A0; --cream:#F5F1E8; --muted:#9FC9C3; --up:#6FCF97; --down:#E2725B; --radius-lg:28px; --radius-md:18px; --radius-sm:12px; }
+  :root{
+    --bg-page:#07211f; --bg-deep:#0B2E2C; --surface:#123F3C; --surface-2:#164A46;
+    --gold:#D4AF6A; --gold-soft:#E8D2A0; --cream:#F5F1E8; --muted:#9FC9C3;
+    --up:#6FCF97; --down:#E2725B;
+    --line:rgba(212,175,106,.14); --line-strong:rgba(212,175,106,.32);
+    --radius-lg:28px; --radius-md:18px; --radius-sm:12px;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;overflow-x:hidden;}
-  body{ background:radial-gradient(circle at 15% 0%, #0d3a37 0%, transparent 45%), radial-gradient(circle at 90% 90%, #0a2b29 0%, transparent 55%), var(--bg-page); min-height:100vh; font-family:'Manrope', sans-serif; color:var(--cream); padding:0 0 80px; }
-  .wrap{ max-width:760px; margin:0 auto; padding:0 20px; }
-  
-  /* Cabecera y Botón Instalar App */
-  header{ padding:40px 0 24px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
-  .brand-group { display: flex; flex-direction: column; gap: 12px; }
-  .brand .mark{ font-family:'Fraunces', serif; font-weight:600; font-size:34px; color:var(--gold-soft); line-height:1; display:flex; align-items:center; gap:12px; }
-  .brand .mark img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-  .brand .tag{ font-size:13px; color:var(--muted); margin-top:6px; }
-  .install-btn { display:none; background: var(--gold); color: #0B2E2C; border: none; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); align-items: center; gap: 6px; width: fit-content; transition: transform 0.2s;}
-  .install-btn:active { transform: scale(0.95); }
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    background:radial-gradient(circle at 15% 0%, #0d3a37 0%, transparent 45%), radial-gradient(circle at 90% 90%, #0a2b29 0%, transparent 55%), var(--bg-page);
+    background-attachment:fixed;
+    min-height:100vh; font-family:'Manrope', sans-serif; color:var(--cream);
+    padding:0 0 calc(40px + env(safe-area-inset-bottom));
+  }
+  .wrap{ max-width:800px; margin:0 auto; padding:0 20px; }
+  a{color:var(--gold-soft);}
+  button{font-family:inherit;}
 
-  .status-pill{ display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid rgba(212,175,106,.15); border-radius:999px; padding:8px 16px; font-size:12px; color:var(--muted); white-space:nowrap; }
-  .dot{ width:7px;height:7px;border-radius:50%; background:var(--up); flex-shrink:0; }
+  /* Foco visible (accesibilidad) */
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:3px; border-radius:8px; }
+  .amount-input:focus-visible{ outline:none; }
+
+  /* ---------- Cabecera ---------- */
+  header.site-header{ padding:calc(36px + env(safe-area-inset-top)) 0 24px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .brand-group{ display:flex; flex-direction:column; gap:12px; }
+  h1.mark{ font-family:'Fraunces', serif; font-weight:600; font-size:34px; color:var(--gold-soft); line-height:1; display:flex; align-items:center; gap:12px; margin:0; }
+  h1.mark img{ width:42px; height:42px; border-radius:50%; object-fit:cover; box-shadow:0 4px 10px rgba(0,0,0,.3); }
+  .tag{ font-size:13px; color:var(--muted); margin:8px 0 0; }
+  .install-btn{ display:none; background:var(--gold); color:#0B2E2C; border:none; min-height:36px; padding:8px 16px; border-radius:999px; font-weight:700; font-size:12.5px; cursor:pointer; align-items:center; gap:6px; width:fit-content; transition:transform .2s; }
+  .install-btn:active{ transform:scale(.95); }
+
+  .status-pill{ display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 6px 6px 16px; font-size:12px; color:var(--muted); white-space:nowrap; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--up); flex-shrink:0; }
   .dot.offline{ background:var(--down); }
-  .refresh-btn{ width:32px;height:32px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; margin-left:6px; flex-shrink:0; transition: transform 0.2s; }
-  .refresh-btn:active { transform: scale(0.9); }
+  .refresh-btn{ width:44px; height:44px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:none; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; transition:transform .2s; }
+  .refresh-btn:active{ transform:scale(.9); }
   .refresh-btn.spinning{ animation:spin .8s linear infinite; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
-  
-  .converter{ background:var(--surface); border-radius:var(--radius-lg); padding:28px 24px; border:1px solid rgba(212,175,106,.14); margin-bottom:24px; position: relative; }
-  .conv-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .conv-label{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.03em; }
-  .reset-btn { background: rgba(212,175,106,.15); color: var(--gold-soft); border: 1px solid rgba(212,175,106,.3); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.2s ease; }
-  .reset-btn:hover { background: var(--gold); color: #0B2E2C; }
-  .reset-btn:active { transform: scale(0.9); }
-  
-  .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface-2); border-radius:var(--radius-md); padding:14px 16px; position: relative; }
-  .curr-pick-container { display: flex; flex: 1; align-items: center; min-width: 0; }
-  .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; cursor: pointer; }
-  .flag{ width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:16px; background:rgba(212,175,106,.1); flex-shrink:0; }
-  
-  .swap-row { display:flex; justify-content:center; margin:-14px 0; position:relative; z-index:10; }
-  .swap-btn { width:42px; height:42px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:4px solid var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:transform 0.2s; }
-  .swap-btn:hover { transform:scale(1.08); }
-  .swap-btn:active { transform:scale(0.9); }
 
-  .custom-select { position: relative; flex: 1; user-select: none; }
-  .select-selected { display: flex; align-items: center; justify-content: space-between; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: var(--cream); width: 100%; }
-  .select-selected .chevron { font-size: 10px; color: var(--gold-soft); transition: transform 0.3s; margin-left: 6px; flex-shrink: 0; }
-  .select-selected.active .chevron { transform: rotate(180deg); }
-  .select-items { position: absolute; background-color: var(--surface); border: 1px solid rgba(212,175,106,.2); top: calc(100% + 15px); left: -10px; width: 260px; max-width: 85vw; max-height: 280px; overflow-y: auto; z-index: 99; border-radius: var(--radius-md); box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 1; transform: translateY(0); transition: all 0.2s ease; }
-  .select-hide { opacity: 0; transform: translateY(-10px); pointer-events: none; }
-  .select-item { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; font-family: 'Manrope', sans-serif; font-size: 14.5px; font-weight: 600; color: var(--cream); border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
-  .select-item:last-child { border-bottom: none; }
-  .select-item:hover { background-color: rgba(212,175,106,.15); }
-  .select-item .flag-mini { font-size: 16px; margin-right: 12px; background: rgba(0,0,0,0.2); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  /* ---------- Convertidor ---------- */
+  .converter{ background:var(--surface); border-radius:var(--radius-lg); padding:28px 24px 24px; border:1px solid var(--line); margin-bottom:20px; position:relative; scroll-margin-top:16px; transition:box-shadow .5s, border-color .5s; }
+  .converter.pulse{ border-color:var(--gold); box-shadow:0 0 0 4px rgba(212,175,106,.18); }
+  .conv-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .conv-label{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.06em; margin:0; text-transform:uppercase; }
+  .reset-btn{ background:rgba(212,175,106,.12); color:var(--gold-soft); border:1px solid var(--line-strong); border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; transition:all .2s ease; }
+  .reset-btn:hover{ background:var(--gold); color:#0B2E2C; }
+  .reset-btn:active{ transform:scale(.9); }
 
-  /* Input y botones */
-  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:22px; font-weight:500; text-align:right; width:100%; min-width:60px; transition: color 0.2s; }
-  .amount-input:focus { color: var(--gold-soft); }
-  
-  /* Billetes Rápidos */
-  .fast-bills { display: flex; justify-content: center; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
-  .bill-btn { background: rgba(212,175,106,.05); border: 1px solid rgba(212,175,106,.15); color: var(--gold-soft); border-radius: 999px; padding: 6px 14px; font-family: 'Manrope', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
-  .bill-btn:hover { background: rgba(212,175,106,.15); border-color: var(--gold); }
-  .bill-btn:active { transform: scale(0.9); background: var(--gold); color: #0B2E2C; }
+  .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface-2); border-radius:var(--radius-md); padding:14px 16px; position:relative; border:1px solid transparent; transition:border-color .2s; }
+  .conv-row:focus-within{ border-color:var(--line-strong); }
+  .curr-pick-container{ display:flex; flex:0 1 52%; align-items:center; min-width:0; }
+  .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; }
+  .flag{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; background:rgba(212,175,106,.1); flex-shrink:0; }
 
-  /* Contenedor de botones SVG */
-  .actions-container { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
-  .copy-btn { background: rgba(212,175,106,.1); border: 1px solid rgba(212,175,106,.2); color: var(--gold-soft); border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-size:15px; }
-  .copy-btn:hover { background: var(--gold); color: #0B2E2C; }
-  .copy-btn:active { transform: scale(0.9); }
-  
-  .gap-banner{ background:linear-gradient(120deg, rgba(212,175,106,.14), rgba(212,175,106,.03)); border:1px solid rgba(212,175,106,.25); border-radius:var(--radius-md); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; margin-top:20px; }
+  .swap-row{ display:flex; justify-content:center; margin:-14px 0; position:relative; z-index:10; }
+  .swap-btn{ width:46px; height:46px; border-radius:50%; background:var(--gold); color:#0B2E2C; border:4px solid var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,.3); transition:transform .2s; }
+  .swap-btn:hover{ transform:scale(1.08); }
+  .swap-btn:active{ transform:scale(.9); }
+
+  .custom-select{ position:relative; flex:1; user-select:none; min-width:0; }
+  .select-selected{ display:flex; align-items:center; justify-content:space-between; font-size:15px; font-weight:700; color:var(--cream); width:100%; cursor:pointer; min-height:44px; }
+  .select-selected span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .select-selected .chevron{ font-size:10px; color:var(--gold-soft); transition:transform .3s; margin-left:6px; flex-shrink:0; }
+  .select-selected.active .chevron{ transform:rotate(180deg); }
+  .select-items{ position:absolute; background-color:var(--surface); border:1px solid var(--line-strong); top:calc(100% + 15px); left:-10px; width:270px; max-width:85vw; max-height:300px; overflow-y:auto; z-index:99; border-radius:var(--radius-md); box-shadow:0 10px 25px rgba(0,0,0,.5); opacity:1; transform:translateY(0); transition:all .2s ease; }
+  .select-hide{ opacity:0; transform:translateY(-10px); pointer-events:none; visibility:hidden; }
+  .select-item{ padding:14px 16px; min-height:48px; cursor:pointer; display:flex; align-items:center; font-size:14.5px; font-weight:600; color:var(--cream); border-bottom:1px solid rgba(255,255,255,.05); transition:background .2s; }
+  .select-item:last-child{ border-bottom:none; }
+  .select-item:hover, .select-item:focus-visible{ background:rgba(212,175,106,.15); outline:none; }
+  .select-item[aria-selected="true"]{ background:rgba(212,175,106,.1); color:var(--gold-soft); }
+  .select-item .flag-mini{ font-size:16px; margin-right:12px; background:rgba(0,0,0,.2); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:24px; font-weight:500; text-align:right; flex:1; width:100%; min-width:60px; transition:color .2s; padding:6px 4px; }
+  .amount-input:focus{ color:var(--gold-soft); }
+
+  /* Montos rápidos */
+  .fast-bills-wrap{ margin-top:18px; }
+  .mini-label{ font-size:11.5px; color:var(--muted); font-weight:700; letter-spacing:.05em; text-transform:uppercase; margin:0 0 8px 2px; }
+  .fast-bills{ display:flex; gap:8px; flex-wrap:wrap; }
+  .bill-btn{ background:rgba(212,175,106,.06); border:1px solid var(--line); color:var(--gold-soft); border-radius:999px; min-height:44px; min-width:52px; padding:8px 16px; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; }
+  .bill-btn:hover{ background:rgba(212,175,106,.15); border-color:var(--gold); }
+  .bill-btn:active{ transform:scale(.94); background:var(--gold); color:#0B2E2C; }
+
+  /* Acciones */
+  .actions-container{ display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-top:18px; padding-top:18px; border-top:1px solid var(--line); }
+  .quote-btn{ background:var(--gold); color:#0B2E2C; border:none; border-radius:999px; min-height:44px; padding:10px 18px; font-weight:800; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:transform .2s, background .2s; }
+  .quote-btn:hover{ background:var(--gold-soft); }
+  .quote-btn:active{ transform:scale(.96); }
+  .actions-spacer{ flex:1; }
+  .copy-btn{ background:rgba(212,175,106,.1); border:1px solid var(--line-strong); color:var(--gold-soft); border-radius:12px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; flex-shrink:0; }
+  .copy-btn:hover{ background:var(--gold); color:#0B2E2C; }
+  .copy-btn:active{ transform:scale(.92); }
+
+  /* ---------- Brecha y resumen ---------- */
+  .gap-banner{ border:1px solid var(--line-strong); border-left:3px solid var(--gold); border-radius:var(--radius-md); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; background:rgba(212,175,106,.05); }
   .gap-banner .label{ font-size:13px; color:var(--muted); }
-  .gap-banner .value{ font-family:'Fraunces', serif; font-size:20px; color:var(--gold-soft); font-weight:600; }
-  
+  .gap-banner .value{ font-family:'Fraunces', serif; font-size:21px; color:var(--gold-soft); font-weight:600; }
+
+  .today{ margin:0 0 36px; padding:0 2px; }
+  .today h2{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; color:var(--gold-soft); margin:0 0 8px; }
+  .today p{ margin:0; font-size:13.5px; line-height:1.65; color:var(--muted); max-width:62ch; }
+  .today p strong{ color:var(--cream); font-weight:700; }
+
   .fallback-note{ font-size:12px; color:var(--down); background:rgba(226,114,91,.08); border:1px solid rgba(226,114,91,.22); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; line-height:1.5; }
-  .section-title{ font-size:12px; color:var(--muted); margin:0 2px 14px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
-  .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom: 20px; }
-  
-  /* Ajustes para integrar los mini-gráficos sin desordenar */
-  .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:16px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(212,175,106,.08); position: relative; overflow: hidden; }
-  .rate-left{ display:flex; align-items:center; gap:12px; min-width:0; position: relative; z-index: 2; }
+
+  /* ---------- Tarjetas de tasas ---------- */
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin:0 2px 14px; flex-wrap:wrap; }
+  .section-title{ font-size:12px; color:var(--muted); margin:0; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+  .section-hint{ font-size:11.5px; color:var(--muted); opacity:.8; }
+  .rate-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+  .rate-grid.balanced > .rate-card:last-child:nth-child(odd){ grid-column:1 / -1; }
+
+  .rate-card{ background:var(--surface); border-radius:var(--radius-md); padding:16px 16px 16px 20px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(212,175,106,.08); position:relative; overflow:hidden; cursor:pointer; min-height:76px; transition:transform .2s, border-color .2s, background .2s; -webkit-tap-highlight-color:transparent; }
+  .rate-card:hover{ border-color:var(--line-strong); background:#154441; transform:translateY(-1px); }
+  .rate-card:active{ transform:scale(.985); }
+  .rate-card::before{ content:''; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:0 3px 3px 0; background:rgba(159,201,195,.25); transition:background .3s; }
+  .rate-card[data-trend="up"]::before{ background:var(--up); }
+  .rate-card[data-trend="down"]::before{ background:var(--down); }
+  .rate-left{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .rate-info{ min-width:0; }
   .rate-info .name{ font-weight:700; font-size:14px; line-height:1.3; }
   .rate-info .sub{ font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.3; }
-  .rate-right{ text-align:right; flex-shrink:0; position: relative; z-index: 2; }
-  .rate-value{ font-family:'Fraunces', serif; font-size:17px; font-weight:600; line-height:1.2; }
-  .rate-delta{ font-size:11.5px; font-weight:700; margin-top:4px; }
-  .rate-delta.up{ color:var(--up); }
-  .rate-delta.down{ color:var(--down); }
-  .skel{ opacity:.4; }
-  
-  /* Mini-gráficos (Sparklines) */
-  .sparkline { position: absolute; right: 0; bottom: 0; width: 45%; height: 50%; opacity: 0.12; pointer-events: none; z-index: 1; display: flex; align-items: flex-end; justify-content: flex-end; padding-right: 5px; }
+  .rate-right{ text-align:right; flex-shrink:0; }
+  .rate-value{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; }
+  .rate-delta{ display:inline-block; font-size:11px; font-weight:700; margin-top:5px; padding:2px 8px; border-radius:999px; min-height:18px; }
+  .rate-delta:empty{ display:none; }
+  .rate-delta.up{ color:var(--up); background:rgba(111,207,151,.12); }
+  .rate-delta.down{ color:var(--down); background:rgba(226,114,91,.12); }
+  .rate-delta.flat{ color:var(--muted); background:rgba(159,201,195,.1); font-weight:600; }
 
-  .toggle-container { display: flex; justify-content: center; margin-bottom: 32px; }
-  .toggle-btn { background: transparent; border: 1px solid rgba(212,175,106,.4); color: var(--gold-soft); padding: 12px 24px; border-radius: 999px; font-family: 'Manrope', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-  .toggle-btn:hover { background: rgba(212,175,106,.1); border-color: var(--gold); }
-  
-  .extra-rates { display: none; margin-bottom: 32px; }
-  .extra-rates.show { display: block; animation: fadeIn 0.4s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-  .info-section { background: var(--surface-2); border-radius: var(--radius-lg); padding: 24px; border: 1px solid rgba(159,201,195,.15); }
-  .info-title { font-family: 'Fraunces', serif; color: var(--gold-soft); font-size: 18px; margin: 0 0 18px 0; font-weight: 600; }
-  .info-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  .info-box h4 { margin: 0 0 6px 0; color: var(--cream); font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
-  .info-box p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
-
-  .select-items::-webkit-scrollbar { width: 6px; }
-  .select-items::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
-  .select-items::-webkit-scrollbar-thumb { background: rgba(212,175,106,.4); border-radius: 10px; }
-
-  @media (max-width:560px){ 
-    .wrap { padding: 0 16px; }
-    header { padding: 28px 0 20px; }
-    .brand .mark { font-size: 28px; }
-    .brand .mark img { width: 34px; height: 34px; }
-    .converter { padding: 20px 16px; }
-    .amount-input { font-size: 19px; }
-    .select-selected { font-size: 14px; }
-    .rate-grid{ grid-template-columns:1fr; } 
-    .gap-banner { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
-    .gap-banner .value { font-size: 18px; }
-    .info-section { padding: 20px 16px; }
-    .select-items { width: calc(100vw - 64px); left: 0; } 
+  /* Skeletons (estado de carga) */
+  .is-loading .rate-value, .is-loading .sub, .is-loading .rate-delta{
+    color:transparent !important; background:linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(212,175,106,.16) 50%, rgba(255,255,255,.05) 75%);
+    background-size:200% 100%; animation:shimmer 1.4s ease-in-out infinite; border-radius:6px; user-select:none; pointer-events:none;
   }
-  @media (min-width:600px){ 
-    .info-grid{ grid-template-columns: 1fr 1fr 1fr; gap: 20px; } 
+  .is-loading .rate-value{ display:inline-block; min-width:84px; min-height:22px; }
+  .is-loading .sub{ display:block; width:120px; max-width:100%; min-height:12px; }
+  .is-loading .rate-delta{ display:inline-block; min-width:70px; min-height:18px; }
+  @keyframes shimmer{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  .rate-card.is-empty{ opacity:.7; }
+
+  .toggle-container{ display:flex; justify-content:flex-start; margin-bottom:32px; }
+  .toggle-btn{ background:transparent; border:1px solid var(--line-strong); color:var(--gold-soft); min-height:44px; padding:10px 22px; border-radius:999px; font-size:13.5px; font-weight:600; cursor:pointer; transition:all .3s ease; }
+  .toggle-btn:hover{ background:rgba(212,175,106,.1); border-color:var(--gold); }
+
+  .extra-rates{ display:none; margin-bottom:32px; }
+  .extra-rates.show{ display:block; animation:fadeIn .4s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(-10px); } to{ opacity:1; transform:translateY(0); } }
+
+  /* ---------- FAQ / Guía ---------- */
+  .info-section{ border-top:1px solid var(--line); padding:32px 0 8px; margin-top:8px; }
+  .info-title{ font-family:'Fraunces', serif; color:var(--gold-soft); font-size:22px; margin:0 0 6px; font-weight:600; }
+  .info-lead{ margin:0 0 18px; color:var(--muted); font-size:13px; line-height:1.6; }
+  .faq details{ border-bottom:1px solid rgba(159,201,195,.15); }
+  .faq summary{ list-style:none; cursor:pointer; padding:16px 2px; min-height:48px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:14.5px; font-weight:700; color:var(--cream); }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{ content:'+'; font-size:20px; color:var(--gold); font-weight:500; transition:transform .25s; flex-shrink:0; }
+  .faq details[open] summary::after{ transform:rotate(45deg); }
+  .faq details[open] summary{ color:var(--gold-soft); }
+  .faq p{ margin:0 0 16px; padding:0 2px; color:var(--muted); font-size:13px; line-height:1.65; max-width:64ch; }
+
+  /* ---------- Footer ---------- */
+  footer.site-footer{ margin-top:40px; border-top:1px solid var(--line); padding-top:32px; }
+  .promo-grid{ display:grid; grid-template-columns:1.15fr 1fr; gap:14px; margin-bottom:14px; }
+  .promo-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md); padding:20px; display:flex; flex-direction:column; gap:10px; }
+  .promo-card.accent{ border-color:var(--line-strong); background:linear-gradient(160deg, rgba(212,175,106,.1), rgba(212,175,106,.02)), var(--surface); }
+  .promo-badge{ font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border:1px solid rgba(159,201,195,.3); border-radius:999px; padding:3px 10px; width:fit-content; }
+  .promo-card h3{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; color:var(--gold-soft); margin:0; line-height:1.25; }
+  .promo-card p{ margin:0; font-size:12.5px; line-height:1.6; color:var(--muted); }
+  .promo-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:6px; }
+  .btn-gold, .btn-ghost{ display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:44px; padding:10px 18px; border-radius:999px; font-size:13px; font-weight:800; text-decoration:none; cursor:pointer; transition:all .2s; }
+  .btn-gold{ background:var(--gold); color:#0B2E2C; border:1px solid var(--gold); }
+  .btn-gold:hover{ background:var(--gold-soft); }
+  .btn-ghost{ background:transparent; color:var(--gold-soft); border:1px solid var(--line-strong); }
+  .btn-ghost:hover{ background:rgba(212,175,106,.1); border-color:var(--gold); }
+  .disclosure{ font-size:11px !important; opacity:.8; }
+
+  .install-block{ background:var(--surface-2); border:1px solid rgba(159,201,195,.15); border-radius:var(--radius-md); padding:20px; margin-bottom:14px; scroll-margin-top:16px; }
+  .install-block.pulse{ border-color:var(--gold); box-shadow:0 0 0 4px rgba(212,175,106,.18); }
+  .install-block h3{ font-family:'Fraunces', serif; font-size:17px; font-weight:600; color:var(--gold-soft); margin:0 0 8px; }
+  .install-block p{ margin:0 0 12px; font-size:12.5px; line-height:1.6; color:var(--muted); }
+  .ios-steps{ display:none; margin:0; padding:0; list-style:none; counter-reset:step; }
+  .ios-steps li{ counter-increment:step; display:flex; align-items:center; gap:12px; font-size:13px; color:var(--cream); padding:8px 0; line-height:1.5; }
+  .ios-steps li::before{ content:counter(step); width:26px; height:26px; border-radius:50%; background:var(--gold); color:#0B2E2C; font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ios-steps svg{ vertical-align:-4px; margin:0 2px; color:var(--gold-soft); }
+  .generic-install{ font-size:12.5px; color:var(--muted); line-height:1.6; margin:0; }
+  .install-block .install-btn{ display:none; }
+
+  .legal{ font-size:11.5px; line-height:1.65; color:var(--muted); opacity:.85; margin:22px 0 0; max-width:75ch; }
+  .legal strong{ color:var(--cream); font-weight:700; }
+  .footer-bottom{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:20px; font-size:11.5px; color:var(--muted); }
+
+  /* Toast */
+  .toast{ position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); transform:translate(-50%, 20px); background:var(--gold); color:#0B2E2C; font-weight:800; font-size:13px; padding:12px 20px; border-radius:999px; box-shadow:0 10px 30px rgba(0,0,0,.45); opacity:0; pointer-events:none; transition:all .3s ease; z-index:1000; max-width:90vw; text-align:center; }
+  .toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  .select-items::-webkit-scrollbar{ width:6px; }
+  .select-items::-webkit-scrollbar-track{ background:rgba(0,0,0,.1); }
+  .select-items::-webkit-scrollbar-thumb{ background:rgba(212,175,106,.4); border-radius:10px; }
+
+  .noscript{ background:var(--surface); border:1px solid var(--line-strong); border-radius:var(--radius-md); padding:16px 20px; margin-bottom:20px; font-size:13px; color:var(--muted); line-height:1.6; }
+
+  @media (max-width:560px){
+    .wrap{ padding:0 16px; }
+    header.site-header{ padding:calc(24px + env(safe-area-inset-top)) 0 20px; }
+    h1.mark{ font-size:28px; }
+    h1.mark img{ width:34px; height:34px; }
+    .converter{ padding:20px 16px; }
+    .amount-input{ font-size:21px; }
+    .select-selected{ font-size:14px; }
+    .rate-grid{ grid-template-columns:1fr; }
+    .gap-banner{ padding:14px 16px; }
+    .promo-grid{ grid-template-columns:1fr; }
+    .select-items{ width:calc(100vw - 64px); left:0; }
+    .quote-btn{ flex:1 1 100%; justify-content:center; }
+    .actions-spacer{ display:none; }
+    .copy-btn{ flex:1; }
+  }
+  @media (min-width:600px){
+    .info-lead{ max-width:60ch; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
   }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <header>
+  <header class="site-header">
     <div class="brand-group">
-      <div class="brand">
-        <div class="mark"><img src="favicon.png" alt="Logo La Divisa"> La Divisa</div>
-        <div class="tag">Tasas de cambio al instante</div>
+      <div>
+        <h1 class="mark"><img src="favicon.png" alt="Logo La Divisa" width="42" height="42"> La Divisa</h1>
+        <p class="tag">Tasas de cambio al instante · Venezuela</p>
       </div>
-      <button id="installAppBtn" class="install-btn" aria-label="Instalar aplicación">⬇️ Instalar App Gratis</button>
+      <button id="installAppBtn" class="install-btn" type="button" aria-label="Instalar aplicación">⬇️ Instalar App Gratis</button>
     </div>
-    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText">Conectando…</span><button class="refresh-btn" id="refreshBtn" title="Actualizar ahora" aria-label="Actualizar tasas">⟳</button></div>
+    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText" aria-live="polite">Conectando…</span><button class="refresh-btn" id="refreshBtn" type="button" title="Actualizar ahora" aria-label="Actualizar tasas">⟳</button></div>
   </header>
 
-  <div class="converter">
-    <div class="conv-head">
-      <div class="conv-label" id="mainConvLabel">CONVERTIR DIVISAS</div>
-      <button class="reset-btn" id="resetBtn" title="Borrar y reiniciar" aria-label="Borrar montos">⟲</button>
-    </div>
-    
-    <div class="conv-row">
-      <div class="curr-pick-container">
-        <div id="customSelectWrapperFrom" class="curr-pick">
-          <div class="flag" id="flagFrom">🇺🇸</div>
-          <div class="custom-select" id="dropdownTriggerFrom">
-            <div class="select-selected" id="selectedBoxFrom">
-              <span id="selectedNameFrom">Dólar Oficial (BCV)</span>
-              <span class="chevron">▼</span>
+  <noscript><div class="noscript">La Divisa necesita JavaScript para mostrar las tasas en tiempo real: Dólar BCV, Dólar Paralelo, Dólar Promedio, Euro, USDT y USDC en Venezuela. Actívalo en tu navegador para usar la calculadora.</div></noscript>
+
+  <main>
+    <!-- ================= CONVERTIDOR ================= -->
+    <section class="converter" id="convertidor" aria-labelledby="convTitle">
+      <div class="conv-head">
+        <h2 class="conv-label" id="convTitle">Convertir divisas</h2>
+        <button class="reset-btn" id="resetBtn" type="button" title="Borrar y reiniciar" aria-label="Borrar montos">⟲</button>
+      </div>
+
+      <div class="conv-row">
+        <div class="curr-pick-container">
+          <div class="curr-pick">
+            <div class="flag" id="flagFrom">🇺🇸</div>
+            <div class="custom-select" id="dropdownTriggerFrom">
+              <div class="select-selected" id="selectedBoxFrom" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false" aria-label="Moneda de origen">
+                <span id="selectedNameFrom">Dólar Oficial (BCV)</span>
+                <span class="chevron" aria-hidden="true">▼</span>
+              </div>
+              <div class="select-items select-hide" id="selectOptionsFrom" role="listbox" aria-label="Elegir moneda de origen"></div>
             </div>
-            <div class="select-items select-hide" id="selectOptionsFrom"></div>
           </div>
         </div>
+        <input class="amount-input" id="fromAmount" type="text" value="1,00" inputmode="decimal" autocomplete="off" aria-label="Monto de origen" enterkeyhint="done">
       </div>
-      <input class="amount-input" id="fromAmount" value="1.00" inputmode="numeric" aria-label="Monto de origen" style="width: 55%; padding-right: 8px;">
-    </div>
-    
-    <div class="swap-row">
-      <button class="swap-btn" id="swapBtn" title="Invertir monedas" aria-label="Invertir monedas seleccionadas">⇅</button>
-    </div>
-    
-    <div class="conv-row">
-      <div class="curr-pick-container">
-        <div id="customSelectWrapperTo" class="curr-pick">
-          <div class="flag" id="flagTo">🇻🇪</div>
-          <div class="custom-select" id="dropdownTriggerTo">
-            <div class="select-selected" id="selectedBoxTo">
-              <span id="selectedNameTo">Bolívares (Bs)</span>
-              <span class="chevron">▼</span>
+
+      <div class="swap-row">
+        <button class="swap-btn" id="swapBtn" type="button" title="Invertir monedas" aria-label="Invertir monedas seleccionadas">⇅</button>
+      </div>
+
+      <div class="conv-row">
+        <div class="curr-pick-container">
+          <div class="curr-pick">
+            <div class="flag" id="flagTo">🇻🇪</div>
+            <div class="custom-select" id="dropdownTriggerTo">
+              <div class="select-selected" id="selectedBoxTo" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false" aria-label="Moneda de destino">
+                <span id="selectedNameTo">Bolívares (Bs)</span>
+                <span class="chevron" aria-hidden="true">▼</span>
+              </div>
+              <div class="select-items select-hide" id="selectOptionsTo" role="listbox" aria-label="Elegir moneda de destino"></div>
             </div>
-            <div class="select-items select-hide" id="selectOptionsTo"></div>
           </div>
         </div>
+        <input class="amount-input" id="toAmount" type="text" value="—" inputmode="decimal" autocomplete="off" aria-label="Monto de destino" enterkeyhint="done">
       </div>
-      <input class="amount-input" id="toAmount" value="—" inputmode="numeric" aria-label="Monto de destino" style="width: 55%; padding-right: 8px;">
-    </div>
-    
-    <div class="fast-bills">
-      <button class="bill-btn" aria-label="Añadir 1" onclick="setFastBill(1)">$1</button>
-      <button class="bill-btn" aria-label="Añadir 5" onclick="setFastBill(5)">$5</button>
-      <button class="bill-btn" aria-label="Añadir 10" onclick="setFastBill(10)">$10</button>
-      <button class="bill-btn" aria-label="Añadir 20" onclick="setFastBill(20)">$20</button>
-      <button class="bill-btn" aria-label="Añadir 50" onclick="setFastBill(50)">$50</button>
-      <button class="bill-btn" aria-label="Añadir 100" onclick="setFastBill(100)">$100</button>
-    </div>
 
-    <!-- Se agregaron etiquetas aria-label invisibles para Google y Accesibilidad -->
-    <div class="actions-container">
-      <button class="copy-btn" id="copyNumberBtn" title="Copiar" aria-label="Copiar solo el número" onclick="copyNumber()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-      </button>
-      <button class="copy-btn" id="copyTextBtn" title="Compartir" aria-label="Compartir conversión" onclick="copyText()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="18" cy="5" r="3"></circle>
-          <circle cx="6" cy="12" r="3"></circle>
-          <circle cx="18" cy="19" r="3"></circle>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="gap-banner"><div class="label">Brecha BCV / Paralelo</div><div class="value" id="gapValue">—</div></div>
-  <div id="fallbackNote" class="fallback-note" style="display:none;"></div>
-
-  <div>
-    <div class="section-title">Indicadores Principales</div>
-    <div class="rate-grid">
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇸</div><div class="rate-info"><div class="name">Dólar BCV</div><div class="sub" id="sub-bcv">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-bcv">···</div><div class="rate-delta" id="delta-bcv"></div></div><div class="sparkline" id="spark-bcv"></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">💱</div><div class="rate-info"><div class="name">Dólar Paralelo</div><div class="sub" id="sub-paralelo">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-paralelo">···</div><div class="rate-delta" id="delta-paralelo"></div></div><div class="sparkline" id="spark-paralelo"></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇪🇺</div><div class="rate-info"><div class="name">Euro BCV</div><div class="sub" id="sub-eur">Cargando…</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-eur">···</div><div class="rate-delta" id="delta-eur"></div></div><div class="sparkline" id="spark-eur"></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">₮</div><div class="rate-info"><div class="name">USDT · Tether</div><div class="sub">1 USDT en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdt">···</div><div class="rate-delta" id="delta-usdt"></div></div><div class="sparkline" id="spark-usdt"></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">Ⓤ</div><div class="rate-info"><div class="name">USDC · USD Coin</div><div class="sub">1 USDC en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-usdc">···</div><div class="rate-delta" id="delta-usdc"></div></div><div class="sparkline" id="spark-usdc"></div></div>
-    </div>
-  </div>
-
-  <div class="toggle-container">
-    <button class="toggle-btn" id="toggleExtraBtn" aria-expanded="false">Mostrar mercado internacional y LATAM ▼</button>
-  </div>
-
-  <div class="extra-rates" id="extraRatesContainer">
-    <div class="section-title">Mercado Internacional y LATAM</div>
-    <div class="rate-grid">
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇨🇳</div><div class="rate-info"><div class="name">Yuan Chino</div><div class="sub">1 Yuan Chino en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-cny">···</div><div class="rate-delta" id="delta-cny"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇹🇷</div><div class="rate-info"><div class="name">Lira Turca</div><div class="sub">1 Lira Turca en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-try">···</div><div class="rate-delta" id="delta-try"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇷🇺</div><div class="rate-info"><div class="name">Rublo Ruso</div><div class="sub">1 Rublo Ruso en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-rub">···</div><div class="rate-delta" id="delta-rub"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇧🇷</div><div class="rate-info"><div class="name">Real Brasileño</div><div class="sub">1 Real Brasileño en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-brl">···</div><div class="rate-delta" id="delta-brl"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇨🇱</div><div class="rate-info"><div class="name">Peso Chileno</div><div class="sub">1 Peso Chileno en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-clp">···</div><div class="rate-delta" id="delta-clp"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇲🇽</div><div class="rate-info"><div class="name">Peso Mexicano</div><div class="sub">1 Peso Mexicano en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-mxn">···</div><div class="rate-delta" id="delta-mxn"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇵🇪</div><div class="rate-info"><div class="name">Sol Peruano</div><div class="sub">1 Sol Peruano en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-pen">···</div><div class="rate-delta" id="delta-pen"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇨🇴</div><div class="rate-info"><div class="name">Peso Colombiano</div><div class="sub">1 Peso Colombiano en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-cop">···</div><div class="rate-delta" id="delta-cop"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇩🇴</div><div class="rate-info"><div class="name">Peso Dominicano</div><div class="sub">1 Peso Dominicano en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-dop">···</div><div class="rate-delta" id="delta-dop"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇦🇷</div><div class="rate-info"><div class="name">Peso Argentino</div><div class="sub">1 Peso Argentino en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-ars">···</div><div class="rate-delta" id="delta-ars"></div></div></div>
-      <div class="rate-card"><div class="rate-left"><div class="flag">🇺🇾</div><div class="rate-info"><div class="name">Peso Uruguayo</div><div class="sub">1 Peso Uruguayo en Bs</div></div></div><div class="rate-right"><div class="rate-value skel" id="val-uyu">···</div><div class="rate-delta" id="delta-uyu"></div></div></div>
-    </div>
-  </div>
-
-  <div class="info-section">
-    <h3 class="info-title">Guía rápida de divisas</h3>
-    <div class="info-grid">
-      <div class="info-box">
-        <h4>💱 Dólar Paralelo</h4>
-        <p>Es la referencia del mercado informal obtenida del promedio de intercambio comercial en Binance P2P en Venezuela.</p>
+      <div class="fast-bills-wrap">
+        <p class="mini-label" id="fastLabel">Montos rápidos</p>
+        <div class="fast-bills" id="fastBills" role="group" aria-labelledby="fastLabel"></div>
       </div>
-      <div class="info-box">
-        <h4>₮ USDT (Tether)</h4>
-        <p>Criptomoneda que equivale a un dólar digital. A nivel mundial sufre micro-variaciones que se reflejan en su precio exacto en bolívares al cruzarlo con la tasa paralela.</p>
-      </div>
-      <div class="info-box">
-        <h4>Ⓤ USDC (USD Coin)</h4>
-        <p>Criptomoneda respaldada y auditada en EE.UU. Al igual que el USDT, tiene su propio comportamiento en la bolsa global independiente del billete físico.</p>
-      </div>
-    </div>
-  </div>
 
+      <div class="actions-container">
+        <button class="quote-btn" id="quoteBtn" type="button" title="Copia el monto desglosado en BCV, Paralelo y Promedio">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"></path></svg>
+          Cotización múltiple
+        </button>
+        <span class="actions-spacer"></span>
+        <button class="copy-btn" id="copyNumberBtn" type="button" title="Copiar solo el número" aria-label="Copiar solo el número">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+        <button class="copy-btn" id="copyTextBtn" type="button" title="Compartir conversión" aria-label="Compartir conversión">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+        </button>
+        <button class="copy-btn" id="waBtn" type="button" title="Enviar cotización por WhatsApp" aria-label="Enviar cotización por WhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"></path><path d="M22 2 15 22l-4-9-9-4 20-7z"></path></svg>
+        </button>
+      </div>
+    </section>
+
+    <div class="gap-banner"><div class="label">Brecha BCV / Paralelo</div><div class="value" id="gapValue">—</div></div>
+    <div id="fallbackNote" class="fallback-note" style="display:none;" role="alert"></div>
+
+    <!-- Resumen citable (SEO / AI SEO) -->
+    <section class="today" aria-labelledby="todayTitle">
+      <h2 id="todayTitle">Precio del dólar hoy en Venezuela</h2>
+      <p id="todaySummary">Consulta el precio del Dólar BCV, el Dólar Paralelo (Binance P2P) y el Dólar Promedio en Venezuela, junto con el Euro oficial, USDT y USDC, actualizados en tiempo real.</p>
+    </section>
+
+    <!-- ================= INDICADORES ================= -->
+    <section aria-labelledby="mainTitle">
+      <div class="section-head">
+        <h2 class="section-title" id="mainTitle">Indicadores principales</h2>
+        <span class="section-hint">Toca una tarjeta para convertirla</span>
+      </div>
+      <div class="rate-grid" id="mainGrid"></div>
+    </section>
+
+    <div class="toggle-container">
+      <button class="toggle-btn" id="toggleExtraBtn" type="button" aria-expanded="false" aria-controls="extraRatesContainer">Mostrar mercado internacional y LATAM ▼</button>
+    </div>
+
+    <section class="extra-rates" id="extraRatesContainer" aria-labelledby="extraTitle">
+      <div class="section-head">
+        <h2 class="section-title" id="extraTitle">Mercado internacional y LATAM</h2>
+      </div>
+      <div class="rate-grid balanced" id="extraGrid"></div>
+    </section>
+
+    <!-- ================= GUÍA / FAQ ================= -->
+    <section class="info-section" aria-labelledby="faqTitle">
+      <h2 class="info-title" id="faqTitle">Guía rápida de divisas</h2>
+      <p class="info-lead">Respuestas cortas a las dudas más comunes sobre el dólar en Venezuela y las criptomonedas estables.</p>
+      <div class="faq">
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Qué es el Dólar BCV?</h3></summary>
+          <p>Es la tasa oficial de referencia del dólar publicada por el Banco Central de Venezuela (BCV). Se utiliza como base para operaciones reguladas, facturación y precios referenciados al dólar oficial.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Qué es el Dólar Paralelo?</h3></summary>
+          <p>Es la referencia del mercado informal obtenida del promedio de intercambio comercial en Binance P2P en Venezuela.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Qué es el Dólar Promedio?</h3></summary>
+          <p>Es la media aritmética entre la tasa del Dólar BCV y la del Dólar Paralelo. Sirve como referencia intermedia al fijar precios o negociar.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Qué es la brecha cambiaria entre el BCV y el Paralelo?</h3></summary>
+          <p>Es la diferencia porcentual entre el Dólar Paralelo y el Dólar BCV. Si el paralelo cuesta más que el oficial, la brecha es positiva.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Qué es el USDT (Tether)?</h3></summary>
+          <p>Es una criptomoneda que equivale a un dólar digital. A nivel mundial sufre micro-variaciones que se reflejan en su precio exacto en bolívares al cruzarlo con la tasa paralela.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Qué es el USDC (USD Coin)?</h3></summary>
+          <p>Es una criptomoneda respaldada y auditada en EE.UU. Al igual que el USDT, tiene su propio comportamiento en la bolsa global independiente del billete físico.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Cómo uso la calculadora de La Divisa?</h3></summary>
+          <p>Elige la moneda de origen y la de destino, escribe o pega un monto (o toca un botón de monto rápido) y verás el resultado al instante. También puedes tocar cualquier tarjeta de tasa para convertir esa moneda.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Cada cuánto se actualizan las tasas?</h3></summary>
+          <p>Las tasas se actualizan al abrir la página, automáticamente cada hora y cada vez que pulsas el botón de actualizar.</p>
+        </details>
+        <details>
+          <summary><h3 style="margin:0;font-size:inherit;font-weight:inherit;">¿Puedo instalar La Divisa en mi teléfono?</h3></summary>
+          <p>Sí. En Android pulsa el botón Instalar App. En iPhone abre la página en Safari y elige Compartir, luego Agregar a inicio.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="promo-grid">
+      <aside class="promo-card accent" aria-labelledby="adsTitle">
+        <span class="promo-badge">Alianzas comerciales</span>
+        <h3 id="adsTitle">¿Tienes un negocio? Llega a quienes consultan el dólar cada día.</h3>
+        <p>Publicidad, patrocinios y alianzas con comercios, casas de cambio y plataformas de pago. Hablemos de un espacio para tu marca en La Divisa.</p>
+        <div class="promo-actions">
+          <a class="btn-gold" id="adsEmail" href="mailto:alianzas@tudominio.com?subject=Alianza%20comercial%20La%20Divisa">Anunciar en La Divisa</a>
+          <a class="btn-ghost" id="adsWhatsApp" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">WhatsApp</a>
+        </div>
+      </aside>
+
+      <aside class="promo-card" aria-labelledby="binanceTitle">
+        <span class="promo-badge">Publicidad · Enlace de referido</span>
+        <h3 id="binanceTitle">Compra USDT en Binance P2P</h3>
+        <p>Cambia dólares y bolívares de persona a persona con la plataforma de referencia del mercado paralelo.</p>
+        <div class="promo-actions">
+          <a class="btn-ghost" id="binanceLink" href="https://www.binance.com/es/p2p" target="_blank" rel="sponsored nofollow noopener noreferrer">Ir a Binance P2P ↗</a>
+        </div>
+        <p class="disclosure">Es un enlace de referido: La Divisa podría recibir una comisión sin costo adicional para ti.</p>
+      </aside>
+    </div>
+
+    <div class="install-block" id="instalar">
+      <h3>Instala La Divisa en tu teléfono</h3>
+      <p>Úsala como una app: abre al instante, sin ocupar espacio y con tus últimas tasas guardadas.</p>
+      <button id="installAppBtnFooter" class="install-btn" type="button" aria-label="Instalar aplicación">⬇️ Instalar App Gratis</button>
+      <ol class="ios-steps" id="iosSteps">
+        <li>Abre esta página en <strong>&nbsp;Safari</strong>.</li>
+        <li>Toca <strong>Compartir</strong>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"></path><path d="m7 8 5-5 5 5"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg>
+          en la barra del navegador.</li>
+        <li>Elige <strong>&nbsp;Agregar a inicio</strong>&nbsp;y confirma con <strong>&nbsp;Agregar</strong>.</li>
+      </ol>
+      <p class="generic-install" id="genericInstall">En Chrome o Edge: abre el menú del navegador (⋮) y elige <strong>Instalar aplicación</strong> o <strong>Agregar a la pantalla de inicio</strong>.</p>
+    </div>
+
+    <p class="legal"><strong>Aviso legal.</strong> Las tasas mostradas son <strong>referenciales</strong> e informativas y pueden diferir de las que apliquen en una operación real. La Divisa no es una casa de cambio, entidad financiera ni asesor de inversiones, y no se hace responsable por decisiones tomadas con base en esta información. Verifica siempre la tasa final antes de transar. Fuentes: Banco Central de Venezuela (vía DolarAPI), Binance P2P, ExchangeRate-API y precios de criptomonedas. La app guarda en tu dispositivo solo tus últimas tasas y preferencias para funcionar más rápido.</p>
+
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> La Divisa · Hecho para Venezuela 🇻🇪</span>
+      <span>ladivisa-app.vercel.app</span>
+    </div>
+  </footer>
 </div>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
+/* =====================================================================
+   CONFIGURACIÓN — edita estos valores antes de publicar
+   ===================================================================== */
+const CONFIG = {
+  siteUrl: 'https://ladivisa-app.vercel.app',
+  contactEmail: 'alianzas@tudominio.com',           // ← tu correo para alianzas / publicidad
+  whatsappNumber: '',                               // ← opcional: formato internacional sin "+", ej. 584121234567
+  binanceReferralUrl: 'https://www.binance.com/es/p2p' // ← pega aquí tu enlace de referido de Binance
+};
+
+/* =====================================================================
+   DATOS BASE
+   ===================================================================== */
+const $ = (id) => document.getElementById(id);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const CURRENCIES = [
   {code:'VES', name:'Bolívares (Bs)', flag:'🇻🇪'},
-  {code:'USD', name:'Dólar Oficial (BCV)', flag:'🇺🇸'}, 
+  {code:'USD', name:'Dólar Oficial (BCV)', flag:'🇺🇸'},
   {code:'USD_PAR', name:'Dólar Paralelo', flag:'💱'},
+  {code:'USD_PROM', name:'Dólar Promedio', flag:'⚖️'},
   {code:'EUR', name:'Euro Oficial (BCV)', flag:'🇪🇺'},
   {code:'CNY', name:'Yuan Chino (BCV)', flag:'🇨🇳'},
   {code:'TRY', name:'Lira Turca (BCV)', flag:'🇹🇷'},
   {code:'RUB', name:'Rublo Ruso (BCV)', flag:'🇷🇺'},
-  {code:'USDT', name:'USDT · Tether', flag:'₮'}, 
+  {code:'USDT', name:'USDT · Tether', flag:'₮'},
   {code:'USDC', name:'USDC · USD Coin', flag:'Ⓤ'},
   {code:'BRL', name:'Real Brasileño', flag:'🇧🇷'},
   {code:'CLP', name:'Peso Chileno', flag:'🇨🇱'},
@@ -325,437 +617,776 @@ const CURRENCIES = [
   {code:'ARS', name:'Peso Argentino', flag:'🇦🇷'},
   {code:'UYU', name:'Peso Uruguayo', flag:'🇺🇾'}
 ];
+const byCode = (code) => CURRENCIES.find(c => c.code === code);
 
-let activeFromCode = 'USD'; 
-let activeToCode = 'VES'; 
+/* Símbolos que se muestran en los botones rápidos */
+const SYMBOLS = { VES:'Bs', USD:'$', USD_PAR:'$', USD_PROM:'$', EUR:'€', CNY:'¥', TRY:'₺', RUB:'₽', USDT:'₮', USDC:'$', BRL:'R$', CLP:'$', MXN:'$', PEN:'S/', COP:'$', DOP:'RD$', ARS:'$', UYU:'$U' };
+const symbolFor = (code) => SYMBOLS[code] || '';
+
+/* Montos rápidos según el tamaño típico de cada moneda */
+const BIG = [1000, 5000, 10000, 20000, 50000, 100000];
+const PRESETS = { VES:[100, 500, 1000, 5000, 10000, 50000], COP:BIG, CLP:BIG, ARS:BIG, default:[1, 5, 10, 20, 50, 100] };
+
+/* Tarjetas de tasas */
+const MAIN_CARDS = [
+  {key:'bcv',      code:'USD',      flag:'🇺🇸', name:'Dólar BCV'},
+  {key:'paralelo', code:'USD_PAR',  flag:'💱', name:'Dólar Paralelo'},
+  {key:'prom',     code:'USD_PROM', flag:'⚖️', name:'Dólar Promedio'},
+  {key:'eur',      code:'EUR',      flag:'🇪🇺', name:'Euro BCV'},
+  {key:'usdt',     code:'USDT',     flag:'₮',  name:'USDT · Tether'},
+  {key:'usdc',     code:'USDC',     flag:'Ⓤ',  name:'USDC · USD Coin'}
+];
+const EXTRA_CARDS = [
+  {key:'cny', code:'CNY', flag:'🇨🇳', name:'Yuan Chino'},
+  {key:'try', code:'TRY', flag:'🇹🇷', name:'Lira Turca'},
+  {key:'rub', code:'RUB', flag:'🇷🇺', name:'Rublo Ruso'},
+  {key:'brl', code:'BRL', flag:'🇧🇷', name:'Real Brasileño'},
+  {key:'clp', code:'CLP', flag:'🇨🇱', name:'Peso Chileno'},
+  {key:'mxn', code:'MXN', flag:'🇲🇽', name:'Peso Mexicano'},
+  {key:'pen', code:'PEN', flag:'🇵🇪', name:'Sol Peruano'},
+  {key:'cop', code:'COP', flag:'🇨🇴', name:'Peso Colombiano'},
+  {key:'dop', code:'DOP', flag:'🇩🇴', name:'Peso Dominicano'},
+  {key:'ars', code:'ARS', flag:'🇦🇷', name:'Peso Argentino'},
+  {key:'uyu', code:'UYU', flag:'🇺🇾', name:'Peso Uruguayo'}
+];
+const FIAT_FROM_USD = ['CNY','TRY','RUB','MXN','PEN','COP','ARS','UYU','BRL','CLP','DOP'];
+const DOLLAR_LIKE = ['USD','USD_PAR','USD_PROM','USDT','USDC'];
+
+/* Estado */
+let activeFromCode = 'USD';
+let activeToCode = 'VES';
 let rates = { VES: 1 };
 let raw = { bcv:null, paralelo:null, eur:null, usdt:null, usdc:null };
-let globalFiatRates = {}; 
-let errors = [], lastEdited = 'from';
+let globalFiatRates = {};
+let errors = [];
+let lastEdited = 'from';
+let settled = false;       // true cuando ya terminó al menos un intento de carga
+let isRefreshing = false;
+let lastRefreshAt = 0;
 
-let deferredPrompt;
-const installBtn = document.getElementById('installAppBtn');
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'flex';
-});
-installBtn.addEventListener('click', async () => {
-  if (deferredPrompt !== null) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') { deferredPrompt = null; installBtn.style.display = 'none'; }
+/* Almacenamiento seguro */
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+};
+
+/* =====================================================================
+   FORMATO Y LECTURA DE NÚMEROS
+   ===================================================================== */
+function fmt(n, min = 2, max = 2){
+  if(n === null || n === undefined || isNaN(n)) return '—';
+  return Number(n).toLocaleString('de-DE', {minimumFractionDigits:min, maximumFractionDigits:max});
+}
+/* Más decimales cuando el valor es pequeño (ej. pesos colombianos en Bs) */
+function fmtSmart(n){
+  if(n === null || n === undefined || isNaN(n)) return '—';
+  const a = Math.abs(n);
+  if(a === 0) return fmt(0);
+  if(a >= 1) return fmt(n, 2, 2);
+  if(a >= 0.01) return fmt(n, 2, 4);
+  return fmt(n, 2, 6);
+}
+function fmtInt(n){ return Number(n).toLocaleString('de-DE', {maximumFractionDigits:0}); }
+
+function fmtDate(iso){
+  if(!iso) return '';
+  try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}); }
+  catch(e){ return iso; }
+}
+
+/* Lectura de lo que el usuario está escribiendo: la coma (o el punto) es el separador decimal */
+function parseRaw(str){
+  const s = String(str || '').replace(',', '.');
+  const n = parseFloat(s);
+  return isFinite(n) ? n : 0;
+}
+/* Lectura inteligente de textos pegados o ya formateados: entiende 1.234,56 / 1,234.56 / Bs 1500 / $1.500 */
+function parseSmart(str){
+  if(str === null || str === undefined) return 0;
+  let s = String(str).replace(/[^\d.,]/g, '');
+  if(!s) return 0;
+  const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
+  if(lastDot > -1 && lastComma > -1){
+    // Gana como decimal el separador que aparece al final
+    if(lastComma > lastDot){ s = s.replace(/\./g, '').replace(',', '.'); }
+    else { s = s.replace(/,/g, ''); }
+  } else if(lastComma > -1){
+    const parts = s.split(',');
+    if(parts.length > 2){ s = parts.join(''); }                                   // 1,234,567
+    else if(parts[1].length === 3 && parts[0].length >= 1 && parts[0].length <= 3 && parts[0] !== '0'){ s = parts.join(''); } // 1,500 pegado desde EE.UU.
+    else { s = parts[0] + '.' + parts[1]; }                                      // 12,50
+  } else if(lastDot > -1){
+    const parts = s.split('.');
+    if(parts.length > 2){ s = parts.join(''); }                                   // 1.234.567
+    else if(parts[1].length === 3 && parts[0].length >= 1 && parts[0].length <= 3 && parts[0] !== '0'){ s = parts.join(''); } // 1.500 (formato VE)
+    // si no, es decimal: 12.5
   }
-});
+  const n = parseFloat(s);
+  return isFinite(n) ? n : 0;
+}
+function rawString(n){
+  if(!n || !isFinite(n)) return '';
+  return String(+n.toFixed(6)).replace('.', ',');
+}
 
-function setFastBill(amount) {
-  document.getElementById('fromAmount').value = amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+/* Campos de monto: modo "raw" mientras escribes, "formateado" cuando no */
+function readField(el){ return el.dataset.raw === '1' ? parseRaw(el.value) : parseSmart(el.value); }
+function setFormatted(el, n){
+  el.dataset.raw = '0';
+  el.value = (n === null || n === undefined || isNaN(n)) ? '—' : fmtSmart(n);
+}
+function sanitizeTyped(v){
+  v = v.replace(/\./g, ',').replace(/[^\d,]/g, '');
+  const i = v.indexOf(',');
+  if(i !== -1) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/,/g, '').slice(0, 6);
+  return v.replace(/^0+(?=\d)/, '');
+}
+
+/* =====================================================================
+   AVISOS (TOAST) Y PORTAPAPELES
+   ===================================================================== */
+let toastTimer;
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+async function copyToClipboard(text){
+  try{
+    if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; }
+  }catch(e){}
+  try{
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  }catch(e){ return false; }
+}
+
+/* =====================================================================
+   SELECCIÓN DE MONEDAS
+   ===================================================================== */
+function saveSelection(){ store.set('ladivisa_sel', JSON.stringify({from:activeFromCode, to:activeToCode})); }
+function loadSelection(){
+  try{
+    const s = JSON.parse(store.get('ladivisa_sel') || 'null');
+    if(s && byCode(s.from) && byCode(s.to)){ activeFromCode = s.from; activeToCode = s.to; }
+  }catch(e){}
+}
+
+function applySelectionUI(){
+  const f = byCode(activeFromCode), t = byCode(activeToCode);
+  $('flagFrom').textContent = f.flag; $('selectedNameFrom').textContent = f.name;
+  $('flagTo').textContent = t.flag;   $('selectedNameTo').textContent = t.name;
+  document.querySelectorAll('#selectOptionsFrom .select-item').forEach(el => el.setAttribute('aria-selected', el.dataset.code === activeFromCode ? 'true' : 'false'));
+  document.querySelectorAll('#selectOptionsTo .select-item').forEach(el => el.setAttribute('aria-selected', el.dataset.code === activeToCode ? 'true' : 'false'));
+  renderFastBills();
+  saveSelection();
+}
+
+function renderFastBills(){
+  const box = $('fastBills');
+  const sym = symbolFor(activeFromCode);
+  const list = PRESETS[activeFromCode] || PRESETS.default;
+  box.innerHTML = '';
+  list.forEach(n => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bill-btn';
+    b.textContent = sym + (sym.length > 1 ? ' ' : '') + fmtInt(n);
+    b.setAttribute('aria-label', 'Poner ' + fmtInt(n) + ' ' + byCode(activeFromCode).name);
+    b.addEventListener('click', () => setFastBill(n));
+    box.appendChild(b);
+  });
+}
+function setFastBill(amount){
+  setFormatted($('fromAmount'), amount);
   lastEdited = 'from';
   updateConverter();
 }
 
-function copyNumber() {
-  const val = document.getElementById('toAmount').value;
-  if(val === '—') return;
-  const cleanVal = val.replace(/,/g, ''); 
-  navigator.clipboard.writeText(cleanVal).then(() => {
-    const btn = document.getElementById('copyNumberBtn');
-    const originalHTML = btn.innerHTML; 
-    btn.textContent = '✔️';
-    setTimeout(() => btn.innerHTML = originalHTML, 2000); 
+function closeDropdowns(){
+  ['From','To'].forEach(s => {
+    $('selectOptions' + s).classList.add('select-hide');
+    $('selectedBox' + s).classList.remove('active');
+    $('selectedBox' + s).setAttribute('aria-expanded', 'false');
   });
 }
 
-function copyText() {
-  const fromVal = document.getElementById('fromAmount').value;
-  const fromName = document.getElementById('selectedNameFrom').innerText;
-  const toVal = document.getElementById('toAmount').value;
-  const toName = document.getElementById('selectedNameTo').innerText;
-  
-  const textToShare = `💱 La Divisa\n${fromVal} ${fromName} = ${toVal} ${toName}\nConsulta en vivo: https://ladivisa-app.vercel.app`;
-  
-  if (navigator.share) {
-    navigator.share({
-      title: 'La Divisa',
-      text: textToShare
-    }).catch(console.error);
-  } else {
-    navigator.clipboard.writeText(textToShare).then(() => {
-      const btn = document.getElementById('copyTextBtn');
-      const originalHTML = btn.innerHTML;
-      btn.textContent = '✔️';
-      setTimeout(() => btn.innerHTML = originalHTML, 2000);
-    });
-  }
-}
+function setupDropdown(side){
+  const isFrom = side === 'From';
+  const trigger = $('dropdownTrigger' + side);
+  const box = $('selectedBox' + side);
+  const list = $('selectOptions' + side);
 
-const savedRaw = localStorage.getItem('ladivisa_raw_data');
-if (savedRaw) {
-  try {
-    raw = JSON.parse(savedRaw);
-    calculateRates();
-    renderVenezuela();
-    updateConverter();
-  } catch(e){}
-}
-
-function fmt(n){ 
-  if(n === null || n === undefined || isNaN(n)) return '—'; 
-  return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); 
-}
-
-function fmtDate(iso){ 
-  if(!iso) return ''; 
-  try{ return new Date(iso).toLocaleString('es-VE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}); }
-  catch(e){ return iso; } 
-}
-
-function updateDeltaTracker(key, newValue) {
-  if (!newValue) return null;
-  let current = localStorage.getItem(key + '_current');
-  let prev = localStorage.getItem(key + '_prev');
-
-  if (!current) {
-    localStorage.setItem(key + '_current', newValue);
-    localStorage.setItem(key + '_prev', newValue);
-    return { prev: newValue, current: newValue };
-  }
-
-  current = parseFloat(current);
-  if (current !== newValue) {
-    localStorage.setItem(key + '_prev', current);
-    localStorage.setItem(key + '_current', newValue);
-    return { prev: current, current: newValue };
-  }
-
-  return { prev: parseFloat(prev || current), current: newValue };
-}
-
-function getSparklineSVG(isUp) {
-  if(isUp) {
-    return `<svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,40 C20,25 35,40 50,20 C70,0 85,25 100,5" fill="none" stroke="var(--up)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
-  }
-  return `<svg width="100%" height="100%" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,5 C20,20 35,5 50,25 C70,45 85,20 100,35" fill="none" stroke="var(--down)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
-}
-
-function setDeltaUI(el, oldVal, newVal, sparkId) {
-  if (!el || !oldVal || !newVal || oldVal === newVal) {
-    if(el) { el.textContent = ''; el.className = 'rate-delta'; }
-    if(sparkId && document.getElementById(sparkId)) {
-      document.getElementById(sparkId).innerHTML = getSparklineSVG(true);
-    }
-    return;
-  }
-  let diff = newVal - oldVal;
-  let pct = (diff / oldVal) * 100;
-  const up = diff > 0;
-  el.className = 'rate-delta ' + (up ? 'up' : 'down');
-  el.textContent = (up ? '↑ ' : '↓ ') + fmt(Math.abs(diff)) + ' Bs (' + fmt(Math.abs(pct)) + '%)';
-  
-  if(sparkId && document.getElementById(sparkId)) {
-    document.getElementById(sparkId).innerHTML = getSparklineSVG(up);
-  }
-}
-
-function parseInput(val) {
-  if(!val) return 0;
-  let s = val.toString().trim().replace(/,/g, ''); 
-  return parseFloat(s) || 0;
-}
-
-function formatATMInput(e) {
-  let val = e.target.value;
-  let digits = val.replace(/\D/g, '');
-  if (digits === '') digits = '0';
-  let num = parseInt(digits, 10) / 100;
-  e.target.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  lastEdited = e.target.id === 'fromAmount' ? 'from' : 'to';
-  updateConverter();
-}
-
-function setupDropdown(triggerId, boxId, listId, flagId, nameId, isFromType) {
-  const trigger = document.getElementById(triggerId);
-  const selectedBox = document.getElementById(boxId);
-  const optionsList = document.getElementById(listId);
-  
-  optionsList.innerHTML = '';
+  list.innerHTML = '';
   CURRENCIES.forEach(c => {
     const item = document.createElement('div');
     item.className = 'select-item';
+    item.setAttribute('role', 'option');
+    item.setAttribute('tabindex', '-1');
+    item.dataset.code = c.code;
     item.innerHTML = `<span class="flag-mini">${c.flag}</span> ${c.name}`;
-    
-    item.addEventListener('click', (e) => {
-      e.stopPropagation(); 
-      if (isFromType) { activeFromCode = c.code; } else { activeToCode = c.code; }
-      document.getElementById(flagId).textContent = c.flag;
-      document.getElementById(nameId).textContent = c.name;
-      optionsList.classList.add('select-hide');
-      selectedBox.classList.remove('active');
+    const choose = (e) => {
+      e.stopPropagation();
+      if(isFrom){ activeFromCode = c.code; } else { activeToCode = c.code; }
+      closeDropdowns();
       lastEdited = 'from';
+      applySelectionUI();
       updateConverter();
+      box.focus();
+    };
+    item.addEventListener('click', choose);
+    item.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); choose(e); }
+      else if(e.key === 'ArrowDown'){ e.preventDefault(); (item.nextElementSibling || item).focus(); }
+      else if(e.key === 'ArrowUp'){ e.preventDefault(); (item.previousElementSibling || item).focus(); }
+      else if(e.key === 'Escape'){ closeDropdowns(); box.focus(); }
     });
-    optionsList.appendChild(item);
+    list.appendChild(item);
   });
 
-  trigger.addEventListener('click', (e) => {
-    const otherListId = isFromType ? 'selectOptionsTo' : 'selectOptionsFrom';
-    const otherBoxId = isFromType ? 'selectedBoxTo' : 'selectedBoxFrom';
-    document.getElementById(otherListId).classList.add('select-hide');
-    document.getElementById(otherBoxId).classList.remove('active');
-
-    optionsList.classList.toggle('select-hide');
-    selectedBox.classList.toggle('active');
+  const toggle = () => {
+    const wasHidden = list.classList.contains('select-hide');
+    closeDropdowns();
+    if(wasHidden){
+      list.classList.remove('select-hide');
+      box.classList.add('active');
+      box.setAttribute('aria-expanded', 'true');
+      const sel = list.querySelector('[aria-selected="true"]');
+      if(sel){ list.scrollTop = Math.max(0, sel.offsetTop - 60); }
+    }
+  };
+  trigger.addEventListener('click', toggle);
+  box.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown'){
+      e.preventDefault();
+      if(list.classList.contains('select-hide')) toggle();
+      const sel = list.querySelector('[aria-selected="true"]') || list.firstElementChild;
+      if(sel) sel.focus();
+    } else if(e.key === 'Escape'){ closeDropdowns(); }
   });
 }
 
-setupDropdown('dropdownTriggerFrom', 'selectedBoxFrom', 'selectOptionsFrom', 'flagFrom', 'selectedNameFrom', true);
-setupDropdown('dropdownTriggerTo', 'selectedBoxTo', 'selectOptionsTo', 'flagTo', 'selectedNameTo', false);
-
 document.addEventListener('click', (e) => {
-  const tFrom = document.getElementById('dropdownTriggerFrom');
-  const tTo = document.getElementById('dropdownTriggerTo');
-  if (!tFrom.contains(e.target) && !tTo.contains(e.target)) {
-    document.getElementById('selectOptionsFrom').classList.add('select-hide');
-    document.getElementById('selectedBoxFrom').classList.remove('active');
-    document.getElementById('selectOptionsTo').classList.add('select-hide');
-    document.getElementById('selectedBoxTo').classList.remove('active');
-  }
+  if(!$('dropdownTriggerFrom').contains(e.target) && !$('dropdownTriggerTo').contains(e.target)) closeDropdowns();
 });
 
-function convert(amount, fromCode, toCode){ 
-  const rf = rates[fromCode], rt = rates[toCode]; 
-  if(!rf || !rt || isNaN(amount)) return null; 
+/* =====================================================================
+   CONVERSIÓN
+   ===================================================================== */
+function convert(amount, fromCode, toCode){
+  const rf = rates[fromCode], rt = rates[toCode];
+  if(!rf || !rt || isNaN(amount)) return null;
   return (amount * rf) / rt;
 }
 
-function updateConverter(){ 
-  if(lastEdited === 'from'){ 
-    const from = parseInput(document.getElementById('fromAmount').value); 
-    const result = convert(from, activeFromCode, activeToCode); 
-    document.getElementById('toAmount').value = result===null ? '—' : fmt(result); 
-  } else { 
-    const to = parseInput(document.getElementById('toAmount').value); 
-    const result = convert(to, activeToCode, activeFromCode); 
-    document.getElementById('fromAmount').value = result===null ? '—' : fmt(result); 
-  } 
-}
-
-function calculateRates() {
-  rates.VES = 1;
-  if (raw.bcv) rates.USD = raw.bcv.price; 
-  if (raw.eur) rates.EUR = raw.eur.price; 
-  if (raw.paralelo) rates.USD_PAR = raw.paralelo.price; 
-  
-  const refRate = raw.paralelo?.price || raw.bcv?.price; 
-  if (raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate; 
-  if (raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate; 
-
-  const officialUSD = raw.bcv?.price || 1;
-  if (globalFiatRates.CNY) rates.CNY = officialUSD / globalFiatRates.CNY;
-  if (globalFiatRates.TRY) rates.TRY = officialUSD / globalFiatRates.TRY;
-  if (globalFiatRates.RUB) rates.RUB = officialUSD / globalFiatRates.RUB;
-  if (globalFiatRates.MXN) rates.MXN = officialUSD / globalFiatRates.MXN;
-  if (globalFiatRates.PEN) rates.PEN = officialUSD / globalFiatRates.PEN;
-  if (globalFiatRates.COP) rates.COP = officialUSD / globalFiatRates.COP;
-  if (globalFiatRates.ARS) rates.ARS = officialUSD / globalFiatRates.ARS;
-  if (globalFiatRates.UYU) rates.UYU = officialUSD / globalFiatRates.UYU;
-  if (globalFiatRates.BRL) rates.BRL = officialUSD / globalFiatRates.BRL;
-  if (globalFiatRates.CLP) rates.CLP = officialUSD / globalFiatRates.CLP;
-  if (globalFiatRates.DOP) rates.DOP = officialUSD / globalFiatRates.DOP;
-}
-
-document.getElementById('swapBtn').addEventListener('click', () => {
-  const tempCode = activeFromCode;
-  activeFromCode = activeToCode;
-  activeToCode = tempCode;
-
-  const fromC = CURRENCIES.find(c => c.code === activeFromCode);
-  const toC = CURRENCIES.find(c => c.code === activeToCode);
-
-  document.getElementById('flagFrom').textContent = fromC.flag;
-  document.getElementById('selectedNameFrom').textContent = fromC.name;
-  document.getElementById('flagTo').textContent = toC.flag;
-  document.getElementById('selectedNameTo').textContent = toC.name;
-
-  const v1 = parseInput(document.getElementById('fromAmount').value);
-  const v2 = parseInput(document.getElementById('toAmount').value);
-  
-  document.getElementById('fromAmount').value = fmt(v2);
-  document.getElementById('toAmount').value = fmt(v1);
-  
-  lastEdited = 'from';
-  updateConverter();
-});
-
-document.getElementById('resetBtn').addEventListener('click', () => {
-  document.getElementById('fromAmount').value = '1.00';
-  lastEdited = 'from';
-  updateConverter();
-});
-
-const toggleExtraBtn = document.getElementById('toggleExtraBtn');
-const extraRatesContainer = document.getElementById('extraRatesContainer');
-
-toggleExtraBtn.addEventListener('click', () => {
-  extraRatesContainer.classList.toggle('show');
-  if(extraRatesContainer.classList.contains('show')) {
-    toggleExtraBtn.textContent = 'Ocultar mercado internacional y LATAM ▲';
-    toggleExtraBtn.setAttribute('aria-expanded', 'true');
+function updateConverter(){
+  const fromEl = $('fromAmount'), toEl = $('toAmount');
+  if(lastEdited === 'from'){
+    const result = convert(readField(fromEl), activeFromCode, activeToCode);
+    setFormatted(toEl, result);
   } else {
-    toggleExtraBtn.textContent = 'Mostrar mercado internacional y LATAM ▼';
-    toggleExtraBtn.setAttribute('aria-expanded', 'false');
+    const result = convert(readField(toEl), activeToCode, activeFromCode);
+    setFormatted(fromEl, result);
   }
+}
+
+function wireAmountInput(el, which){
+  el.dataset.raw = '0';
+  el.addEventListener('focus', () => {
+    const n = readField(el);
+    el.dataset.raw = '1';
+    el.value = rawString(n);
+    setTimeout(() => { try{ el.select(); }catch(e){} }, 0);
+  });
+  el.addEventListener('input', () => {
+    el.dataset.raw = '1';
+    const clean = sanitizeTyped(el.value);
+    if(clean !== el.value) el.value = clean;
+    lastEdited = which;
+    updateConverter();
+  });
+  el.addEventListener('paste', (e) => {
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    e.preventDefault();
+    const n = parseSmart(text);
+    el.dataset.raw = '1';
+    el.value = rawString(n);
+    lastEdited = which;
+    updateConverter();
+  });
+  el.addEventListener('blur', () => {
+    const n = readField(el);
+    setFormatted(el, n);
+    if(lastEdited === which) updateConverter();
+  });
+  el.addEventListener('keydown', (e) => { if(e.key === 'Enter') el.blur(); });
+}
+
+$('swapBtn').addEventListener('click', () => {
+  const v2 = readField($('toAmount'));
+  const tmp = activeFromCode; activeFromCode = activeToCode; activeToCode = tmp;
+  applySelectionUI();
+  setFormatted($('fromAmount'), v2);
+  lastEdited = 'from';
+  updateConverter();
 });
+
+$('resetBtn').addEventListener('click', () => {
+  setFormatted($('fromAmount'), 1);
+  lastEdited = 'from';
+  updateConverter();
+});
+
+/* =====================================================================
+   COMPARTIR / COTIZACIÓN MÚLTIPLE
+   ===================================================================== */
+function currentShareText(){
+  const f = byCode(activeFromCode), t = byCode(activeToCode);
+  return `💱 La Divisa\n${symbolFor(activeFromCode)} ${$('fromAmount').value} ${f.name} = ${symbolFor(activeToCode)} ${$('toAmount').value} ${t.name}\nConsulta en vivo: ${CONFIG.siteUrl}`;
+}
+
+function buildQuote(){
+  const code = activeFromCode;
+  const amount = readField($('fromAmount'));
+  const tiers = [['🏛️ BCV', rates.USD], ['🔶 Paralelo', rates.USD_PAR], ['⚖️ Promedio', rates.USD_PROM]].filter(t => t[1]);
+  if(!amount || !tiers.length || !rates[code]) return null;
+
+  const when = new Date().toLocaleString('es-VE', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+  const sym = symbolFor(code);
+  const lines = ['💱 *Cotización La Divisa*', '🕒 ' + when, ''];
+
+  if(DOLLAR_LIKE.includes(code)){
+    lines.push(`*${sym}${fmt(amount)}* equivalen a:`);
+    tiers.forEach(([label, rate]) => lines.push(`${label} (${fmt(rate)}): *Bs ${fmt(amount * rate)}*`));
+  } else {
+    const bs = amount * rates[code];
+    const origin = code === 'VES' ? `*Bs ${fmt(amount)}*` : `*${sym} ${fmt(amount)}* (${byCode(code).name})`;
+    if(code !== 'VES') lines.push(`${origin} = *Bs ${fmt(bs)}*`, '');
+    else lines.push(`${origin} equivalen a:`);
+    tiers.forEach(([label, rate]) => lines.push(`${label} (${fmt(rate)}): *$${fmt(bs / rate)}*`));
+  }
+  lines.push('', '_Tasas referenciales_', CONFIG.siteUrl);
+  return lines.join('\n');
+}
+
+$('quoteBtn').addEventListener('click', async () => {
+  const q = buildQuote();
+  if(!q){ toast('Escribe un monto y espera a que carguen las tasas'); return; }
+  const ok = await copyToClipboard(q);
+  toast(ok ? '✔ Cotización copiada. Pégala en WhatsApp' : 'No se pudo copiar');
+});
+
+$('waBtn').addEventListener('click', () => {
+  const q = buildQuote();
+  if(!q){ toast('Escribe un monto y espera a que carguen las tasas'); return; }
+  window.open('https://wa.me/?text=' + encodeURIComponent(q), '_blank', 'noopener');
+});
+
+$('copyNumberBtn').addEventListener('click', async () => {
+  const el = $('toAmount');
+  if(el.value === '—'){ toast('Aún no hay resultado'); return; }
+  const n = readField(el);
+  const clean = String(+n.toFixed(6));
+  const ok = await copyToClipboard(clean);
+  toast(ok ? '✔ Número copiado: ' + clean : 'No se pudo copiar');
+});
+
+$('copyTextBtn').addEventListener('click', async () => {
+  const text = currentShareText();
+  if(navigator.share){
+    try{ await navigator.share({title:'La Divisa', text}); return; }
+    catch(e){ if(e && e.name === 'AbortError') return; }
+  }
+  const ok = await copyToClipboard(text);
+  toast(ok ? '✔ Conversión copiada' : 'No se pudo copiar');
+});
+
+/* =====================================================================
+   TARJETAS DE TASAS (interactivas)
+   ===================================================================== */
+function buildCards(){
+  const make = (d, container) => {
+    const card = document.createElement('div');
+    card.className = 'rate-card is-loading';
+    card.id = 'card-' + d.code;
+    card.dataset.code = d.code;
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `Convertir ${d.name}`);
+    card.innerHTML = `
+      <div class="rate-left">
+        <div class="flag" aria-hidden="true">${d.flag}</div>
+        <div class="rate-info"><div class="name">${d.name}</div><div class="sub">&nbsp;</div></div>
+      </div>
+      <div class="rate-right"><div class="rate-value">&nbsp;</div><div class="rate-delta">&nbsp;</div></div>`;
+    const go = () => selectFromCard(d.code);
+    card.addEventListener('click', go);
+    card.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+    container.appendChild(card);
+  };
+  MAIN_CARDS.forEach(d => make(d, $('mainGrid')));
+  EXTRA_CARDS.forEach(d => make(d, $('extraGrid')));
+}
+
+function selectFromCard(code){
+  activeFromCode = code;
+  if(activeToCode === code) activeToCode = code === 'VES' ? 'USD' : 'VES';
+  lastEdited = 'from';
+  applySelectionUI();
+  updateConverter();
+  const target = $('convertidor');
+  target.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'start'});
+  target.classList.add('pulse');
+  setTimeout(() => target.classList.remove('pulse'), 1100);
+}
+
+/* Seguimiento de variación (compara contra la lectura anterior guardada) */
+function updateDeltaTracker(key, newValue){
+  if(newValue === null || newValue === undefined || isNaN(newValue)) return null;
+  const curS = store.get(key + '_current');
+  if(curS === null){
+    store.set(key + '_current', newValue); store.set(key + '_prev', newValue);
+    return {prev:null, current:newValue};
+  }
+  const cur = parseFloat(curS);
+  if(cur !== newValue){
+    store.set(key + '_prev', cur); store.set(key + '_current', newValue);
+    return {prev:cur, current:newValue};
+  }
+  const prevS = store.get(key + '_prev');
+  return {prev: prevS !== null ? parseFloat(prevS) : cur, current:newValue};
+}
+
+function setDeltaUI(card, deltaEl, t){
+  if(!t || t.prev === null || t.prev === undefined){ deltaEl.className = 'rate-delta'; deltaEl.textContent = ''; card.dataset.trend = 'flat'; return; }
+  const diff = t.current - t.prev;
+  if(Math.abs(diff) < 1e-9){
+    deltaEl.className = 'rate-delta flat'; deltaEl.textContent = 'Sin cambios'; card.dataset.trend = 'flat'; return;
+  }
+  const up = diff > 0;
+  const pct = (diff / t.prev) * 100;
+  deltaEl.className = 'rate-delta ' + (up ? 'up' : 'down');
+  deltaEl.textContent = (up ? '▲ ' : '▼ ') + fmtSmart(Math.abs(diff)) + ' Bs · ' + fmt(Math.abs(pct)) + '%';
+  card.dataset.trend = up ? 'up' : 'down';
+}
+
+function subFor(d){
+  const src = (r) => r ? (r.source + ' · ' + fmtDate(r.last_update)) : 'Sin datos';
+  switch(d.key){
+    case 'bcv': return src(raw.bcv);
+    case 'paralelo': return src(raw.paralelo);
+    case 'eur': return src(raw.eur);
+    case 'prom': return '(BCV + Paralelo) ÷ 2';
+    case 'usdt': return '1 USDT en Bs';
+    case 'usdc': return '1 USDC en Bs';
+    default: return '1 ' + d.name + ' en Bs';
+  }
+}
+
+function renderCards(){
+  [...MAIN_CARDS, ...EXTRA_CARDS].forEach(d => {
+    const card = $('card-' + d.code);
+    if(!card) return;
+    const valEl = card.querySelector('.rate-value');
+    const subEl = card.querySelector('.sub');
+    const dEl = card.querySelector('.rate-delta');
+    const price = rates[d.code];
+
+    if(price === undefined || price === null || isNaN(price)){
+      if(!settled) return; // sigue cargando: se mantiene el skeleton
+      card.classList.remove('is-loading');
+      card.classList.add('is-empty');
+      valEl.textContent = '—';
+      subEl.textContent = (d.key === 'bcv' || d.key === 'paralelo' || d.key === 'eur') ? subFor(d) : 'No disponible ahora';
+      dEl.className = 'rate-delta'; dEl.textContent = '';
+      card.dataset.trend = 'flat';
+      return;
+    }
+    card.classList.remove('is-loading', 'is-empty');
+    valEl.textContent = fmtSmart(price);
+    subEl.textContent = subFor(d);
+    setDeltaUI(card, dEl, updateDeltaTracker(d.key, price));
+  });
+}
+
+function renderGapAndSummary(){
+  const b = raw.bcv?.price, p = raw.paralelo?.price;
+  if(b && p){
+    const gap = ((p - b) / b) * 100;
+    $('gapValue').textContent = (gap >= 0 ? '↑ ' : '↓ ') + fmt(Math.abs(gap)) + '%';
+  }
+  if(b){
+    const today = new Date().toLocaleDateString('es-VE', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+    let t = `Hoy, ${today}, el <strong>Dólar BCV</strong> cotiza a <strong>Bs ${fmt(b)}</strong>`;
+    if(p) t += `, el <strong>Dólar Paralelo</strong> (Binance P2P) a <strong>Bs ${fmt(p)}</strong>`;
+    if(rates.USD_PROM) t += ` y el <strong>Dólar Promedio</strong> a <strong>Bs ${fmt(rates.USD_PROM)}</strong>`;
+    t += '.';
+    if(b && p) t += ` La brecha entre el paralelo y el BCV es de ${fmt(Math.abs(((p - b) / b) * 100))}%.`;
+    if(raw.eur?.price) t += ` El Euro BCV está en Bs ${fmt(raw.eur.price)}.`;
+    $('todaySummary').innerHTML = t;
+  }
+}
+
+/* =====================================================================
+   CÁLCULO DE TASAS
+   ===================================================================== */
+function calculateRates(){
+  rates = { VES: 1 };
+  if(raw.bcv) rates.USD = raw.bcv.price;
+  if(raw.eur) rates.EUR = raw.eur.price;
+  if(raw.paralelo) rates.USD_PAR = raw.paralelo.price;
+  if(raw.bcv && raw.paralelo) rates.USD_PROM = (raw.bcv.price + raw.paralelo.price) / 2;
+
+  const refRate = raw.paralelo?.price || raw.bcv?.price;
+  if(raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate;
+  if(raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate;
+
+  const officialUSD = raw.bcv?.price;
+  if(officialUSD){
+    FIAT_FROM_USD.forEach(code => {
+      if(globalFiatRates[code]) rates[code] = officialUSD / globalFiatRates[code];
+    });
+  }
+}
+
+/* =====================================================================
+   CONEXIONES A LAS APIS (sin cambios en endpoints)
+   ===================================================================== */
+async function fetchJSON(url, ms = 9000){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try{
+    const res = await fetch(url, {signal: ctrl.signal});
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } finally { clearTimeout(timer); }
+}
 
 async function fetchBinanceP2P(){
   const t = new Date().getTime();
-  const res = await fetch(`/api/binance?t=${t}`);
-  if(!res.ok) throw new Error('Error en Vercel');
-  const data = await res.json();
+  const data = await fetchJSON(`/api/binance?t=${t}`);
+  if(!data || !data.price) throw new Error('Error en Vercel');
   return { price: data.price, last_update: new Date().toISOString(), source: data.source };
 }
 
 async function fetchVenezuela(){
-  try {
+  try{
     const t = new Date().getTime();
-    const resOficial = await fetch(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`);
-    const resEuro = await fetch(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`);
-    if(!resOficial.ok || !resEuro.ok) throw new Error('DolarAPI caído');
-
-    const oficial = await resOficial.json();
-    const eurOficial = await resEuro.json();
+    const [oficial, eurOficial] = await Promise.all([
+      fetchJSON(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`),
+      fetchJSON(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`)
+    ]);
     const paraleloData = await fetchBinanceP2P().catch(async () => {
-      const res = await fetch(`https://ve.dolarapi.com/v1/dolares/paralelo?t=${t}`);
-      const p = await res.json();
+      const p = await fetchJSON(`https://ve.dolarapi.com/v1/dolares/paralelo?t=${t}`);
       return { price: p.promedio, last_update: p.fechaActualizacion, source: 'DolarAPI (Respaldo)' };
     });
-
     raw.bcv = { price: oficial.promedio, last_update: oficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.eur = { price: eurOficial.promedio, last_update: eurOficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.paralelo = paraleloData;
-  } catch (error) { throw new Error('Fallo al conectar con BCV/Paralelo'); }
+  }catch(error){ throw new Error('Fallo al conectar con BCV/Paralelo'); }
 }
 
 async function fetchCrypto(){
-  try {
+  try{
     const t = new Date().getTime();
-    const res = await fetch(`/api/crypto?t=${t}`);
-    
-    if(!res.ok) {
-      console.warn('API de Cripto no disponible temporalmente. Usando datos locales si existen.');
-      return; 
-    }
-    
-    const data = await res.json();
-    
-    if(data.tether && data['usd-coin']) {
-      raw.usdt = data.tether; 
+    const data = await fetchJSON(`/api/crypto?t=${t}`);
+    if(data && data.tether && data['usd-coin']){
+      raw.usdt = data.tether;
       raw.usdc = data['usd-coin'];
     }
-  } catch(error) { 
-    console.warn('Fallo silencioso en Cripto:', error); 
+  }catch(error){
+    console.warn('API de Cripto no disponible temporalmente. Se usan datos locales si existen.', error);
   }
 }
 
 async function fetchGlobalRates(){
-  try {
-    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-    if(!res.ok) throw new Error('API Global caída');
-    const data = await res.json();
+  try{
+    const data = await fetchJSON('https://api.exchangerate-api.com/v4/latest/USD');
+    if(!data || !data.rates) throw new Error('API Global caída');
     globalFiatRates = data.rates;
-  } catch(error) { console.warn('Error en conexión internacional', error); }
-}
-
-function renderFiatCard(code, elementId) {
-  const bcvPrice = raw.bcv?.price;
-  if(globalFiatRates[code] && bcvPrice) {
-    const rateInVes = bcvPrice / globalFiatRates[code];
-    document.getElementById(`val-${elementId}`).textContent = fmt(rateInVes);
-    document.getElementById(`val-${elementId}`).classList.remove('skel');
-    document.getElementById(`delta-${elementId}`).textContent = ''; 
+  }catch(error){
+    console.warn('Error en conexión internacional', error);
+    throw new Error('Fallo en mercado internacional');
   }
 }
 
-function renderVenezuela(){
-  const bcvPrice = raw.bcv?.price ?? null, paraPrice = raw.paralelo?.price ?? null, eurPrice = raw.eur?.price ?? null;
-  
-  document.getElementById('val-bcv').textContent = fmt(bcvPrice); document.getElementById('val-bcv').classList.remove('skel'); document.getElementById('sub-bcv').textContent = raw.bcv ? (raw.bcv.source + ' · ' + fmtDate(raw.bcv.last_update)) : 'Sin datos'; 
-  if(bcvPrice!==null) { let t = updateDeltaTracker('bcv', bcvPrice); setDeltaUI(document.getElementById('delta-bcv'), t.prev, t.current, 'spark-bcv'); }
-  
-  document.getElementById('val-paralelo').textContent = fmt(paraPrice); document.getElementById('val-paralelo').classList.remove('skel'); document.getElementById('sub-paralelo').textContent = raw.paralelo ? (raw.paralelo.source + ' · ' + fmtDate(raw.paralelo.last_update)) : 'Sin datos'; 
-  if(paraPrice!==null) { let t = updateDeltaTracker('paralelo', paraPrice); setDeltaUI(document.getElementById('delta-paralelo'), t.prev, t.current, 'spark-paralelo'); }
-  
-  document.getElementById('val-eur').textContent = fmt(eurPrice); document.getElementById('val-eur').classList.remove('skel'); document.getElementById('sub-eur').textContent = raw.eur ? (raw.eur.source + ' · ' + fmtDate(raw.eur.last_update)) : 'Sin datos'; 
-  if(eurPrice!==null) { let t = updateDeltaTracker('eur', eurPrice); setDeltaUI(document.getElementById('delta-eur'), t.prev, t.current, 'spark-eur'); }
-  
-  const refRate = paraPrice || bcvPrice;
-  if(raw.usdt && refRate){ 
-    const usdtPrice = raw.usdt.usd * refRate;
-    document.getElementById('val-usdt').textContent = fmt(usdtPrice); document.getElementById('val-usdt').classList.remove('skel'); 
-    let t = updateDeltaTracker('usdt', usdtPrice); setDeltaUI(document.getElementById('delta-usdt'), t.prev, t.current, 'spark-usdt');
-  }
-  if(raw.usdc && refRate){ 
-    const usdcPrice = raw.usdc.usd * refRate;
-    document.getElementById('val-usdc').textContent = fmt(usdcPrice); document.getElementById('val-usdc').classList.remove('skel'); 
-    let t = updateDeltaTracker('usdc', usdcPrice); setDeltaUI(document.getElementById('delta-usdc'), t.prev, t.current, 'spark-usdc');
-  }
-  
-  if(bcvPrice && paraPrice){ const gap = ((paraPrice-bcvPrice)/bcvPrice)*100; document.getElementById('gapValue').textContent = (gap>=0?'↑ ':'↓ ') + fmt(Math.abs(gap)) + '%'; }
-  
-  renderFiatCard('CNY', 'cny');
-  renderFiatCard('TRY', 'try');
-  renderFiatCard('RUB', 'rub');
-  renderFiatCard('BRL', 'brl');
-  renderFiatCard('CLP', 'clp');
-  renderFiatCard('MXN', 'mxn');
-  renderFiatCard('PEN', 'pen');
-  renderFiatCard('COP', 'cop');
-  renderFiatCard('DOP', 'dop');
-  renderFiatCard('ARS', 'ars');
-  renderFiatCard('UYU', 'uyu');
+/* =====================================================================
+   ACTUALIZACIÓN GENERAL
+   ===================================================================== */
+function setStatus(ok, message){
+  $('statusDot').className = 'dot' + (ok ? '' : ' offline');
+  $('updateText').textContent = message;
 }
 
-function setStatus(ok, message){ document.getElementById('statusDot').className = 'dot' + (ok ? '' : ' offline'); document.getElementById('updateText').textContent = message; }
+function renderAll(){
+  calculateRates();
+  renderCards();
+  renderGapAndSummary();
+  updateConverter();
+}
 
 async function refreshAll(){
-  const btn = document.getElementById('refreshBtn'); btn.classList.add('spinning'); setStatus(true, 'Actualizando...');
-  const noteEl = document.getElementById('fallbackNote'); noteEl.style.display = 'none'; errors = [];
-  
+  if(isRefreshing) return;
+  isRefreshing = true;
+  const btn = $('refreshBtn');
+  btn.classList.add('spinning');
+  setStatus(true, 'Actualizando...');
+  const noteEl = $('fallbackNote');
+  noteEl.style.display = 'none';
+  errors = [];
+
   const results = await Promise.allSettled([fetchVenezuela(), fetchCrypto(), fetchGlobalRates()]);
   const labels = ['Mercado Nacional', 'Criptomonedas', 'Mercado Internacional'];
-  results.forEach((r,i) => { if(r.status==='rejected') errors.push(labels[i]+': '+r.reason.message); });
-  
-  if(errors.length){ 
-    noteEl.style.display='block'; 
-    noteEl.textContent = 'Aviso: Estás viendo precios guardados localmente. Falló la conexión: ' + errors.join(' · '); 
-  } else {
-    localStorage.setItem('ladivisa_raw_data', JSON.stringify(raw));
+  results.forEach((r, i) => { if(r.status === 'rejected') errors.push(labels[i] + ': ' + r.reason.message); });
+
+  if(raw.bcv) store.set('ladivisa_raw_data', JSON.stringify(raw));
+  if(Object.keys(globalFiatRates).length) store.set('ladivisa_fiat_data', JSON.stringify(globalFiatRates));
+
+  if(errors.length){
+    noteEl.style.display = 'block';
+    noteEl.textContent = 'Aviso: estás viendo precios guardados localmente. Falló la conexión: ' + errors.join(' · ');
   }
-  
-  calculateRates();
-  renderVenezuela(); 
-  updateConverter();
-  
+
+  settled = true;
+  renderAll();
+
   const timeStr = new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit'});
-  setStatus(errors.length===0, (errors.length ? 'Conexión débil' : 'Última actualización') + ' · ' + timeStr); btn.classList.remove('spinning');
+  setStatus(errors.length === 0, (errors.length ? 'Conexión débil' : 'Última actualización') + ' · ' + timeStr);
+  btn.classList.remove('spinning');
+  lastRefreshAt = Date.now();
+  isRefreshing = false;
 }
 
-const fromInput = document.getElementById('fromAmount');
-const toInput = document.getElementById('toAmount');
+/* =====================================================================
+   INSTALACIÓN PWA (Android / iOS)
+   ===================================================================== */
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let deferredPrompt = null;
 
-fromInput.addEventListener('input', formatATMInput); 
-toInput.addEventListener('input', formatATMInput);
+function showInstallButtons(show, label){
+  ['installAppBtn', 'installAppBtnFooter'].forEach(id => {
+    const b = $(id);
+    if(!b) return;
+    b.style.display = show ? 'inline-flex' : 'none';
+    if(label) b.textContent = label;
+  });
+}
 
-document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+function setupInstall(){
+  if(isStandalone){
+    $('instalar').style.display = 'none';
+    showInstallButtons(false);
+    return;
+  }
+  if(isIOS){
+    $('iosSteps').style.display = 'block';
+    $('genericInstall').style.display = 'none';
+    $('installAppBtn').style.display = 'inline-flex';
+    $('installAppBtn').textContent = '⬇️ Instalar en iPhone';
+  }
+  $('installAppBtn').addEventListener('click', handleInstallClick);
+  $('installAppBtnFooter').addEventListener('click', handleInstallClick);
+}
 
-if ('serviceWorker' in navigator) {
+async function handleInstallClick(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if(outcome === 'accepted'){ deferredPrompt = null; showInstallButtons(false); }
+    return;
+  }
+  // iOS o navegador sin prompt: llevar a las instrucciones
+  const block = $('instalar');
+  block.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'center'});
+  block.classList.add('pulse');
+  setTimeout(() => block.classList.remove('pulse'), 1400);
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  $('genericInstall').style.display = 'none';
+  showInstallButtons(true);
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  showInstallButtons(false);
+  $('instalar').style.display = 'none';
+  toast('✔ La Divisa fue instalada');
+});
+
+/* =====================================================================
+   FOOTER: enlaces comerciales desde CONFIG
+   ===================================================================== */
+function setupFooter(){
+  $('year').textContent = new Date().getFullYear();
+  $('adsEmail').href = 'mailto:' + CONFIG.contactEmail + '?subject=' + encodeURIComponent('Alianza comercial La Divisa');
+  $('binanceLink').href = CONFIG.binanceReferralUrl;
+  if(CONFIG.whatsappNumber){
+    const w = $('adsWhatsApp');
+    w.href = 'https://wa.me/' + CONFIG.whatsappNumber + '?text=' + encodeURIComponent('Hola, me interesa una alianza comercial / publicidad en La Divisa.');
+    w.style.display = 'inline-flex';
+  }
+}
+
+/* =====================================================================
+   BOTÓN INTERNACIONAL / LATAM
+   ===================================================================== */
+const toggleExtraBtn = $('toggleExtraBtn');
+const extraRatesContainer = $('extraRatesContainer');
+toggleExtraBtn.addEventListener('click', () => {
+  const open = extraRatesContainer.classList.toggle('show');
+  toggleExtraBtn.textContent = open ? 'Ocultar mercado internacional y LATAM ▲' : 'Mostrar mercado internacional y LATAM ▼';
+  toggleExtraBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+
+$('refreshBtn').addEventListener('click', refreshAll);
+
+/* =====================================================================
+   ARRANQUE
+   ===================================================================== */
+loadSelection();
+buildCards();
+setupDropdown('From');
+setupDropdown('To');
+wireAmountInput($('fromAmount'), 'from');
+wireAmountInput($('toAmount'), 'to');
+setFormatted($('fromAmount'), 1);
+applySelectionUI();
+setupInstall();
+setupFooter();
+
+/* Datos guardados para mostrar algo útil al instante */
+try{
+  const savedRaw = store.get('ladivisa_raw_data');
+  const savedFiat = store.get('ladivisa_fiat_data');
+  if(savedFiat) globalFiatRates = JSON.parse(savedFiat) || {};
+  if(savedRaw){
+    raw = Object.assign(raw, JSON.parse(savedRaw));
+    renderAll();
+  }
+}catch(e){}
+
+if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => console.log('SW falló'));
   });
 }
 
+window.addEventListener('online', () => refreshAll());
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible' && Date.now() - lastRefreshAt > 15 * 60 * 1000) refreshAll();
+});
+
 refreshAll();
-setInterval(refreshAll, 60 * 60 * 1000); 
+setInterval(refreshAll, 60 * 60 * 1000);
 </script>
 </body>
 </html>
