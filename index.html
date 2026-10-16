@@ -198,7 +198,7 @@
   .conv-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface-2); border-radius:var(--radius-md); padding:14px 16px; position:relative; border:1px solid transparent; transition:border-color .2s; }
   .conv-row:focus-within{ border-color:var(--line-strong); }
   .curr-pick-container{ display:flex; flex:0 1 52%; align-items:center; min-width:0; }
-  .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; }
+  .curr-pick{ display:flex; align-items:center; gap:10px; width:100%; position:relative; }
   .flag{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; background:rgba(212,175,106,.1); flex-shrink:0; }
 
   .swap-row{ display:flex; justify-content:center; margin:-14px 0; position:relative; z-index:10; }
@@ -206,12 +206,12 @@
   .swap-btn:hover{ transform:scale(1.08); }
   .swap-btn:active{ transform:scale(.9); }
 
-  .custom-select{ position:relative; flex:1; user-select:none; min-width:0; }
+  .custom-select{ position:static; flex:1; user-select:none; min-width:0; }
   .select-selected{ display:flex; align-items:center; justify-content:space-between; font-size:15px; font-weight:700; color:var(--cream); width:100%; cursor:pointer; min-height:44px; }
-  .select-selected span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .select-selected span:first-child{ min-width:0; white-space:normal; line-height:1.25; overflow-wrap:break-word; }
   .select-selected .chevron{ font-size:10px; color:var(--gold-soft); transition:transform .3s; margin-left:6px; flex-shrink:0; }
   .select-selected.active .chevron{ transform:rotate(180deg); }
-  .select-items{ position:absolute; background-color:var(--surface); border:1px solid var(--line-strong); top:calc(100% + 15px); left:-10px; width:270px; max-width:85vw; max-height:300px; overflow-y:auto; z-index:99; border-radius:var(--radius-md); box-shadow:0 10px 25px rgba(0,0,0,.5); opacity:1; transform:translateY(0); transition:all .2s ease; }
+  .select-items{ position:absolute; background-color:var(--surface); border:1px solid var(--line-strong); top:calc(100% + 10px); left:0; width:max(100%, 270px); max-width:calc(100vw - 48px); max-height:300px; overflow-y:auto; z-index:99; border-radius:var(--radius-md); box-shadow:0 10px 25px rgba(0,0,0,.5); opacity:1; transform:translateY(0); transition:all .2s ease; }
   .select-hide{ opacity:0; transform:translateY(-10px); pointer-events:none; visibility:hidden; }
   .select-item{ padding:14px 16px; min-height:48px; cursor:pointer; display:flex; align-items:center; font-size:14.5px; font-weight:600; color:var(--cream); border-bottom:1px solid rgba(255,255,255,.05); transition:background .2s; }
   .select-item:last-child{ border-bottom:none; }
@@ -219,7 +219,7 @@
   .select-item[aria-selected="true"]{ background:rgba(212,175,106,.1); color:var(--gold-soft); }
   .select-item .flag-mini{ font-size:16px; margin-right:12px; background:rgba(0,0,0,.2); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
-  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:24px; font-weight:500; text-align:right; flex:1; width:100%; min-width:60px; transition:color .2s; padding:6px 4px; }
+  .amount-input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Fraunces', serif; font-size:26px; font-weight:500; text-align:right; flex:1; width:100%; min-width:60px; transition:color .2s; padding:6px 4px; font-variant-numeric:tabular-nums; }
   .amount-input:focus{ color:var(--gold-soft); }
 
   /* Montos rápidos */
@@ -355,12 +355,14 @@
     h1.mark{ font-size:28px; }
     h1.mark img{ width:34px; height:34px; }
     .converter{ padding:20px 16px; }
-    .amount-input{ font-size:21px; }
-    .select-selected{ font-size:14px; }
+    /* Cada fila del convertidor se apila: moneda arriba, monto abajo con todo el ancho */
+    .conv-row{ flex-direction:column; align-items:stretch; gap:2px; padding:10px 14px 8px; }
+    .curr-pick-container{ flex:0 0 auto; width:100%; }
+    .amount-input{ flex:0 0 auto; width:100%; min-width:0; margin-top:2px; padding:8px 2px 4px; border-top:1px solid rgba(212,175,106,.1); }
+    .select-selected{ font-size:14.5px; }
     .rate-grid{ grid-template-columns:1fr; }
     .gap-banner{ padding:14px 16px; }
     .promo-grid{ grid-template-columns:1fr; }
-    .select-items{ width:calc(100vw - 64px); left:0; }
     .quote-btn{ flex:1 1 100%; justify-content:center; }
     .actions-spacer{ display:none; }
     .copy-btn{ flex:1; }
@@ -539,7 +541,7 @@
         <h3 id="adsTitle">¿Tienes un negocio? Llega a quienes consultan el dólar cada día.</h3>
         <p>Publicidad, patrocinios y alianzas con comercios, casas de cambio y plataformas de pago. Hablemos de un espacio para tu marca en La Divisa.</p>
         <div class="promo-actions">
-          <a class="btn-gold" id="adsEmail" href="mailto:alianzas@tudominio.com?subject=Alianza%20comercial%20La%20Divisa">Anunciar en La Divisa</a>
+          <a class="btn-gold" id="adsEmail" href="mailto:andersonlucero.com+ladivisa@gmail.com?subject=Alianza%20comercial%20La%20Divisa">Anunciar en La Divisa</a>
           <a class="btn-ghost" id="adsWhatsApp" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">WhatsApp</a>
         </div>
       </aside>
@@ -586,7 +588,7 @@
    ===================================================================== */
 const CONFIG = {
   siteUrl: 'https://ladivisa-app.vercel.app',
-  contactEmail: 'alianzas@tudominio.com',           // ← tu correo para alianzas / publicidad
+  contactEmail: 'andersonlucero.com+ladivisa@gmail.com',           // ← tu correo para alianzas / publicidad
   whatsappNumber: '',                               // ← opcional: formato internacional sin "+", ej. 584121234567
   binanceReferralUrl: 'https://www.binance.com/es/p2p' // ← pega aquí tu enlace de referido de Binance
 };
@@ -694,9 +696,9 @@ function fmtDate(iso){
   catch(e){ return iso; }
 }
 
-/* Lectura de lo que el usuario está escribiendo: la coma (o el punto) es el separador decimal */
-function parseRaw(str){
-  const s = String(str || '').replace(',', '.');
+/* Lectura de un campo ya formateado en es-VE: "1.234.567,89" → 1234567.89 */
+function parseVE(str){
+  const s = String(str || '').replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '');
   const n = parseFloat(s);
   return isFinite(n) ? n : 0;
 }
@@ -724,22 +726,74 @@ function parseSmart(str){
   const n = parseFloat(s);
   return isFinite(n) ? n : 0;
 }
+/* Número → texto editable en es-VE sin ceros finales (1500.5 → "1500,5") */
 function rawString(n){
   if(!n || !isFinite(n)) return '';
-  return String(+n.toFixed(6)).replace('.', ',');
+  return n.toFixed(6).replace(/\.?0+$/, '').replace('.', ',');
 }
 
-/* Campos de monto: modo "raw" mientras escribes, "formateado" cuando no */
-function readField(el){ return el.dataset.raw === '1' ? parseRaw(el.value) : parseSmart(el.value); }
-function setFormatted(el, n){
-  el.dataset.raw = '0';
-  el.value = (n === null || n === undefined || isNaN(n)) ? '—' : fmtSmart(n);
+/* Campos de monto: siempre en formato es-VE (puntos de miles, coma decimal) */
+const MAX_INT_DIGITS = 15, MAX_DEC_DIGITS = 6;
+function readField(el){ return parseVE(el.value); }
+
+/* Ajusta el tamaño de letra para que el monto completo (con decimales) quepa sin cortarse */
+let fitCtx = null;
+try{ fitCtx = document.createElement('canvas').getContext('2d'); }catch(e){}
+function fitAmount(el){
+  if(!el || !fitCtx) return;
+  const cs = getComputedStyle(el);
+  const avail = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 2;
+  if(!(avail > 0)) return;
+  const MAX = 26, MIN = 12;
+  const text = el.value || '0';
+  let size = MAX;
+  while(size > MIN){
+    fitCtx.font = cs.fontWeight + ' ' + size + 'px ' + cs.fontFamily;
+    if(fitCtx.measureText(text).width <= avail) break;
+    size -= 0.5;
+  }
+  el.style.fontSize = size + 'px';
 }
-function sanitizeTyped(v){
-  v = v.replace(/\./g, ',').replace(/[^\d,]/g, '');
-  const i = v.indexOf(',');
-  if(i !== -1) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/,/g, '').slice(0, 6);
-  return v.replace(/^0+(?=\d)/, '');
+function fitAllAmounts(){ fitAmount($('fromAmount')); fitAmount($('toAmount')); }
+
+function setFormatted(el, n){
+  el.value = (n === null || n === undefined || isNaN(n)) ? '—' : fmtSmart(n);
+  el._prevValue = el.value;
+  fitAmount(el);
+}
+
+/* Formato en vivo mientras se escribe: agrega puntos de miles, admite una sola coma decimal
+   y calcula dónde debe quedar el cursor para que no salte.
+   value: texto del input · caret: posición del cursor (null = al final) · typedDot: la última tecla fue "." */
+function liveFormat(value, caret, typedDot){
+  let v = String(value);
+  const c = Math.max(0, Math.min(caret == null ? v.length : caret, v.length));
+  // Un punto escrito a mano se interpreta como coma decimal
+  if(typedDot && c > 0 && v[c - 1] === '.') v = v.slice(0, c - 1) + ',' + v.slice(c);
+
+  let int = '', dec = '', hasComma = false, sig = 0;   // sig = caracteres significativos (dígitos y coma) antes del cursor
+  for(let i = 0; i < v.length; i++){
+    const ch = v[i];
+    let keep = false;
+    if(ch >= '0' && ch <= '9'){
+      if(!hasComma){ if(int.length < MAX_INT_DIGITS){ int += ch; keep = true; } }
+      else if(dec.length < MAX_DEC_DIGITS){ dec += ch; keep = true; }
+    } else if(ch === ',' && !hasComma){ hasComma = true; keep = true; }
+    if(keep && i < c) sig++;
+  }
+  // Quita ceros a la izquierda ("05" → "5")
+  let zeros = 0;
+  while(int.length > 1 && int[0] === '0'){ int = int.slice(1); zeros++; }
+  sig -= Math.min(zeros, sig);
+  // Coma sin entero → "0,"
+  if(int === '' && hasComma){ int = '0'; if(sig > 0) sig++; }
+  if(int === '') return { text: '', caret: 0 };
+
+  const text = int.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (hasComma ? ',' + dec : '');
+  // El cursor queda justo después del sig-ésimo carácter significativo (los puntos no cuentan)
+  let pos = 0, seen = 0;
+  while(pos < text.length && seen < sig){ if(text[pos] !== '.') seen++; pos++; }
+  return { text: text, caret: pos };
 }
 
 /* =====================================================================
@@ -897,34 +951,68 @@ function updateConverter(){
 }
 
 function wireAmountInput(el, which){
-  el.dataset.raw = '0';
+  el._dirty = false;
+  el._prevValue = el.value;
+
   el.addEventListener('focus', () => {
+    el._dirty = false;
+    el._prevValue = el.value;
     const n = readField(el);
-    el.dataset.raw = '1';
-    el.value = rawString(n);
+    // Versión editable: ya con puntos de miles, sin ceros decimales sobrantes
+    el.value = n ? liveFormat(rawString(n), null, false).text : '';
+    fitAmount(el);
     setTimeout(() => { try{ el.select(); }catch(e){} }, 0);
   });
-  el.addEventListener('input', () => {
-    el.dataset.raw = '1';
-    const clean = sanitizeTyped(el.value);
-    if(clean !== el.value) el.value = clean;
+
+  // Guarda cómo estaba el campo justo antes de cada cambio (para borrar sobre los puntos de miles)
+  el.addEventListener('beforeinput', () => {
+    el._pre = { value: el.value, start: el.selectionStart, end: el.selectionEnd };
+  });
+
+  el.addEventListener('input', (e) => {
+    let v = el.value, c = el.selectionStart;
+    const pre = el._pre; el._pre = null;
+    if(pre && pre.start === pre.end){
+      // Borrar un punto de miles borra el dígito que lo acompaña, en vez de "no hacer nada"
+      if(e.inputType === 'deleteContentBackward' && pre.start > 1 && pre.value[pre.start - 1] === '.'){
+        v = pre.value.slice(0, pre.start - 2) + pre.value.slice(pre.start);
+        c = pre.start - 2;
+      } else if(e.inputType === 'deleteContentForward' && pre.value[pre.start] === '.'){
+        v = pre.value.slice(0, pre.start) + pre.value.slice(pre.start + 2);
+        c = pre.start;
+      }
+    }
+    const f = liveFormat(v, c, e.data === '.');
+    el.value = f.text;
+    try{ el.setSelectionRange(f.caret, f.caret); }catch(err){}
+    el._dirty = true;
     lastEdited = which;
     updateConverter();
+    fitAmount(el);
   });
+
   el.addEventListener('paste', (e) => {
-    const text = (e.clipboardData || window.clipboardData).getData('text');
     e.preventDefault();
-    const n = parseSmart(text);
-    el.dataset.raw = '1';
-    el.value = rawString(n);
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    const f = liveFormat(rawString(parseSmart(text)), null, false);
+    el.value = f.text;
+    try{ el.setSelectionRange(f.caret, f.caret); }catch(err){}
+    el._dirty = true;
     lastEdited = which;
     updateConverter();
+    fitAmount(el);
   });
+
   el.addEventListener('blur', () => {
-    const n = readField(el);
-    setFormatted(el, n);
+    if(!el._dirty){            // solo tocó el campo: se restaura tal cual estaba
+      el.value = el._prevValue;
+      fitAmount(el);
+      return;
+    }
+    setFormatted(el, readField(el));
     if(lastEdited === which) updateConverter();
   });
+
   el.addEventListener('keydown', (e) => { if(e.key === 'Enter') el.blur(); });
 }
 
@@ -1359,6 +1447,8 @@ setupDropdown('To');
 wireAmountInput($('fromAmount'), 'from');
 wireAmountInput($('toAmount'), 'to');
 setFormatted($('fromAmount'), 1);
+window.addEventListener('resize', fitAllAmounts);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllAmounts);
 applySelectionUI();
 setupInstall();
 setupFooter();
