@@ -390,6 +390,9 @@
         <p class="tag">Tasas de cambio al instante · Venezuela</p>
       </div>
       <button id="installAppBtn" class="install-btn" type="button" aria-label="Instalar aplicación">⬇️ Instalar App Gratis</button>
+      <div class="mobile-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button id="notifBtn" class="install-btn" type="button" style="display:none; background:rgba(212,175,106,.12); color:var(--gold-soft); border:1px solid var(--line-strong);">🔔 Activar alertas</button>
+      </div>
     </div>
     <div class="status-pill"><span class="dot" id="statusDot"></span><span id="updateText" aria-live="polite">Conectando…</span><button class="refresh-btn" id="refreshBtn" type="button" title="Actualizar ahora" aria-label="Actualizar tasas">⟳</button></div>
   </header>
@@ -1415,6 +1418,7 @@ async function refreshAll(){
   setStatus(errors.length === 0, (errors.length ? 'Conexión débil' : 'Última actualización') + ' · ' + timeStr);
   btn.classList.remove('spinning');
   lastRefreshAt = Date.now();
+  if(isMobileDevice && settled && raw.bcv?.price) checkMobileNotifications().catch(() => {});
   isRefreshing = false;
 }
 
@@ -1507,6 +1511,128 @@ $('refreshBtn').addEventListener('click', refreshAll);
 /* =====================================================================
    ARRANQUE
    ===================================================================== */
+/* ===== ALERTAS EN MÓVIL (solo teléfonos; en escritorio no se muestra ni se ejecuta nada) ===== */
+const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && window.innerWidth <= 768);
+const HOUR_MS = 60 * 60 * 1000;
+const NOTIF_START_H = 8, NOTIF_END_H = 21;   // ventana 8:00 a. m. – 9:00 p. m.
+
+function inNotifWindow(){ const h = new Date().getHours(); return h >= NOTIF_START_H && h < NOTIF_END_H; }
+function notifGranted(){ return isMobileDevice && 'Notification' in window && Notification.permission === 'granted'; }
+function lastNotif(key){ return parseInt(store.get(key) || '0', 10) || 0; }
+function withTimeout(p, ms){ return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]); }
+
+/* Envío vía Service Worker; si no está disponible, usa Notification directa */
+async function sendMobileNotification(title, body, tag, url){
+  if(!notifGranted()) return;
+  try{
+    const reg = await withTimeout(navigator.serviceWorker.ready, 3000);
+    return await reg.showNotification(title, { body, icon: '/favicon.png', badge: '/favicon.png', tag, renotify: true, data: { url } });
+  }catch(e){
+    try{ return new Notification(title, { body, icon: '/favicon.png', tag }); }
+    catch(err){ console.warn('No se pudo mostrar la notificación', err); }
+  }
+}
+
+/* Alerta 1: cambio del Dólar BCV (inmediata) */
+async function checkBcvChangeAlert(){
+  const cur = raw.bcv.price;
+  const prevS = store.get('ladivisa_notified_bcv');
+  store.set('ladivisa_notified_bcv', String(cur));
+  try{
+    const cache = await caches.open('ladivisa-meta');
+    await cache.put('/__meta/bcv', new Response(JSON.stringify({ price: cur, at: Date.now() }), { headers: { 'Content-Type': 'application/json' } }));
+  }catch(e){}
+  if(prevS === null) return;
+  const prev = parseFloat(prevS);
+  const diff = cur - prev;
+  if(!isFinite(diff) || Math.abs(diff) < 0.01) return;
+  const url = '/#convertidor';
+  if(diff > 0){
+    await sendMobileNotification('📈 Subió el Dólar BCV', `Pasó de Bs ${fmt(prev)} a Bs ${fmt(cur)} (+${fmt(diff)} Bs). Toca para calcular.`, 'bcv-rate-change', url);
+  } else {
+    await sendMobileNotification('📉 Bajó el Dólar BCV', `Pasó de Bs ${fmt(prev)} a Bs ${fmt(cur)} (-${fmt(-diff)} Bs). Toca para ver tasas.`, 'bcv-rate-change', url);
+  }
+}
+
+/* Alerta 2: publicidad, una vez cada 24 h, dentro de la ventana horaria */
+const AD_NOTIFS = [
+  { title: '📢 ¿Tienes un negocio en Venezuela?', body: 'Anúnciate en La Divisa y llega a miles de personas que consultan el dólar cada día.' },
+  { title: '🚀 Haz visible tu marca en La Divisa', body: 'Espacios disponibles para comercios, casas de cambio y plataformas de pago. Toca aquí.' }
+];
+function maybeAdNotif(){
+  if(!inNotifWindow() || !notifGranted()) return;
+  const now = Date.now();
+  if(now - lastNotif('ladivisa_last_ad_notif') < 24 * HOUR_MS) return;
+  if(now - lastNotif('ladivisa_last_market_notif') < 2 * HOUR_MS) return;
+  const i = lastNotif('ladivisa_ad_idx') % AD_NOTIFS.length;
+  const msg = AD_NOTIFS[i];
+  store.set('ladivisa_last_ad_notif', String(now));
+  store.set('ladivisa_ad_idx', String(i + 1));
+  sendMobileNotification(msg.title, msg.body, 'ladivisa-ads', '/#adsTitle');
+}
+
+/* Alerta 3: recordatorios del mercado, cada 6 h, separados 2 h de la publicidad */
+function marketNotifs(){
+  const bcv = raw.bcv?.price, par = raw.paralelo?.price, usdt = rates.USDT, prom = rates.USD_PROM, eur = raw.eur?.price;
+  return [
+    { ok: !!(bcv && par), title: '💱 ¿Ya viste cómo está la brecha hoy?', body: `BCV en Bs ${fmt(bcv)} · Paralelo en Bs ${fmt(par)}. Calcula tus cambios al instante.` },
+    { ok: !!usdt, title: '₮ Así cotiza el USDT hoy en Venezuela', body: `1 USDT = Bs ${fmt(usdt)}. Toca para abrir la calculadora.` },
+    { ok: true, title: '⚖️ ¿Vas a cobrar o pagar hoy?', body: 'Revisa el Dólar BCV, Paralelo y Promedio antes de cerrar tu operación.' },
+    { ok: true, title: '📊 Actualización del mercado cambiario', body: 'Consulta las tasas oficiales del BCV y divisas internacionales en La Divisa.' },
+    { ok: !!prom, title: '⚖️ Dólar Promedio de hoy', body: `Promedio entre BCV y Paralelo: Bs ${fmt(prom)}. Revísalo antes de fijar precios.` },
+    { ok: !!eur, title: '🇪🇺 Euro BCV de hoy', body: `1 Euro = Bs ${fmt(eur)}. Toca para convertir.` }
+  ];
+}
+function maybeMarketNotif(){
+  if(!inNotifWindow() || !notifGranted()) return;
+  const now = Date.now();
+  if(now - lastNotif('ladivisa_last_market_notif') < 6 * HOUR_MS) return;
+  if(now - lastNotif('ladivisa_last_ad_notif') < 2 * HOUR_MS) return;
+  const list = marketNotifs().filter(m => m.ok);
+  if(!list.length) return;
+  const i = lastNotif('ladivisa_market_idx') % list.length;
+  const msg = list[i];
+  store.set('ladivisa_last_market_notif', String(now));
+  store.set('ladivisa_market_idx', String(i + 1));
+  sendMobileNotification(msg.title, msg.body, 'market-checkin', '/');
+}
+
+/* Punto de entrada: se ejecuta al final de cada refreshAll() en móviles */
+async function checkMobileNotifications(){
+  if(!notifGranted() || !raw.bcv?.price) return;
+  await checkBcvChangeAlert();
+  maybeAdNotif();
+  maybeMarketNotif();
+}
+
+async function handleNotifClick(){
+  if(!isMobileDevice) return;
+  if(isIOS && !isStandalone){
+    toast('Para activar alertas en iPhone, primero agrega La Divisa a tu pantalla de inicio');
+    $('instalar').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'center'});
+    return;
+  }
+  if(!('Notification' in window)){ toast('Tu navegador no admite notificaciones'); return; }
+  if(Notification.permission === 'granted'){ toast('Las alertas ya están activas'); return; }
+  const perm = await Notification.requestPermission();
+  if(perm !== 'granted'){ toast('Permiso de notificaciones no concedido'); return; }
+  $('notifBtn').textContent = '🔔 Alertas activas';
+  try{
+    const reg = await withTimeout(navigator.serviceWorker.ready, 3000);
+    if('periodicSync' in reg){ await reg.periodicSync.register('check-bcv-rate', { minInterval: HOUR_MS }).catch(() => {}); }
+  }catch(e){}
+  toast('✔ Alertas activadas');
+  checkMobileNotifications();
+}
+
+function setupMobileNotifications(){
+  const btn = $('notifBtn');
+  if(!btn || !isMobileDevice) return;   // en escritorio no se muestra ni se conecta nada
+  btn.style.display = 'inline-flex';
+  if(notifGranted()) btn.textContent = '🔔 Alertas activas';
+  btn.addEventListener('click', handleNotifClick);
+}
+
 loadSelection();
 buildCards();
 setupDropdown('From');
@@ -1519,6 +1645,7 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllAmoun
 applySelectionUI();
 setupInstall();
 setupFooter();
+setupMobileNotifications();
 
 /* Datos guardados para mostrar algo útil al instante */
 try{
