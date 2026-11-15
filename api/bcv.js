@@ -51,17 +51,26 @@ function fetchHtml(url, ms = 8000, redirects = 0) {
   });
 }
 
-function extractRate(html, id) {
-  const re = new RegExp(`id=["']${id}["'][\\s\\S]{0,700}?<strong>[\\s\\S]*?([0-9]{1,3}(?:\\.[0-9]{3})*,[0-9]+|[0-9]+,[0-9]+)`, 'i');
-  const m = html.match(re);
+function htmlToPlainText(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/ /gi, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+function parseCodeRate(plainText, code) {
+  const re = new RegExp(`\\b${code}\\s+([0-9]{1,3}(?:\\.[0-9]{3})*,[0-9]{4,8}|[0-9]+,[0-9]{4,8})\\b`, 'i');
+  const m = plainText.match(re);
   if (!m) return null;
   const val = parseFloat(m[1].replace(/\./g, '').replace(',', '.'));
   return Number.isFinite(val) ? val : null;
 }
 
-function extractFechaValor(html) {
-  const m = html.match(/class=["'][^"']*date-display-single[^"']*["'][^>]*>([^<]+)</i);
-  return m ? m[1].replace(/ /gi, ' ').trim() : '';
+function parseFechaValor(plainText) {
+  const m = plainText.match(/Fecha\s+Valor:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ]+,\s*\d{1,2}\s+(?:de\s+)?[A-Za-zÁÉÍÓÚáéíóúñÑ]+\s+(?:de\s+)?\d{4})/i);
+  return m ? m[1].trim() : '';
 }
 
 module.exports = async (req, res) => {
@@ -70,21 +79,19 @@ module.exports = async (req, res) => {
 
   try {
     const html = await fetchHtml('https://www.bcv.org.ve/');
-    const usd = extractRate(html, 'dolar');
-    const eur = extractRate(html, 'euro');
-    const cny = extractRate(html, 'yuan');
-    const tryRate = extractRate(html, 'lira');
-    const rub = extractRate(html, 'rublo');
+    const text = htmlToPlainText(html);
 
-    if (!usd) {
-      const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-      const pageTitle = titleMatch ? titleMatch[1].replace(/\s+/g, ' ').trim().slice(0, 80) : 'Sin título';
-      throw new Error(`Sin tasa USD (título: "${pageTitle}", bytes: ${html.length})`);
-    }
+    const usd = parseCodeRate(text, 'USD');
+    const eur = parseCodeRate(text, 'EUR');
+    const cny = parseCodeRate(text, 'CNY');
+    const tryRate = parseCodeRate(text, 'TRY');
+    const rub = parseCodeRate(text, 'RUB');
+
+    if (!usd) throw new Error('No se encontró el bloque USD en el texto del BCV');
 
     return res.status(200).json({
       source: 'BCV (Oficial)',
-      fechaValor: extractFechaValor(html),
+      fechaValor: parseFechaValor(text),
       last_update: new Date().toISOString(),
       usd,
       eur,
