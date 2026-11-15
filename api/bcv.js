@@ -1,17 +1,33 @@
 const https = require('https');
+const http = require('http');
+const crypto = require('crypto');
 
-const bcvAgent = new https.Agent({ rejectUnauthorized: false });
+const bcvAgent = new https.Agent({
+  rejectUnauthorized: false,
+  secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT
+});
 
-function fetchHtml(url, ms = 7000) {
+function fetchHtml(url, ms = 8000, redirects = 0) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, {
-      agent: bcvAgent,
+    if (redirects > 4) return reject(new Error('Demasiadas redirecciones'));
+    const client = url.startsWith('https') ? https : http;
+    const options = {
       timeout: ms,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'es-VE,es;q=0.9,en;q=0.8',
+        'Cache-Control': 'no-cache'
       }
-    }, (res) => {
+    };
+    if (url.startsWith('https')) options.agent = bcvAgent;
+
+    const req = client.get(url, options, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        res.resume();
+        const nextUrl = new URL(res.headers.location, url).toString();
+        return resolve(fetchHtml(nextUrl, ms, redirects + 1));
+      }
       if (res.statusCode < 200 || res.statusCode >= 300) {
         res.resume();
         return reject(new Error('HTTP ' + res.statusCode));
@@ -51,7 +67,7 @@ module.exports = async (req, res) => {
     const tryRate = extractRate(html, 'lira');
     const rub = extractRate(html, 'rublo');
 
-    if (!usd) throw new Error('No se pudo leer USD en BCV');
+    if (!usd) throw new Error('HTML recibido sin tasa USD');
 
     return res.status(200).json({
       source: 'BCV (Oficial)',
@@ -71,6 +87,7 @@ module.exports = async (req, res) => {
       ]);
       return res.status(200).json({
         source: 'BCV (Respaldo)',
+        bcv_error: err.message,
         fechaValor: '',
         last_update: rUsd.fechaActualizacion || new Date().toISOString(),
         usd: rUsd.promedio,
@@ -80,7 +97,7 @@ module.exports = async (req, res) => {
         rub: null
       });
     } catch (fallbackErr) {
-      return res.status(502).json({ error: 'No se pudo conectar con BCV ni respaldo' });
+      return res.status(502).json({ error: 'No se pudo conectar con BCV ni respaldo', bcv_error: err.message });
     }
   }
 };
