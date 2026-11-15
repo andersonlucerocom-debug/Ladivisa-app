@@ -1,6 +1,7 @@
 const https = require('https');
 const http = require('http');
 const crypto = require('crypto');
+const zlib = require('zlib');
 
 const bcvAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -17,6 +18,7 @@ function fetchHtml(url, ms = 8000, redirects = 0) {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'es-VE,es;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
         'Cache-Control': 'no-cache'
       }
     };
@@ -32,10 +34,17 @@ function fetchHtml(url, ms = 8000, redirects = 0) {
         res.resume();
         return reject(new Error('HTTP ' + res.statusCode));
       }
-      let data = '';
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => resolve(data));
+
+      let stream = res;
+      const enc = (res.headers['content-encoding'] || '').toLowerCase();
+      if (enc === 'gzip') stream = res.pipe(zlib.createGunzip());
+      else if (enc === 'deflate') stream = res.pipe(zlib.createInflate());
+      else if (enc === 'br') stream = res.pipe(zlib.createBrotliDecompress());
+
+      const chunks = [];
+      stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+      stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+      stream.on('error', reject);
     });
     req.on('timeout', () => { req.destroy(); reject(new Error('Timeout BCV')); });
     req.on('error', reject);
@@ -43,7 +52,7 @@ function fetchHtml(url, ms = 8000, redirects = 0) {
 }
 
 function extractRate(html, id) {
-  const re = new RegExp(`id=["']${id}["'][\\s\\S]*?<strong>\\s*([0-9.,]+)\\s*<\\/strong>`, 'i');
+  const re = new RegExp(`id=["']${id}["'][\\s\\S]{0,700}?<strong>[\\s\\S]*?([0-9]{1,3}(?:\\.[0-9]{3})*,[0-9]+|[0-9]+,[0-9]+)`, 'i');
   const m = html.match(re);
   if (!m) return null;
   const val = parseFloat(m[1].replace(/\./g, '').replace(',', '.'));
@@ -52,7 +61,7 @@ function extractRate(html, id) {
 
 function extractFechaValor(html) {
   const m = html.match(/class=["'][^"']*date-display-single[^"']*["'][^>]*>([^<]+)</i);
-  return m ? m[1].trim() : '';
+  return m ? m[1].replace(/ /gi, ' ').trim() : '';
 }
 
 module.exports = async (req, res) => {
@@ -67,7 +76,11 @@ module.exports = async (req, res) => {
     const tryRate = extractRate(html, 'lira');
     const rub = extractRate(html, 'rublo');
 
-    if (!usd) throw new Error('HTML recibido sin tasa USD');
+    if (!usd) {
+      const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+      const pageTitle = titleMatch ? titleMatch[1].replace(/\s+/g, ' ').trim().slice(0, 80) : 'Sin título';
+      throw new Error(`Sin tasa USD (título: "${pageTitle}", bytes: ${html.length})`);
+    }
 
     return res.status(200).json({
       source: 'BCV (Oficial)',
