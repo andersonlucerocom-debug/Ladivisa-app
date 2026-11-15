@@ -1192,6 +1192,7 @@ function setDeltaUI(card, deltaEl, t){
 }
 
 function subFor(d){
+  if(raw.fechaValor && ['bcv','eur','cny','try','rub'].includes(d.key)) return `BCV · ${raw.fechaValor}`;
   const src = (r) => r ? (r.source + ' · ' + fmtDate(r.last_update)) : 'Sin datos';
   switch(d.key){
     case 'bcv': return src(raw.bcv);
@@ -1268,9 +1269,16 @@ function calculateRates(){
   if(raw.usdt && refRate) rates.USDT = raw.usdt.usd * refRate;
   if(raw.usdc && refRate) rates.USDC = raw.usdc.usd * refRate;
 
+  /* Tasas BCV directas (CNY, TRY, RUB) cuando la API propia las entrega */
+  if(raw.cny) rates.CNY = raw.cny;
+  if(raw.try) rates.TRY = raw.try;
+  if(raw.rub) rates.RUB = raw.rub;
+
+  /* Resto de divisas (o las tres anteriores si faltan): cálculo por tasa internacional */
   const officialUSD = raw.bcv?.price;
   if(officialUSD){
     FIAT_FROM_USD.forEach(code => {
+      if(rates[code]) return;
       if(globalFiatRates[code]) rates[code] = officialUSD / globalFiatRates[code];
     });
   }
@@ -1299,16 +1307,36 @@ async function fetchBinanceP2P(){
 async function fetchVenezuela(){
   try{
     const t = new Date().getTime();
-    const [oficial, eurOficial] = await Promise.all([
-      fetchJSON(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`),
-      fetchJSON(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`)
-    ]);
+    let bcvOk = false;
+    try{
+      const d = await fetchJSON(`${API_BASE}/api/bcv?t=${t}`);
+      if(!d || !d.usd) throw new Error('Respuesta BCV incompleta');
+      raw.bcv = { price: d.usd, last_update: d.fechaValor, source: 'BCV (Oficial)' };
+      raw.eur = { price: d.eur, last_update: d.fechaValor, source: 'BCV (Oficial)' };
+      raw.cny = d.cny ?? null;
+      raw.try = d.try ?? null;
+      raw.rub = d.rub ?? null;
+      raw.fechaValor = d.fechaValor || null;
+      bcvOk = true;
+    }catch(e){
+      console.warn('API BCV propia no disponible, usando DolarAPI.', e);
+    }
+    if(!bcvOk){
+      const [oficial, eurOficial] = await Promise.all([
+        fetchJSON(`https://ve.dolarapi.com/v1/dolares/oficial?t=${t}`),
+        fetchJSON(`https://ve.dolarapi.com/v1/euros/oficial?t=${t}`)
+      ]);
+      raw.bcv = { price: oficial.promedio, last_update: oficial.fechaActualizacion, source: 'BCV (Oficial)' };
+      raw.eur = { price: eurOficial.promedio, last_update: eurOficial.fechaActualizacion, source: 'BCV (Oficial)' };
+      raw.cny = null;
+      raw.try = null;
+      raw.rub = null;
+      raw.fechaValor = null;
+    }
     const paraleloData = await fetchBinanceP2P().catch(async () => {
       const p = await fetchJSON(`https://ve.dolarapi.com/v1/dolares/paralelo?t=${t}`);
       return { price: p.promedio, last_update: p.fechaActualizacion, source: 'DolarAPI (Respaldo)' };
     });
-    raw.bcv = { price: oficial.promedio, last_update: oficial.fechaActualizacion, source: 'BCV (Oficial)' };
-    raw.eur = { price: eurOficial.promedio, last_update: eurOficial.fechaActualizacion, source: 'BCV (Oficial)' };
     raw.paralelo = paraleloData;
   }catch(error){ throw new Error('Fallo al conectar con BCV/Paralelo'); }
 }
@@ -1328,12 +1356,18 @@ async function fetchCrypto(){
 
 async function fetchGlobalRates(){
   try{
-    const data = await fetchJSON('https://api.exchangerate-api.com/v4/latest/USD');
+    const data = await fetchJSON('https://open.er-api.com/v6/latest/USD');
     if(!data || !data.rates) throw new Error('API Global caída');
     globalFiatRates = data.rates;
-  }catch(error){
-    console.warn('Error en conexión internacional', error);
-    throw new Error('Fallo en mercado internacional');
+  }catch(primaryError){
+    try{
+      const data = await fetchJSON('https://api.exchangerate-api.com/v4/latest/USD');
+      if(!data || !data.rates) throw new Error('API Global caída');
+      globalFiatRates = data.rates;
+    }catch(error){
+      console.warn('Error en conexión internacional', error);
+      throw new Error('Fallo en mercado internacional');
+    }
   }
 }
 
@@ -1505,11 +1539,11 @@ if('serviceWorker' in navigator && window.location.protocol !== 'file:'){
 
 window.addEventListener('online', () => refreshAll());
 document.addEventListener('visibilitychange', () => {
-  if(document.visibilityState === 'visible' && Date.now() - lastRefreshAt > 15 * 60 * 1000) refreshAll();
+  if(document.visibilityState === 'visible' && Date.now() - lastRefreshAt > 5 * 60 * 1000) refreshAll();
 });
 
 refreshAll();
-setInterval(refreshAll, 60 * 60 * 1000);
+setInterval(refreshAll, 5 * 60 * 1000);
 </script>
 </body>
 </html>
